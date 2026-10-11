@@ -65,7 +65,9 @@ export const REDUCE_MOTION = typeof window !== 'undefined'
 // Shared mutable session state + a hook for pilot analytics.
 // points: session points shown on the Mission Map (nothing awards them yet).
 // completed: experience ids finished this session, e.g. { speed: true }.
-export const state = { guess: null, tried: { 60: false, 80: false, 90: false }, firstSpeed: null, events: [], points: 0, completed: {} };
+// runs: speeds tried per scenario, keyed 'experience.perspective', e.g. { 'pedestrian.driving': { 30: true } }.
+// predictions: answers from prediction gates, keyed 'experience.perspective', e.g. { 'pedestrian.driving': 31 }.
+export const state = { guess: null, tried: { 60: false, 80: false, 90: false }, firstSpeed: null, events: [], points: 0, completed: {}, predictions: {}, runs: {} };
 
 export function track(name, data) {
   // Pilot hook: wire this to Supabase / n8n / your event endpoint.

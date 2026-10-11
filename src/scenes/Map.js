@@ -150,7 +150,7 @@ export default class MapScene extends Phaser.Scene {
         ? EXPERIENCES.slice(0, cols - 1).concat([{ label: 'More', icon: 'more', status: 'playable' }])
         : EXPERIENCES;
       list.forEach((e, i) => {
-        const cx = x0 + pad + i * (cw + gap), open = e.status === 'playable';
+        const cx = x0 + pad + i * (cw + gap), open = e.status !== 'locked';
         const g = this.add.graphics();
         g.fillStyle(0xFFFFFF, open ? 0.12 : 0.06); g.fillRoundedRect(cx, y, cw, ch, 12);
         drawIcon(g, e.icon, cx + cw / 2, y + 19, 24, open ? C.yellow : 0xFFFFFF, open ? 1 : 0.5);

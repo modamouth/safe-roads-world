@@ -96,6 +96,33 @@ soon". A playable one needs `status: 'playable'`, a `scene`, `minutes` and a
 `reset()` that clears its session state. All entries appear in the `LabMenu`
 grid (2 columns). The Map's Lab card shows the first three, then a "More" chip.
 
+## Pedestrian safety (Learning Lab)
+
+Lab → Pedestrian opens an intro (`ExperienceIntro`) with two perspectives.
+Each one starts with a "Before we begin" prediction (`Prediction`). All the
+copy, questions and tuning live in `src/experiences.js`.
+
+- **Driving** (`StopDistance` → `StopReveal`): pick 30/40/50 km/h. A pedestrian
+  steps out 25 m ahead and the car brakes after the driver's reaction time.
+  The physics is in `src/stopping.js`. If the car can't stop in time, the
+  scene freezes before contact and shows the impact speed; no collision is
+  animated. **Placeholders:** `reactionS` (1.5 s) and `decel` (7 m/s²) need
+  validating, and they set every number shown.
+- **Walking** (`WalkCross` → `WalkReveal`): a top-down street with left-hand
+  traffic. Pick where to stand (beside a van, at its outer edge, or on a
+  clear stretch), then choose Cross or Wait as a car approaches at 50 km/h.
+  Shading and the car's visibility come from real sight lines past the parked
+  vehicles. The lesson wording on the results screen needs validating.
+  After all three spots, three screens follow (`WalkReveal`): the prediction
+  answer, a chance-of-death chart with a low-light tip, and "Always remember".
+  The answer (2x) and the chart figures (40% at 40 km/h, 90% at 50 km/h) are
+  in `reveal` / `predict` and still need a cited source (`sourceRef`).
+- The Driving question still has `answer: null`. Its reveal shows the
+  distance calculated from the placeholder physics.
+
+The skyline in the driving scene is `public/assets/city_backdrop.webp` (a crop
+of the Windhoek street art). Without it, the drawn dusk sky is used.
+
 ## Art slots (optional)
 
 Title and Map work without any art files. If these files exist in

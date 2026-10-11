@@ -15,7 +15,7 @@ function star(g, x, y, ro, ri) {
 export const ICONS = ['back', 'close', 'lock', 'city', 'lab', 'taxi', 'highway', 'gravel', 'truck', 'school',
   'map', 'passport', 'badge', 'star', 'play', 'check', 'speed', 'info',
   'car_speed', 'pedestrian', 'motorcycle', 'bicycle', 'heavy', 'car_shield', 'conditions', 'child_seat',
-  'rules', 'treatment', 'alcohol', 'fatigue', 'more'];
+  'rules', 'treatment', 'alcohol', 'fatigue', 'more', 'steering', 'walker'];
 
 export function drawIcon(g, name, x, y, s, color, alpha) {
   const a = alpha == null ? 1 : alpha, h = s / 2, lw = Math.max(2, s * 0.1);
@@ -203,6 +203,16 @@ function drawOutline(g, name, x, y, h, lw, color, a) {
       ring(0, 0.5, 0.3); line([-0.3, 0.5], [0.3, 0.5]);
       line([0.42, -0.74], [0.6, -0.74], [0.42, -0.56], [0.6, -0.56]);
       line([0.7, -0.96], [0.82, -0.96], [0.7, -0.84], [0.82, -0.84]);
+      return true;
+    case 'steering': // hands on a steering wheel
+      ring(0, 0, 0.62); ring(0, 0.04, 0.16);
+      line([-0.16, 0.04], [-0.6, -0.04]); line([0.16, 0.04], [0.6, -0.04]); line([0, 0.2], [0, 0.62]);
+      arc(-0.66, -0.06, 0.2, Math.PI * 0.55, Math.PI * 1.45); arc(0.66, -0.06, 0.2, -Math.PI * 0.45, Math.PI * 0.45);
+      return true;
+    case 'walker':
+      ring(0.06, -0.76, 0.13);
+      line([0.02, -0.6], [-0.04, 0.0]); line([-0.28, -0.22], [0.0, -0.46], [0.26, -0.18]);
+      line([-0.04, 0.0], [-0.28, 0.74]); line([-0.04, 0.0], [0.18, 0.32], [0.3, 0.74]);
       return true;
     case 'more':
       dot(-0.5, 0, 0.13); dot(0, 0, 0.13); dot(0.5, 0, 0.13);

@@ -36,13 +36,13 @@ export default class LabMenu extends Phaser.Scene {
   }
 
   tile(e, x, y, w, h) {
-    const open = e.status === 'playable', done = !!state.completed[e.id];
+    const open = e.status !== 'locked', play = e.status === 'playable', done = !!state.completed[e.id];
     const g = this.add.graphics();
     const draw = hi => {
       g.clear();
       g.fillStyle(open ? C.navy2 : 0xFFFFFF, open ? (hi ? 1 : 0.94) : (hi ? 0.12 : 0.07));
       g.fillRoundedRect(x, y, w, h, 18);
-      if (open) { g.lineStyle(2, C.yellow, hi ? 1 : 0.85); g.strokeRoundedRect(x, y, w, h, 18); }
+      if (open) { g.lineStyle(2, play ? C.yellow : C.teal, hi ? 1 : 0.85); g.strokeRoundedRect(x, y, w, h, 18); }
       drawIcon(g, e.icon, x + w / 2, y + 34, 46, open ? C.yellow : 0xFFFFFF, open ? 1 : 0.45);
       if (!open) {
         const lx = x + w - 22, ly = y + 20;
@@ -52,8 +52,8 @@ export default class LabMenu extends Phaser.Scene {
     };
     draw(false);
     T(this, x + w / 2, y + 70, e.label, 18, open ? '#FFFFFF' : '#C9D3DF');
-    const sub = open ? (done ? '✓ Done' : e.minutes + ' min  ·  Play') : 'Coming soon';
-    T(this, x + w / 2, y + 91, sub, 14, open ? '#FFCB2B' : '#8A97A8', { fontStyle: open ? 'bold' : 'normal' });
+    const sub = play ? (done ? '✓ Done' : e.minutes + ' min  ·  Play') : open ? 'Preview' : 'Coming soon';
+    T(this, x + w / 2, y + 91, sub, 14, play ? '#FFCB2B' : open ? '#5FD0E0' : '#8A97A8', { fontStyle: open ? 'bold' : 'normal' });
 
     const hit = this.add.zone(x + w / 2, y + h / 2, w, h).setInteractive({ useHandCursor: true });
     hit.on('pointerover', () => draw(true));
@@ -62,6 +62,7 @@ export default class LabMenu extends Phaser.Scene {
       Sfx.init(this); Sfx.click();
       track('experience_select', { id: e.id, status: e.status });
       if (!open) { toast(this, e.label + ': coming soon', H - 120); return; }
+      if (!play) { this.go('ExperienceIntro', { id: e.id }); return; }
       track('experience_start', { id: e.id });
       e.reset();
       this.go(e.scene);

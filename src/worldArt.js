@@ -12,10 +12,11 @@ export const OPTIONAL_ART = {
   title_bg: 'assets/title_bg.webp',
   map_bg: 'assets/map_bg.webp',
   hero_wave: 'assets/hero_wave.webp',
-  hero_passport: 'assets/hero_passport.webp'
+  hero_passport: 'assets/hero_passport.webp',
+  city_backdrop: 'assets/city_backdrop.webp'
 };
 
-const FALLBACK = { title_bg: 'title_bg_fb', map_bg: 'map_bg_fb', hero_wave: 'hero_wave_fb', hero_passport: 'hero_passport_fb' };
+const FALLBACK = { title_bg: 'title_bg_fb', map_bg: 'map_bg_fb', hero_wave: 'hero_wave_fb', hero_passport: 'hero_passport_fb', city_backdrop: 'sky' };
 
 export const optKey = name => 'opt_' + name;
 
@@ -195,8 +196,72 @@ function scrim(scene) {
   c.fillStyle = g; c.fillRect(0, 0, 8, 256); t.refresh();
 }
 
+// --- street scenery for the driving scenarios -------------------------------
+
+/** Palm tree, design size 120 x 260 (trunk base at bottom centre). */
+function palm(scene) {
+  const { t, c } = canvas(scene, 'palm', 120, 260, 2);
+  c.strokeStyle = '#7A5A3A'; c.lineCap = 'round';
+  for (let i = 0; i < 20; i++) {
+    const k = i / 20, x = 60 + Math.sin(k * 2.2) * 6, y = 258 - k * 196;
+    c.lineWidth = 11 - k * 4; c.beginPath(); c.moveTo(x, y); c.lineTo(60 + Math.sin((k + 0.05) * 2.2) * 6, y - 10); c.stroke();
+  }
+  const cx = 64, cy = 60;
+  [[-1.0, 0.9], [-0.6, 1.2], [-0.2, 1.0], [0.2, 1.0], [0.6, 1.2], [1.0, 0.9], [0, 0.7], [-1.3, 0.5], [1.3, 0.5]].forEach(([dir, len], i) => {
+    c.fillStyle = i % 2 ? '#3E7A2E' : '#4F9136';
+    const ex = cx + dir * 52 * len, ey = cy + 30 - Math.abs(dir) * 6 * len + (Math.abs(dir) > 0.8 ? 26 : 0);
+    c.beginPath(); c.moveTo(cx, cy);
+    c.quadraticCurveTo(cx + dir * 30 * len, cy - 28 * len, ex, ey);
+    c.quadraticCurveTo(cx + dir * 26 * len, cy - 10 * len, cx, cy + 6);
+    c.fill();
+  });
+  t.refresh();
+}
+
+/** Street lamp, design size 60 x 260 (pole base at bottom centre). */
+function lamp(scene) {
+  const { t, c } = canvas(scene, 'lamp', 60, 260, 2);
+  c.fillStyle = '#5E646B'; c.fillRect(27, 30, 6, 230); c.fillRect(22, 248, 16, 12);
+  c.fillRect(30, 28, 22, 4); c.fillStyle = '#F4F1E6'; c.fillRect(44, 31, 14, 5);
+  t.refresh();
+}
+
+/**
+ * Pedestrian, design size 50 x 140 (feet at bottom centre).
+ * pose: 'walkA' | 'walkB' (side view facing right) | 'stand' (front view).
+ */
+function person(scene, key, pose, shirt, legs) {
+  const { t, c } = canvas(scene, key, 50, 140, 2);
+  const skin = '#6E4A30', hair = '#22160F', shoe = '#2B2B2B';
+  c.lineCap = 'round'; c.lineJoin = 'round';
+  const limb = (col, w, pts) => { c.strokeStyle = col; c.lineWidth = w; c.beginPath(); c.moveTo(pts[0][0], pts[0][1]); pts.slice(1).forEach(p => c.lineTo(p[0], p[1])); c.stroke(); };
+  if (pose === 'stand') {
+    limb(legs, 9, [[20, 72], [20, 132]]); limb(legs, 9, [[30, 72], [30, 132]]);
+    c.fillStyle = shoe; c.fillRect(14, 131, 11, 6); c.fillRect(25, 131, 11, 6);
+    limb(shirt, 7, [[14, 36], [11, 70]]); limb(shirt, 7, [[36, 36], [39, 70]]);
+    c.fillStyle = shirt; rr(c, 14, 28, 22, 48, 7);
+  } else {
+    const a = pose === 'walkA';
+    limb(legs, 9, a ? [[25, 72], [17, 104], [11, 132]] : [[25, 72], [22, 104], [21, 132]]);
+    limb(shirt, 6, a ? [[25, 36], [15, 62]] : [[25, 36], [22, 66]]);
+    c.fillStyle = shirt; rr(c, 16, 28, 18, 48, 7);
+    limb(legs, 9, a ? [[25, 72], [33, 104], [38, 132]] : [[25, 72], [28, 104], [30, 132]]);
+    limb(shirt, 6, a ? [[25, 36], [36, 60]] : [[25, 36], [28, 66]]);
+    c.fillStyle = shoe; c.fillRect(a ? 5 : 16, 130, 11, 6); c.fillRect(a ? 34 : 26, 130, 11, 6);
+  }
+  c.fillStyle = skin; c.beginPath(); c.arc(25, 16, 10, 0, Math.PI * 2); c.fill();
+  c.fillStyle = hair; c.beginPath(); c.arc(25, 13, 10, Math.PI * 1.05, Math.PI * 1.95); c.fill();
+  t.refresh();
+}
+
 /** Builds every placeholder. Call from Boot after loading and buildTextures(). */
 export function buildWorldTextures(scene) {
+  palm(scene);
+  lamp(scene);
+  person(scene, 'ped_walkA', 'walkA', '#7FB3E0', '#CDB892');
+  person(scene, 'ped_walkB', 'walkB', '#7FB3E0', '#CDB892');
+  [['#E07B53', '#2E3A4F'], ['#F2D16B', '#3C3C46'], ['#5FB08A', '#5B4636'], ['#C85A8E', '#2F3E5C']]
+    .forEach(([s, l], i) => person(scene, 'ped_stand' + i, 'stand', s, l));
   titleBg(scene);
   mapBg(scene);
   heroFigure(scene, 'hero_wave_fb', 'wave');
