@@ -3,7 +3,7 @@ import { W, H, COLORS as C, FONT, state, track, clamp, lerpColor, easeOut, REDUC
 import { setupCam, viewBounds, fillView, T, button, soundToggle, iconButton, makeCaption, panel } from '../ui.js';
 import { drawIcon } from '../icons.js';
 import { experienceById } from '../experiences.js';
-import { artKey } from '../worldArt.js';
+import { artKey, PARKED_VEHICLES } from '../worldArt.js';
 import { stopping, impactKmh } from '../stopping.js';
 import { Sfx } from '../sfx.js';
 
@@ -115,9 +115,18 @@ export default class StopDistance extends Phaser.Scene {
     const end = this.ZP + 160;
     for (let z = 30; z < end; z += 22) { add('palm', z, -6.4, 7.5); add('palm', z + 11, 7.6, 7.5); }
     for (let z = 42; z < end; z += 30) { add('lamp', z, -4.6, 6.5); add('lamp', z + 15, 6.2, 6.5); }
+    // Parked vehicles on the left. The first (nearest the pedestrian's gap) is the
+    // tallest available, so it hides the pedestrian until they step out.
+    const vehicles = PARKED_VEHICLES.filter(v => this.textures.exists(v.key));
     const carKey = this.real ? 'img_suv' : 'carRear', tints = [0xFFFFFF, 0x9DB8E8, 0xE8C9A0, 0xB0B0B8, 0x9FD3C7];
-    [this.ZP - 7.5, this.ZP + 5.5, this.ZP - 26, this.ZP + 21, this.ZP + 40, 48, 70].forEach((z, i) =>
-      add(carKey, z, -2.9, CAR_W, 'w').setTint(tints[i % tints.length]));
+    [this.ZP - 7.5, this.ZP + 5.5, this.ZP - 26, this.ZP + 21, this.ZP + 40, 48, 70].forEach((z, i) => {
+      if (!vehicles.length) { add(carKey, z, -2.9, CAR_W, 'w').setTint(tints[i % tints.length]); return; }
+      const v = vehicles[i % vehicles.length];
+      const rear = this.add.image(0, 0, v.key, 'rear').setOrigin(0.5, 1).setVisible(false);
+      rear.wz = z; rear.xm = -2.9; rear.veh = v;
+      rear.side = this.add.image(0, 0, v.key, 'side').setOrigin(0, 1).setVisible(false);
+      this.scn.push(rear);
+    });
     let s = 11; const rnd = () => (s = (s * 16807) % 2147483647) / 2147483647;
     for (let z = 26; z < end; z += 9 + rnd() * 12) {
       const left = rnd() < 0.5;
@@ -135,8 +144,16 @@ export default class StopDistance extends Phaser.Scene {
     this.ped.xm = this.pedX;
     this.scn.forEach(o => {
       const zRel = o.wz - this.pos;
-      if (zRel < 6 || zRel > 320 || (o === this.ped && !this.pedOn)) { o.setVisible(false); return; }
+      if (zRel < 6 || zRel > 320 || (o === this.ped && !this.pedOn)) { o.setVisible(false); if (o.side) o.side.setVisible(false); return; }
       const p = this.proj(zRel, o.xm);
+      if (o.veh) {
+        // Rear face square-on at real width; side squashed to its true perspective width.
+        const v = o.veh, sy = v.h * p.k / o.height, a = clamp(1.35 - zRel / 260, 0.35, 1);
+        o.setVisible(true).setPosition(p.x, p.y).setScale(v.w * p.k / o.width, sy).setDepth(400 - zRel).setAlpha(a);
+        const xr = o.xm + v.w / 2, sideW = Math.max(1, -xr * F * (1 / zRel - 1 / (zRel + v.len)));
+        o.side.setVisible(true).setPosition(p.x + o.displayWidth / 2 - 1, p.y).setScale(sideW / o.side.width, sy).setDepth(400 - zRel).setAlpha(a);
+        return;
+      }
       const px = o.by === 'w' ? o.sizeM * p.k / o.width : o.sizeM * p.k / o.height;
       o.setVisible(true).setPosition(p.x, p.y).setScale(px).setDepth(400 - zRel).setAlpha(clamp(1.35 - zRel / 260, 0.35, 1));
     });

@@ -120,6 +120,12 @@ copy, questions and tuning live in `src/experiences.js`.
 - The Driving question still has `answer: null`. Its reveal shows the
   distance calculated from the placeholder physics.
 
+Parked vehicles on the driving street are `public/assets/veh_*.webp` (taxi
+minibus, two sedans, bakkie, box truck), listed in `PARKED_VEHICLES` in
+`src/worldArt.js`. They are rear three-quarter views, mirrored so their sides
+face the road. Other uses need other views: straight-on rear for cars in your
+lane, front views for oncoming traffic, top-down for the Walking street.
+
 The skyline in the driving scene is `public/assets/city_backdrop.webp` (a crop
 of the Windhoek street art). Without it, the drawn dusk sky is used.
 
