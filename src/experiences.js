@@ -36,8 +36,8 @@ export const EXPERIENCES = [
           },
           // Driving scenario: pick a speed, a pedestrian steps out `hazardM` ahead, the car brakes.
           scenario: {
-            speeds: [30, 40, 50],
-            hazardM: 25,
+            speeds: [40, 50, 60],   // Namibia's general urban limit is 60 km/h
+            hazardM: 30,           // with the placeholder physics: 40 stops in time, 50 and 60 don't
             reactionS: 1.5,   // PLACEHOLDER: driver reaction time (s). Validate with a road-safety partner.
             decel: 7.0,       // PLACEHOLDER: dry-road braking deceleration (m/s^2). Validate before launch.
             revealKmh: 50     // speed the prediction question asks about
@@ -75,12 +75,42 @@ export const EXPERIENCES = [
   },
   soon('motorcycle', 'Motorcycle', 'motorcycle'),
   soon('bicycle', 'Bicycle', 'bicycle'),
-  soon('heavy', 'Heavy vehicle', 'heavy'),
+  {
+    id: 'heavy', label: 'Heavy vehicle', title: 'Heavy vehicle safety', icon: 'heavy', status: 'preview',
+    intro: {
+      tagline: 'Be truck aware',
+      body: 'Heavy vehicles have bigger blind spots and take longer to stop.\n\nLearn how to stay safe when sharing the road with trucks and buses.',
+      prompt: 'Pick a topic to learn more',
+      options: [
+        {
+          id: 'blind-spots', label: 'Blind spots', icon: 'blind_spot', status: 'playable', scene: 'TruckBlindSpots',
+          // Namibian figures (verify with the MVA Fund before launch):
+          //  - ~6% of registered vehicles are heavy trucks or buses: 19,899 trucks + 5,405 buses of
+          //    401,476 vehicles (2021). WHO Global status report on road safety 2023, Namibia profile:
+          //    https://www.who.int/publications/m/item/road-safety-nam-2023-country-profile
+          //  - 48 deaths, 211 injuries in 112 heavy-vehicle crashes, 1 Jan to 16 Sep 2026, MVA Fund as
+          //    reported by Economist Namibia (22 Sep 2026):
+          //    https://economist.com.na/rising-truck-crashes-trigger-urgent-road-safety-warning-in-erongo-and-otjozondjupa/
+          // The original NSW question asked for the share of road deaths. That needs the MVA Fund's
+          // national death total for the same period, which isn't published yet.
+          predict: {
+            question: 'Heavy trucks and buses make up about 6% of vehicles registered in Namibia. In 2026, up to mid-September, how many people died in crashes involving heavy vehicles?',
+            options: [15, 48, 95], unit: '',
+            answer: 48,
+            explain: '48 people died and 211 were injured in 112 crashes involving heavy vehicles between 1 January and 16 September 2026.',
+            sourceRef: 'MVA Fund via Economist Namibia, 22 Sep 2026; WHO Global status report on road safety 2023 (2021 vehicle data)',
+            note: "We'll reveal the right answer at the end."
+          }
+        },
+        { id: 'braking', label: 'Braking distance', icon: 'truck_brake', status: 'locked' }
+      ]
+    }
+  },
   soon('vehicle-safety', 'Vehicle safety', 'car_shield'),
   soon('conditions', 'Drive to conditions', 'conditions'),
   soon('child-seats', 'Child car seats', 'child_seat'),
   soon('road-rules', 'Road rules', 'rules'),
-  soon('road-treatments', 'Road treatments', 'treatment'),
+  soon('road-treatments', 'Road signs & markings', 'treatment'),
   soon('alcohol-drugs', 'Alcohol & drugs', 'alcohol'),
   soon('fatigue', 'Fatigue', 'fatigue')
 ];

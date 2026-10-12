@@ -29,7 +29,7 @@ export default class StopReveal extends Phaser.Scene {
 
     // Chart
     panel(this, 28, 150, W - 56, 330, { alpha: 0.92, r: 20 });
-    const x0 = 124, maxM = 40, pxm = 340 / maxM, rowY = i => 248 + i * 74;
+    const x0 = 124, maxM = 50, pxm = 340 / maxM, rowY = i => 248 + i * 74;
     const pedX = x0 + cfg.hazardM * pxm;
     const g = this.add.graphics();
     for (let y = 196; y < 440; y += 12) { g.fillStyle(0xFFFFFF, 0.55); g.fillRect(pedX - 1, y, 2, 7); }

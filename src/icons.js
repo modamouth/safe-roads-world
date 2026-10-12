@@ -15,7 +15,7 @@ function star(g, x, y, ro, ri) {
 export const ICONS = ['back', 'close', 'lock', 'city', 'lab', 'taxi', 'highway', 'gravel', 'truck', 'school',
   'map', 'passport', 'badge', 'star', 'play', 'check', 'speed', 'info',
   'car_speed', 'pedestrian', 'motorcycle', 'bicycle', 'heavy', 'car_shield', 'conditions', 'child_seat',
-  'rules', 'treatment', 'alcohol', 'fatigue', 'more', 'steering', 'walker'];
+  'rules', 'treatment', 'alcohol', 'fatigue', 'more', 'steering', 'walker', 'blind_spot', 'truck_brake'];
 
 export function drawIcon(g, name, x, y, s, color, alpha) {
   const a = alpha == null ? 1 : alpha, h = s / 2, lw = Math.max(2, s * 0.1);
@@ -213,6 +213,20 @@ function drawOutline(g, name, x, y, h, lw, color, a) {
       ring(0.06, -0.76, 0.13);
       line([0.02, -0.6], [-0.04, 0.0]); line([-0.28, -0.22], [0.0, -0.46], [0.26, -0.18]);
       line([-0.04, 0.0], [-0.28, 0.74]); line([-0.04, 0.0], [0.18, 0.32], [0.3, 0.74]);
+      return true;
+    case 'blind_spot': // car (front view) sending signal arcs toward a car seen from above
+      box(-0.9, 0.12, 0.62, 0.36, 0.1); line([-0.82, 0.12], [-0.72, -0.12], [-0.46, -0.12], [-0.36, 0.12]);
+      ring(-0.76, 0.52, 0.06); ring(-0.42, 0.52, 0.06);
+      arc(-0.3, -0.05, 0.22, -Math.PI * 0.45, Math.PI * 0.05); arc(-0.3, -0.05, 0.38, -Math.PI * 0.42, Math.PI * 0.02);
+      box(0.32, -0.72, 0.5, 1.0, 0.18); line([0.38, -0.42], [0.76, -0.42]); line([0.38, 0.0], [0.76, 0.0]);
+      return true;
+    case 'truck_brake': // car rear-end close behind a truck: arrow between, impact lines
+      line([-0.98, 0.32], [-0.98, 0.04], [-0.78, 0.0], [-0.6, -0.2], [-0.32, -0.2], [-0.24, 0.32], [-0.98, 0.32]);
+      ring(-0.78, 0.38, 0.1); ring(-0.38, 0.38, 0.1);
+      line([-0.14, 0.12], [0.18, 0.12]); line([-0.06, 0.04], [-0.14, 0.12], [-0.06, 0.2]); line([0.1, 0.04], [0.18, 0.12], [0.1, 0.2]);
+      line([-0.06, -0.3], [0.0, -0.14]); line([0.08, -0.36], [0.08, -0.18]); line([0.22, -0.3], [0.16, -0.14]);
+      box(0.3, -0.52, 0.36, 0.84, 0.04); box(0.66, -0.78, 0.3, 1.1, 0.04); line([0.66, -0.78], [0.66, -0.98]);
+      ring(0.46, 0.4, 0.1); ring(0.84, 0.4, 0.1);
       return true;
     case 'more':
       dot(-0.5, 0, 0.13); dot(0, 0, 0.13); dot(0.5, 0, 0.13);

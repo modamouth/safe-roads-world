@@ -12,6 +12,7 @@ import StopDistance from './scenes/StopDistance.js';
 import StopReveal from './scenes/StopReveal.js';
 import WalkCross from './scenes/WalkCross.js';
 import WalkReveal from './scenes/WalkReveal.js';
+import TruckBlindSpots from './scenes/TruckBlindSpots.js';
 import Predict from './scenes/Predict.js';
 import Drive from './scenes/Drive.js';
 import Lab from './scenes/Lab.js';
@@ -27,5 +28,5 @@ new Phaser.Game({
   // EXPAND keeps the whole 540x960 design visible and fills any extra screen space (see ui.setupCam).
   scale: { mode: Phaser.Scale.EXPAND, autoCenter: Phaser.Scale.CENTER_BOTH },
   render: { antialias: true },
-  scene: [Boot, Title, MapScene, CityRunStub, LabMenu, ExperienceIntro, Prediction, PerspectiveStub, StopDistance, StopReveal, WalkCross, WalkReveal, Predict, Drive, Lab, Reveal, Passport]
+  scene: [Boot, Title, MapScene, CityRunStub, LabMenu, ExperienceIntro, Prediction, PerspectiveStub, StopDistance, StopReveal, WalkCross, WalkReveal, TruckBlindSpots, Predict, Drive, Lab, Reveal, Passport]
 });

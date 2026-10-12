@@ -49,7 +49,7 @@ function hull(pts) {
 }
 
 /** Top-down vehicle centred on (cx, cy) in screen px, front pointing up. */
-function topCar(g, cx, cy, len, wid, body, van) {
+export function topCar(g, cx, cy, len, wid, body, van) {
   const L = len * S, w = wid * S;
   g.fillStyle(0x000000, 0.28); g.fillRoundedRect(cx - w / 2 + 2, cy - L / 2 + 3, w, L, 6);
   g.fillStyle(body, 1); g.fillRoundedRect(cx - w / 2, cy - L / 2, w, L, van ? 4 : 7);
