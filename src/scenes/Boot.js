@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
 import { buildTextures, darken } from '../textures.js';
-import { OPTIONAL_ART, PARKED_VEHICLES, optKey, buildWorldTextures, splitVehicles } from '../worldArt.js';
+import { OPTIONAL_ART, PARKED_VEHICLES, optKey, buildWorldTextures } from '../worldArt.js';
 
 // Photo assets live in /public/assets and are loaded by URL (not embedded),
 // so swapping an image is just replacing the file — no rebuild step needed.
@@ -44,7 +44,6 @@ export default class Boot extends Phaser.Scene {
     }
 
     buildWorldTextures(this);
-    splitVehicles(this);
     this.scene.start('Title');
   }
 }

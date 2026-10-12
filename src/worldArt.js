@@ -16,30 +16,16 @@ export const OPTIONAL_ART = {
   city_backdrop: 'assets/city_backdrop.webp'
 };
 
-// Parked vehicles for the driving street: rear three-quarter views, mirrored so
-// the side faces the road (they park on the left). Each image is split at `rear`
-// (fraction of its width where the rear face ends) into a 'rear' and a 'side'
-// frame. The rear is drawn square-on at the vehicle's real width `w`; the side is
-// squashed to the sliver the chase camera would really see over length `len`.
-// h = on-screen height in metres (a little taller than the vehicle: the view
-// also shows the roof). Optional: if none load, tinted SUV photos are used.
+// Parked vehicles for the driving street: straight-on rear views, drawn square
+// to the camera at the vehicle's real width `w` (metres); height follows the
+// image's own proportions. Optional: if none load, tinted SUV photos are used.
 export const PARKED_VEHICLES = [
-  { key: 'veh_taxi', url: 'assets/veh_taxi.webp', rear: 0.40, w: 1.9, len: 5.3, h: 2.7 },
-  { key: 'veh_sedan_blue', url: 'assets/veh_sedan_blue.webp', rear: 0.52, w: 1.8, len: 4.7, h: 1.95 },
-  { key: 'veh_bakkie', url: 'assets/veh_bakkie.webp', rear: 0.42, w: 1.9, len: 5.3, h: 2.5 },
-  { key: 'veh_sedan_white', url: 'assets/veh_sedan_white.webp', rear: 0.52, w: 1.8, len: 4.6, h: 1.95 },
-  { key: 'veh_truck', url: 'assets/veh_truck.webp', rear: 0.44, w: 2.45, len: 8.0, h: 3.9 }
+  { key: 'veh_taxi', url: 'assets/veh_taxi.webp', w: 1.9 },
+  { key: 'veh_sedan_blue', url: 'assets/veh_sedan_blue.webp', w: 1.85 },
+  { key: 'veh_bakkie', url: 'assets/veh_bakkie.webp', w: 1.95 },
+  { key: 'veh_sedan_white', url: 'assets/veh_sedan_white.webp', w: 1.75 },
+  { key: 'veh_truck', url: 'assets/veh_truck.webp', w: 2.4 }
 ];
-
-/** Adds 'rear' and 'side' frames to each loaded parked-vehicle texture. Call from Boot. */
-export function splitVehicles(scene) {
-  PARKED_VEHICLES.forEach(v => {
-    if (!scene.textures.exists(v.key)) return;
-    const t = scene.textures.get(v.key), src = t.getSourceImage(), rx = Math.round(src.width * v.rear);
-    t.add('rear', 0, 0, 0, rx, src.height);
-    t.add('side', 0, rx, 0, src.width - rx, src.height);
-  });
-}
 
 const FALLBACK = { title_bg: 'title_bg_fb', map_bg: 'map_bg_fb', hero_wave: 'hero_wave_fb', hero_passport: 'hero_passport_fb', city_backdrop: 'sky' };
 

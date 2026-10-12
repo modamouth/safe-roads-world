@@ -122,9 +122,9 @@ copy, questions and tuning live in `src/experiences.js`.
 
 Parked vehicles on the driving street are `public/assets/veh_*.webp` (taxi
 minibus, two sedans, bakkie, box truck), listed in `PARKED_VEHICLES` in
-`src/worldArt.js`. They are rear three-quarter views, mirrored so their sides
-face the road. Other uses need other views: straight-on rear for cars in your
-lane, front views for oncoming traffic, top-down for the Walking street.
+`src/worldArt.js`. They are straight-on rear views, drawn at each vehicle's
+real width. The same images suit cars driving ahead in your lane. Oncoming
+traffic needs front views, and the Walking street needs top-down views.
 
 The skyline in the driving scene is `public/assets/city_backdrop.webp` (a crop
 of the Windhoek street art). Without it, the drawn dusk sky is used.

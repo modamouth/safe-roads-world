@@ -122,10 +122,7 @@ export default class StopDistance extends Phaser.Scene {
     [this.ZP - 7.5, this.ZP + 5.5, this.ZP - 26, this.ZP + 21, this.ZP + 40, 48, 70].forEach((z, i) => {
       if (!vehicles.length) { add(carKey, z, -2.9, CAR_W, 'w').setTint(tints[i % tints.length]); return; }
       const v = vehicles[i % vehicles.length];
-      const rear = this.add.image(0, 0, v.key, 'rear').setOrigin(0.5, 1).setVisible(false);
-      rear.wz = z; rear.xm = -2.9; rear.veh = v;
-      rear.side = this.add.image(0, 0, v.key, 'side').setOrigin(0, 1).setVisible(false);
-      this.scn.push(rear);
+      add(v.key, z, -2.9, v.w, 'w');
     });
     let s = 11; const rnd = () => (s = (s * 16807) % 2147483647) / 2147483647;
     for (let z = 26; z < end; z += 9 + rnd() * 12) {
@@ -144,16 +141,8 @@ export default class StopDistance extends Phaser.Scene {
     this.ped.xm = this.pedX;
     this.scn.forEach(o => {
       const zRel = o.wz - this.pos;
-      if (zRel < 6 || zRel > 320 || (o === this.ped && !this.pedOn)) { o.setVisible(false); if (o.side) o.side.setVisible(false); return; }
+      if (zRel < 6 || zRel > 320 || (o === this.ped && !this.pedOn)) { o.setVisible(false); return; }
       const p = this.proj(zRel, o.xm);
-      if (o.veh) {
-        // Rear face square-on at real width; side squashed to its true perspective width.
-        const v = o.veh, sy = v.h * p.k / o.height, a = clamp(1.35 - zRel / 260, 0.35, 1);
-        o.setVisible(true).setPosition(p.x, p.y).setScale(v.w * p.k / o.width, sy).setDepth(400 - zRel).setAlpha(a);
-        const xr = o.xm + v.w / 2, sideW = Math.max(1, -xr * F * (1 / zRel - 1 / (zRel + v.len)));
-        o.side.setVisible(true).setPosition(p.x + o.displayWidth / 2 - 1, p.y).setScale(sideW / o.side.width, sy).setDepth(400 - zRel).setAlpha(a);
-        return;
-      }
       const px = o.by === 'w' ? o.sizeM * p.k / o.width : o.sizeM * p.k / o.height;
       o.setVisible(true).setPosition(p.x, p.y).setScale(px).setDepth(400 - zRel).setAlpha(clamp(1.35 - zRel / 260, 0.35, 1));
     });
