@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
 import { W, H, LAB, LABG, COLORS as C, SEV, OUTCOME, DATA, state, track, REDUCE_MOTION } from '../config.js';
-import { setupCam, T, button, brand, soundToggle, makeCaption, pop, Debris } from '../ui.js';
+import { setupCam, viewBounds, fillView, T, button, brand, soundToggle, makeCaption, pop, Debris } from '../ui.js';
 import { Sfx } from '../sfx.js';
 import { drawFallbackCar } from '../textures.js';
 
@@ -41,6 +41,7 @@ export default class Lab extends Phaser.Scene {
 
   // --- Drawn fallback lab (used only if photo assets failed to load) ---
   buildVectorLab() {
+    fillView(this, 0x08111E, 1, 0);
     this.add.image(0, 0, 'labbg_fallback').setOrigin(0).setDepth(0);
     const s = this.add.graphics().setDepth(1);
     for (let row = 0; row < 2; row++) for (let i = 0; i < 6; i++) {
@@ -63,11 +64,12 @@ export default class Lab extends Phaser.Scene {
 
   // --- Photo lab: real facility background + real car/dummy photos ---
   buildRealLab() {
-    this.add.rectangle(W / 2, H / 2, W, H, 0x05080D).setDepth(0);
+    const v = viewBounds(this);
+    fillView(this, 0x05080D, 1, 0);
     this.add.image(LABG.bgX, LABG.bgY, 'img_labbg').setOrigin(0).setDisplaySize(LABG.bgW, LABG.bgH).setDepth(1);
     this.add.image(0, LABG.bgY, 'labtop').setOrigin(0).setDepth(2);
     this.add.image(0, LABG.bgY + LABG.bgH - 150, 'labbot').setOrigin(0).setDepth(2);
-    this.add.rectangle(W / 2, 859, W, 202, 0x05080D).setDepth(3);
+    this.add.rectangle(v.left, 758, v.width, v.bottom - 758, 0x05080D).setOrigin(0).setDepth(3);
     this.carShadow = this.add.image(0, LABG.ground - 3, 'shadow').setDisplaySize(LABG.carW * 1.05, 38).setDepth(4);
     this.carA = this.add.image(0, LABG.ground, 'img_labcar0').setOrigin(0, 1).setDepth(5);
     this.carB = this.add.image(0, LABG.ground, 'img_labcar60').setOrigin(0, 1).setDepth(6).setAlpha(0);

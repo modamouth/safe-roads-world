@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
 import { W, H, COLORS as C, FONT, state, track, REDUCE_MOTION } from '../config.js';
-import { setupCam, T, button, soundToggle, iconButton, panel, toast } from '../ui.js';
+import { setupCam, viewBounds, T, button, soundToggle, iconButton, panel, toast } from '../ui.js';
 import { drawIcon } from '../icons.js';
 import { MAP_ZONES, zoneById } from '../zones.js';
 import { EXPERIENCES } from '../experiences.js';
@@ -29,6 +29,11 @@ export default class MapScene extends Phaser.Scene {
     this.cameras.main.fadeIn(250, 8, 17, 30);
     this.card = null; this.selected = null; this._toast = null; this.leaving = false; // instances are reused between visits
 
+    // The map art must stay aligned with the zone nodes, so it covers the design
+    // area only; a softened copy behind it fills any extra screen space.
+    const v = this.vb = viewBounds(this);
+    const back = cover(this, artKey(this, 'map_bg'), -1, v).setTint(0x8A8A8A);
+    if (back.preFX) back.preFX.addBlur(1, 2, 2, 1.2);
     cover(this, artKey(this, 'map_bg'), 0);
     // Real map art has its own painted road; only the drawn placeholder needs ours.
     if (!this.textures.exists(optKey('map_bg'))) this.drawPath();
@@ -191,8 +196,9 @@ export default class MapScene extends Phaser.Scene {
   // --- chrome --------------------------------------------------------------
   topBar() {
     const g = this.add.graphics().setDepth(1500);
-    g.fillStyle(C.navy, 0.9); g.fillRect(0, 0, W, TOP_H);
-    g.fillStyle(0xFFFFFF, 0.08); g.fillRect(0, TOP_H - 1, W, 1);
+    const v = this.vb;
+    g.fillStyle(C.navy, 0.9); g.fillRect(v.left, v.top, v.width, TOP_H - v.top);
+    g.fillStyle(0xFFFFFF, 0.08); g.fillRect(v.left, TOP_H - 1, v.width, 1);
     iconButton(this, 44, 44, 'back', () => { track('map_nav', { to: 'title' }); this.go('Title'); }).setDepth(2000);
     this.add.text(84, 44, 'Mission Map', { fontFamily: FONT, fontSize: '24px', color: '#FFFFFF', fontStyle: 'bold', resolution: 2 })
       .setOrigin(0, 0.5).setDepth(2000);
@@ -211,8 +217,9 @@ export default class MapScene extends Phaser.Scene {
 
   bottomNav() {
     const g = this.add.graphics().setDepth(1500), iw = W / NAV.length;
-    g.fillStyle(C.navy, 0.97); g.fillRect(0, NAV_Y, W, H - NAV_Y);
-    g.fillStyle(0xFFFFFF, 0.08); g.fillRect(0, NAV_Y, W, 1);
+    const v = this.vb;
+    g.fillStyle(C.navy, 0.97); g.fillRect(v.left, NAV_Y, v.width, v.bottom - NAV_Y);
+    g.fillStyle(0xFFFFFF, 0.08); g.fillRect(v.left, NAV_Y, v.width, 1);
     NAV.forEach((n, i) => {
       const cx = iw * i + iw / 2, active = n.id === 'map', col = active ? C.yellow : 0xB9C6D6;
       const ig = this.add.graphics().setDepth(1600);

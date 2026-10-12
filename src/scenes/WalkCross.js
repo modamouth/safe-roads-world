@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
 import { W, H, COLORS as C, FONT, state, track, REDUCE_MOTION } from '../config.js';
-import { setupCam, T, button, soundToggle, iconButton, makeCaption, panel } from '../ui.js';
+import { setupCam, viewBounds, T, button, soundToggle, iconButton, makeCaption, panel } from '../ui.js';
 import { experienceById } from '../experiences.js';
 import { Sfx } from '../sfx.js';
 
@@ -16,8 +16,8 @@ const LANE_OUT = NEAR_C + CAR_HALF + PED_R;
 const FREEZE_M = 4;                            // freeze when the car is this close behind a pedestrian in its path
 
 // Parked vehicles (occluders) as [y0, y1, kind] in the left parking lane (x 0.2..2.2).
-const PARKED_L = [[-6.6, -1.0, 'van'], [-11.8, -7.2], [-17.0, -12.4], [-22.2, -17.6], [-27.4, -22.8], [-32.6, -28.0], [22, 26.6], [27.2, 31.8]];
-const PARKED_R = [[-20, -15.4], [-11, -6.4], [5.5, 10], [16, 20.6], [26, 30.6]];
+const PARKED_L = [[-6.6, -1.0, 'van'], [-11.8, -7.2], [-17.0, -12.4], [-22.2, -17.6], [-27.4, -22.8], [-32.6, -28.0], [-37.8, -33.2], [-43.0, -38.4], [22, 26.6], [27.2, 31.8], [32.4, 37.0]];
+const PARKED_R = [[-38, -33.4], [-29, -24.4], [-20, -15.4], [-11, -6.4], [5.5, 10], [16, 20.6], [26, 30.6], [33, 37.6]];
 const BODY = [0xC9CED6, 0x2F5D9E, 0xE8E2D6, 0x7A1F2B, 0x3B3F46, 0xD9A441, 0x5C7F6A, 0xF2F2F2];
 
 export const SPOTS = [
@@ -77,10 +77,11 @@ export default class WalkCross extends Phaser.Scene {
     this.occ = PARKED_L.map(([y0, y1]) => ({ x0: 0.2, x1: 2.2, y0, y1 }))
       .concat(PARKED_R.map(([y0, y1]) => ({ x0: 9.6, x1: 11.6, y0, y1 })));
 
+    this.vb = viewBounds(this);
     this.drawStreet();
     this.carG = this.add.graphics().setDepth(15);
     this.fogG = this.make.graphics({ x: 0, y: 0, add: false });
-    this.fog = this.add.renderTexture(0, 0, W, H).setOrigin(0).setDepth(20).setAlpha(0.62);
+    this.fog = this.add.renderTexture(this.vb.left, this.vb.top, this.vb.width, this.vb.height).setOrigin(0).setDepth(20).setAlpha(0.62);
     this.drawParked();
     this.pedG = this.add.graphics().setDepth(40);
     this.ui = this.add.container(0, 0).setDepth(1001);
@@ -101,36 +102,76 @@ export default class WalkCross extends Phaser.Scene {
 
   // --- static street -----------------------------------------------------------
   drawStreet() {
-    const g = this.add.graphics().setDepth(0);
-    g.fillStyle(0x5E646B, 1); g.fillRect(0, 0, W, H);
-    // left buildings (roofs)
-    [[0, 150, 0x6B7076], [150, 340, 0x8A6F5A], [340, 470, 0x5E646B], [470, 700, 0x7B8087], [700, 960, 0x8C5E4A]].forEach(([a, b, c]) => {
-      g.fillStyle(c, 1); g.fillRect(0, a + 2, sx(-4.2), b - a - 4);
+    const g = this.add.graphics().setDepth(0), v = this.vb, top = v.top, bot = v.bottom, ht = v.height;
+    g.fillStyle(0x5E646B, 1); g.fillRect(v.left, top, v.width, ht);
+    // left buildings (roofs); the first and last blocks stretch to the screen edges
+    const rows = [[0, 150, 0x6B7076], [150, 340, 0x8A6F5A], [340, 470, 0x5E646B], [470, 700, 0x7B8087], [700, 960, 0x8C5E4A]];
+    rows.forEach(([a, b, c], i) => {
+      if (i === 0) a = top; if (i === rows.length - 1) b = bot;
+      g.fillStyle(c, 1); g.fillRect(v.left, a + 2, sx(-4.2) - v.left, b - a - 4);
       g.fillStyle(0xFFFFFF, 0.06); g.fillRect(8, a + 12, sx(-4.2) - 24, 6);
     });
     // footpaths
-    g.fillStyle(0xD8C8A6, 1); g.fillRect(sx(-4.2), 0, 4.2 * S, H); g.fillRect(sx(11.8), 0, 4.2 * S, H);
+    g.fillStyle(0xD8C8A6, 1); g.fillRect(sx(-4.2), top, 4.2 * S, ht); g.fillRect(sx(11.8), top, 4.2 * S, ht);
     g.fillStyle(0xC9B892, 1);
-    for (let y = 0; y < H; y += 24) { g.fillRect(sx(-4.2), y, 4.2 * S, 1); g.fillRect(sx(11.8), y, 4.2 * S, 1); }
+    for (let y = Math.floor(top / 24) * 24; y < bot; y += 24) { g.fillRect(sx(-4.2), y, 4.2 * S, 1); g.fillRect(sx(11.8), y, 4.2 * S, 1); }
     // road, kerbs, markings
-    g.fillStyle(0x4A494D, 1); g.fillRect(sx(0), 0, 11.8 * S, H);
-    g.fillStyle(0xB9B6AE, 1); g.fillRect(sx(0) - 3, 0, 3, H); g.fillRect(sx(11.8), 0, 3, H);
+    g.fillStyle(0x4A494D, 1); g.fillRect(sx(0), top, 11.8 * S, ht);
+    g.fillStyle(0xB9B6AE, 1); g.fillRect(sx(0) - 3, top, 3, ht); g.fillRect(sx(11.8), top, 3, ht);
     g.fillStyle(0xF2F2F2, 0.9);
-    for (let y = 0; y < H; y += 40) { g.fillRect(sx(5.9) - 1.5, y, 3, 22); }
-    for (let y = 0; y < H; y += 30) { g.fillRect(sx(2.3) - 1, y, 2, 12); g.fillRect(sx(9.5) - 1, y, 2, 12); }
+    for (let y = Math.floor(top / 40) * 40; y < bot; y += 40) { g.fillRect(sx(5.9) - 1.5, y, 3, 22); }
+    for (let y = Math.floor(top / 30) * 30; y < bot; y += 30) { g.fillRect(sx(2.3) - 1, y, 2, 12); g.fillRect(sx(9.5) - 1, y, 2, 12); }
     // right side: shop opposite the crossing spots, other buildings around it
     const shop0 = sy(16), shop1 = sy(-9);
-    g.fillStyle(0x7B8087, 1); g.fillRect(sx(16), 0, W - sx(16), shop0 - 4);
-    g.fillStyle(0x6B7076, 1); g.fillRect(sx(16), shop1 + 4, W - sx(16), H - shop1);
-    g.fillStyle(0xB5523A, 1); g.fillRect(sx(16), shop0, W - sx(16), shop1 - shop0);
-    for (let y = shop0; y < shop1; y += 16) { g.fillStyle(y / 16 % 2 ? C.yellow : C.navy, 1); g.fillRect(sx(16) - 12, y, 12, 16); }
-    T(this, (sx(16) + W) / 2 + 4, (shop0 + shop1) / 2, 'SHOP', 26, '#FFFFFF', { letterSpacing: 4 }).setAngle(90).setDepth(1);
+    g.fillStyle(0x7B8087, 1); g.fillRect(sx(16), top, v.right - sx(16), shop0 - 4 - top);
+    g.fillStyle(0x6B7076, 1); g.fillRect(sx(16), shop1 + 4, v.right - sx(16), bot - shop1 - 4);
+    this.drawShop(g, shop0, shop1, this.cfg.shopBrand);
     // street trees
     [[-3.2, 30], [-3.2, -14], [-3.2, -30], [12.9, 30], [12.9, -24]].forEach(([x, y]) => {
       g.fillStyle(0x000000, 0.2); g.fillCircle(sx(x) + 3, sy(y) + 4, 20);
       g.fillStyle(0x4F8A3A, 1); g.fillCircle(sx(x), sy(y), 20);
       g.fillStyle(0x6AA84F, 1); g.fillCircle(sx(x) - 5, sy(y) - 5, 11);
     });
+  }
+
+  /** The shop the pedestrian crosses to: generic, or a partner's store branding. */
+  drawShop(g, y0, y1, brand) {
+    const v = this.vb, x0 = sx(16), cx = (x0 + W) / 2 + 4, cy = (y0 + y1) / 2;
+    if (brand !== 'woermann-brock') {
+      g.fillStyle(0xB5523A, 1); g.fillRect(x0, y0, v.right - x0, y1 - y0);
+      for (let y = y0; y < y1; y += 16) { g.fillStyle(y / 16 % 2 ? C.yellow : C.navy, 1); g.fillRect(x0 - 12, y, 12, 16); }
+      T(this, cx, cy, 'SHOP', 26, '#FFFFFF', { letterSpacing: 4 }).setAngle(90).setDepth(1);
+      return;
+    }
+    // Woermann Brock supermarket: red tiled facade, WB hexagon, green "WE CARE" ribbon, "Supermarket" sign.
+    // Drawn approximation; replace with the partner's official logo artwork once approved.
+    const RED = 0xD2232A, GREEN = 0x1F5C3A;
+    g.fillStyle(RED, 1); g.fillRect(x0, y0, v.right - x0, y1 - y0);
+    g.fillStyle(0xFFFFFF, 0.07);
+    for (let y = y0 + 10; y < y1; y += 10) g.fillRect(x0, y, v.right - x0, 1);
+    for (let x = x0 + 10; x < v.right; x += 10) g.fillRect(x, y0, 1, y1 - y0);
+    // glass entrance along the street side
+    g.fillStyle(0xC9D6E0, 1); g.fillRect(x0 - 10, cy - 46, 10, 92);
+    g.fillStyle(0x8FA3B3, 1); g.fillRect(x0 - 10, cy - 1, 10, 2);
+
+    // Sign, rotated to read along the shop like the street-facing facade.
+    const c = this.add.container(cx, cy).setAngle(90).setDepth(1);
+    const s = this.add.graphics(), r = 40, ex = -72;
+    const hex = (rr, ox, oy) => [0, 1, 2, 3, 4, 5].map(i => ({ x: ox + rr * Math.cos(i * Math.PI / 3), y: oy + rr * Math.sin(i * Math.PI / 3) }));
+    s.fillStyle(0x000000, 0.2); s.fillPoints(hex(r + 3, ex + 2, 3), true);
+    s.fillStyle(0xFFFFFF, 1); s.fillPoints(hex(r, ex, 0), true);
+    s.lineStyle(3, RED, 1); s.strokePoints(hex(r - 6, ex, 0), true, true);
+    // ribbon with tails
+    s.fillStyle(0x163F28, 1);
+    s.fillTriangle(ex - 52, 22, ex - 38, 22, ex - 44, 34); s.fillTriangle(ex + 52, 22, ex + 38, 22, ex + 44, 34);
+    s.fillStyle(GREEN, 1); s.fillRoundedRect(ex - 44, 18, 88, 20, 4);
+    s.lineStyle(1.5, 0xFFFFFF, 0.9); s.strokeRoundedRect(ex - 44, 18, 88, 20, 4);
+    // "Supermarket" sign with rules above and below
+    s.fillStyle(0xFFFFFF, 1); s.fillRect(10, -17, 168, 2); s.fillRect(10, 15, 168, 2);
+    c.add([s,
+      T(this, ex, -16, 'W', 22, '#D2232A'), T(this, ex, 4, 'B', 22, '#D2232A'),
+      T(this, ex, 28, 'WE CARE', 11, '#FFFFFF', { letterSpacing: 1 }),
+      T(this, 94, 0, 'Supermarket', 24, '#FFFFFF')]);
   }
 
   drawParked() {
@@ -158,7 +199,7 @@ export default class WalkCross extends Phaser.Scene {
       });
       g.fillPoints(hull(pts).map(([x, y]) => ({ x: sx(x), y: sy(y) })), true);
     });
-    this.fog.clear(); this.fog.draw(g);
+    this.fog.clear(); this.fog.draw(g, -this.vb.left, -this.vb.top);
   }
 
   carRect() { return { x0: NEAR_C - CAR_HALF, x1: NEAR_C + CAR_HALF, y0: this.car.y - CAR_L, y1: this.car.y }; }
@@ -264,7 +305,7 @@ export default class WalkCross extends Phaser.Scene {
     if (!safe) {
       Sfx.chime(false);
       this.drawCar();
-      this.add.rectangle(W / 2, H / 2, W, H, 0x05080D, 0.35).setDepth(50);
+      this.add.rectangle(this.vb.left, this.vb.top, this.vb.width, this.vb.height, 0x05080D, 0.35).setOrigin(0).setDepth(50);
       msg = s.id === 'van'
         ? 'Near miss. The van hid the car from you, and hid you from the driver.'
         : 'Near miss. You could see the car coming, but stepped out anyway.';

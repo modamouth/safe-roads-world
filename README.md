@@ -191,6 +191,26 @@ branch before relying on it.
 - The Badges tab shows "Coming soon".
 - The fixed 540x960 design space scales down on small phones: at 360 px wide,
   everything is about two-thirds size.
+- On a resize or rotation mid-scene, the camera re-centres, but image
+  backgrounds keep the size they were given when the scene started. They
+  refit on the next scene.
+
+## Screen sizes (no letterbox bars)
+
+The game uses Phaser's `Scale.EXPAND`. All layout is in a 540x960 design
+space that is always fully visible and centred. Taller phones (and wide
+desktop windows) show extra world around it instead of empty bars. When you
+build a scene:
+
+- Call `setupCam(this)` first. It also re-centres the camera on resize.
+- Make backgrounds cover `viewBounds(this)` rather than `0..W x 0..H`. Use
+  `duskBg(this)` for the standard gradient, `fillView(this, color)` for a
+  solid fill, or `cover(this, key, depth, viewBounds(this))` for free-standing
+  art.
+- Keep buttons and text inside 540x960. Only backgrounds, bars and road or
+  street drawing should reach into the extra space.
+- Art that other things are positioned against (the Map's zone nodes) stays
+  on the design area; a softened copy behind it fills the rest.
 - Tested headlessly and in-browser during development, but give it a pass on
   your actual target devices (low-end Android, slow connections) before any
   pilot.

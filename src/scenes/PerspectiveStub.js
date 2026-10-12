@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
 import { W, H, COLORS as C, FONT, state } from '../config.js';
-import { setupCam, T, button, soundToggle, iconButton, panel } from '../ui.js';
+import { setupCam, duskBg, T, button, soundToggle, iconButton, panel } from '../ui.js';
 import { drawIcon } from '../icons.js';
 import { experienceById } from '../experiences.js';
 import { Sfx } from '../sfx.js';
@@ -17,8 +17,7 @@ export default class PerspectiveStub extends Phaser.Scene {
     const e = experienceById(data.id), o = e.intro.options.find(p => p.id === data.perspective);
     const guess = state.predictions[e.id + '.' + o.id];
 
-    this.add.image(0, 0, 'bgdusk').setOrigin(0);
-    this.add.image(0, 0, 'vig').setOrigin(0).setDisplaySize(W, H);
+    duskBg(this);
     const back = () => this.go('ExperienceIntro', { id: e.id });
     iconButton(this, 44, 44, 'back', back).setDepth(2000);
     soundToggle(this);

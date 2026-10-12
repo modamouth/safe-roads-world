@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
 import { W, H, COLORS as C, FONT, state, track, REDUCE_MOTION } from '../config.js';
-import { setupCam, T, button, soundToggle, iconButton, panel } from '../ui.js';
+import { setupCam, duskBg, T, button, soundToggle, iconButton, panel } from '../ui.js';
 import { experienceById } from '../experiences.js';
 import { stopping } from '../stopping.js';
 import { fmtM } from './StopDistance.js';
@@ -21,8 +21,7 @@ export default class StopReveal extends Phaser.Scene {
     const calc = v => stopping(v, cfg.reactionS, cfg.decel), r = fmtM;
     state.completed[key] = true;
 
-    this.add.image(0, 0, 'bgdusk').setOrigin(0);
-    this.add.image(0, 0, 'vig').setOrigin(0).setDisplaySize(W, H);
+    duskBg(this);
     iconButton(this, 44, 44, 'back', () => this.go('ExperienceIntro', { id: e.id })).setDepth(2000);
     soundToggle(this);
 

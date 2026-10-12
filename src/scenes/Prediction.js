@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
 import { W, H, COLORS as C, FONT, state, track, REDUCE_MOTION } from '../config.js';
-import { setupCam, T, button, soundToggle, iconButton } from '../ui.js';
+import { setupCam, duskBg, T, button, soundToggle, iconButton } from '../ui.js';
 import { experienceById } from '../experiences.js';
 import { Sfx } from '../sfx.js';
 
@@ -19,8 +19,7 @@ export default class Prediction extends Phaser.Scene {
     this.o = this.e.intro.options.find(o => o.id === data.perspective);
     const q = this.o.predict;
 
-    this.add.image(0, 0, 'bgdusk').setOrigin(0);
-    this.add.image(0, 0, 'vig').setOrigin(0).setDisplaySize(W, H);
+    duskBg(this);
     iconButton(this, 44, 44, 'back', () => this.go('ExperienceIntro', { id: this.e.id })).setDepth(2000);
     soundToggle(this);
 

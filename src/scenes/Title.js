@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
 import { W, H, COLORS as C, FONT, track, REDUCE_MOTION } from '../config.js';
-import { setupCam, T, button, soundToggle, panel } from '../ui.js';
+import { setupCam, viewBounds, T, button, soundToggle, panel } from '../ui.js';
 import { artKey, cover, hero } from '../worldArt.js';
 import { Sfx } from '../sfx.js';
 
@@ -20,8 +20,9 @@ export default class Title extends Phaser.Scene {
     this.cameras.main.fadeIn(300, 8, 17, 30);
 
     // Until a clean title_bg exists, reuse the map painting (same art style).
-    cover(this, artKey(this, ['title_bg', 'map_bg']), 0);
-    this.add.image(0, 0, 'scrim_v').setOrigin(0).setDisplaySize(W, H).setDepth(1);
+    const v = viewBounds(this);
+    cover(this, artKey(this, ['title_bg', 'map_bg']), 0, v);
+    this.add.image(v.left, v.top, 'scrim_v').setOrigin(0).setDisplaySize(v.width, v.height).setDepth(1);
     soundToggle(this);
     this.logo();
 
@@ -60,8 +61,9 @@ export default class Title extends Phaser.Scene {
     if (this.overlay) return;
     const o = this.add.container(0, 0).setDepth(4000);
     // Full-screen blocker: swallows taps so buttons underneath can't fire.
-    const block = this.add.zone(W / 2, H / 2, W, H).setInteractive();
-    const dim = this.add.rectangle(W / 2, H / 2, W, H, 0x05080D, 0.78);
+    const v = viewBounds(this);
+    const block = this.add.zone(W / 2, H / 2, v.width, v.height).setInteractive();
+    const dim = this.add.rectangle(W / 2, H / 2, v.width, v.height, 0x05080D, 0.78);
     o.add([dim, block, panel(this, 32, 120, W - 64, 720, { alpha: 0.97, stroke: 0xFFFFFF, strokeA: 0.12 })]);
 
     o.add(hero(this, ['hero_wave', 'hero_passport'], W / 2, 330, 190, 0));

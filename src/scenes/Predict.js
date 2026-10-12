@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
 import { W, H, DATA, state, track } from '../config.js';
-import { setupCam, T, button, brand, soundToggle } from '../ui.js';
+import { setupCam, viewBounds, T, button, brand, soundToggle } from '../ui.js';
 
 export default class Predict extends Phaser.Scene {
   constructor() { super('Predict'); }
@@ -10,8 +10,9 @@ export default class Predict extends Phaser.Scene {
     track('enter');
 
     const real = this.registry.get('REAL');
-    this.add.image(0, 0, real ? 'img_sky' : 'bgdusk').setOrigin(0).setDisplaySize(W, real ? 370 : H);
-    this.add.image(0, 0, 'vig').setOrigin(0).setDisplaySize(W, H);
+    const v = viewBounds(this);
+    this.add.image(v.left, v.top, real ? 'img_sky' : 'bgdusk').setOrigin(0).setDisplaySize(v.width, real ? 370 - v.top : v.height);
+    this.add.image(v.left, v.top, 'vig').setOrigin(0).setDisplaySize(v.width, v.height);
     brand(this); soundToggle(this);
 
     T(this, W / 2, 200, 'Before we begin', 44, '#FFFFFF');

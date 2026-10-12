@@ -31,10 +31,15 @@ export function artKey(scene, names) {
   return hit ? optKey(hit) : FALLBACK[list[0]];
 }
 
-/** Adds an image scaled to cover the whole 540x960 design space, centred. */
-export function cover(scene, key, depth) {
+/**
+ * Adds an image scaled to cover an area, centred on the design space.
+ * `area` defaults to the 540x960 design space; pass viewBounds(scene) to cover
+ * the whole screen (only for art that nothing else is positioned against).
+ */
+export function cover(scene, key, depth, area) {
+  const a = area || { width: W, height: H };
   const im = scene.add.image(W / 2, H / 2, key).setDepth(depth || 0);
-  im.setScale(Math.max(W / im.width, H / im.height));
+  im.setScale(Math.max(a.width / im.width, a.height / im.height));
   return im;
 }
 

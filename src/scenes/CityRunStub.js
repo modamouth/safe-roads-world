@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
 import { W, H, COLORS as C, FONT } from '../config.js';
-import { setupCam, T, button, soundToggle, iconButton, panel } from '../ui.js';
+import { setupCam, viewBounds, fillView, T, button, soundToggle, iconButton, panel } from '../ui.js';
 import { drawIcon } from '../icons.js';
 import { zoneById } from '../zones.js';
 import { artKey, cover } from '../worldArt.js';
@@ -17,8 +17,8 @@ export default class CityRunStub extends Phaser.Scene {
     this.leaving = false; // scene instances are reused between visits
     const z = zoneById('windhoek');
 
-    cover(this, artKey(this, 'map_bg'), 0);
-    this.add.rectangle(W / 2, H / 2, W, H, 0x05080D, 0.72);
+    cover(this, artKey(this, 'map_bg'), 0, viewBounds(this));
+    fillView(this, 0x05080D, 0.72);
     iconButton(this, 44, 44, 'back', () => this.back()).setDepth(2000);
     soundToggle(this);
 

@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
 import { W, H, COLORS as C, DATA, state, track } from '../config.js';
-import { setupCam, T, button, brand, soundToggle } from '../ui.js';
+import { setupCam, duskBg, T, button, brand, soundToggle } from '../ui.js';
 import { experienceById } from '../experiences.js';
 import { Sfx } from '../sfx.js';
 
@@ -15,8 +15,7 @@ export default class Passport extends Phaser.Scene {
     const done = !!state.completed.speed;
     track('passport_view', { done });
     this.cameras.main.fadeIn(250, 8, 17, 30);
-    this.add.image(0, 0, 'bgdusk').setOrigin(0);
-    this.add.image(0, 0, 'vig').setOrigin(0).setDisplaySize(W, H);
+    duskBg(this);
     brand(this); soundToggle(this);
 
     T(this, W / 2, 112, done ? 'Speed check complete' : 'Your Passport', 38, '#FFFFFF');

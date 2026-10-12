@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
 import { W, H, DATA, COLORS as C, FONT, state, clamp } from '../config.js';
-import { setupCam, T, button, brand, soundToggle } from '../ui.js';
+import { setupCam, duskBg, T, button, brand, soundToggle } from '../ui.js';
 import { Sfx } from '../sfx.js';
 
 export default class Reveal extends Phaser.Scene {
@@ -10,8 +10,7 @@ export default class Reveal extends Phaser.Scene {
     setupCam(this);
     Sfx.init(this);
     this.cameras.main.fadeIn(300, 8, 17, 30);
-    this.add.image(0, 0, 'bgdusk').setOrigin(0);
-    this.add.image(0, 0, 'vig').setOrigin(0).setDisplaySize(W, H);
+    duskBg(this);
     brand(this); soundToggle(this);
 
     const right = state.guess === DATA.answer;

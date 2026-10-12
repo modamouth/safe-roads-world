@@ -24,7 +24,8 @@ new Phaser.Game({
   width: GW,
   height: GH,
   backgroundColor: '#0B1B2E',
-  scale: { mode: Phaser.Scale.FIT, autoCenter: Phaser.Scale.CENTER_BOTH },
+  // EXPAND keeps the whole 540x960 design visible and fills any extra screen space (see ui.setupCam).
+  scale: { mode: Phaser.Scale.EXPAND, autoCenter: Phaser.Scale.CENTER_BOTH },
   render: { antialias: true },
   scene: [Boot, Title, MapScene, CityRunStub, LabMenu, ExperienceIntro, Prediction, PerspectiveStub, StopDistance, StopReveal, WalkCross, WalkReveal, Predict, Drive, Lab, Reveal, Passport]
 });

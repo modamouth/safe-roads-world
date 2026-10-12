@@ -54,7 +54,9 @@ export const EXPERIENCES = [
             note: "We'll reveal the right answer at the end."
           },
           // Crossing scenario: pick where to stand, a car approaches in the near lane at `carKmh`.
-          scenario: { carKmh: 50, decideAtM: 28 },
+          // shopBrand: 'woermann-brock' shows Woermann Brock store branding on the shop across the road.
+          // Needs Woermann Brock's permission before public use; set to null for a generic shop.
+          scenario: { carKmh: 50, decideAtM: 28, shopBrand: 'woermann-brock' },
           // Screens after the scenario (WalkReveal): answer, chart + tip, then "Always remember".
           reveal: {
             heading: 'Be aware, cross with care',

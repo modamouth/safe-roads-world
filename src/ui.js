@@ -2,11 +2,36 @@ import { W, H, Z, COLORS as C, FONT } from './config.js';
 import { Sfx } from './sfx.js';
 import { drawIcon } from './icons.js';
 
+// The game uses Scale.EXPAND: the 540x960 design area is always fully visible
+// and centred, and taller/wider screens show extra world around it (no
+// letterbox bars). Backgrounds should cover viewBounds(), not just 0..W x 0..H.
 export function setupCam(scene) {
   const cam = scene.cameras.main;
   cam.setZoom(Z);
   cam.centerOn(W / 2, H / 2);
   cam.setBackgroundColor('#0B1B2E');
+  const onResize = size => { cam.setSize(size.width, size.height); cam.centerOn(W / 2, H / 2); };
+  scene.scale.on('resize', onResize);
+  scene.events.once('shutdown', () => scene.scale.off('resize', onResize));
+}
+
+/** Visible world area in design px (always contains 0..W x 0..H). */
+export function viewBounds(scene) {
+  const w = scene.scale.width / Z, h = scene.scale.height / Z;
+  return { left: W / 2 - w / 2, top: H / 2 - h / 2, right: W / 2 + w / 2, bottom: H / 2 + h / 2, width: w, height: h };
+}
+
+/** Solid colour over the whole visible area. */
+export function fillView(scene, color, alpha, depth) {
+  const v = viewBounds(scene);
+  return scene.add.rectangle(v.left, v.top, v.width, v.height, color, alpha == null ? 1 : alpha).setOrigin(0).setDepth(depth || 0);
+}
+
+/** The shared dusk gradient + vignette, stretched over the whole visible area. */
+export function duskBg(scene) {
+  const v = viewBounds(scene);
+  scene.add.image(v.left, v.top, 'bgdusk').setOrigin(0).setDisplaySize(v.width, v.height);
+  scene.add.image(v.left, v.top, 'vig').setOrigin(0).setDisplaySize(v.width, v.height);
 }
 
 export function T(scene, x, y, str, size, color, opts) {

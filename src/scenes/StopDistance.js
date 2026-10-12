@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
 import { W, H, COLORS as C, FONT, state, track, clamp, lerpColor, easeOut, REDUCE_MOTION } from '../config.js';
-import { setupCam, T, button, soundToggle, iconButton, makeCaption, panel } from '../ui.js';
+import { setupCam, viewBounds, fillView, T, button, soundToggle, iconButton, makeCaption, panel } from '../ui.js';
 import { drawIcon } from '../icons.js';
 import { experienceById } from '../experiences.js';
 import { artKey } from '../worldArt.js';
@@ -47,9 +47,16 @@ export default class StopDistance extends Phaser.Scene {
     this.ZP = Z_R + CAR_LEN + PRE_EVENT + this.cfg.hazardM;   // pedestrian's world z
     this.pedX = PED_FROM; this.pedOn = false; this.walkT = 0; this.pedGoal = null; this.pickerUi = null; this.target = null;
 
-    this.add.image(0, 0, artKey(this, 'city_backdrop')).setOrigin(0).setDisplaySize(W, HY + 8).setDepth(0);
+    // Sky colour fills any extra screen space around the skyline art.
+    const v = this.vb = viewBounds(this), sky = artKey(this, 'city_backdrop');
+    fillView(this, sky === 'sky' ? 0x132347 : 0x58A7F4, 1, 0);
+    if (v.width > W) {   // wide screens: a softened, stretched copy fills the sides
+      const side = this.add.image(W / 2, HY + 8, sky).setOrigin(0.5, 1).setDisplaySize(v.width, (HY + 8) * v.width / W).setDepth(0).setTint(0xB0B0B0);
+      if (side.preFX) side.preFX.addBlur(1, 2, 2, 1.2);
+    }
+    this.add.image(0, 0, sky).setOrigin(0).setDisplaySize(W, HY + 8).setDepth(0);
     this.roadG = this.add.graphics().setDepth(1);
-    this.add.rectangle(W / 2, HY + 2, W, 10, COL.haze, 0.55).setDepth(2);
+    this.add.rectangle(v.left, HY - 3, v.width, 10, COL.haze, 0.55).setOrigin(0).setDepth(2);
     this.buildScenery();
 
     const carKey = this.real ? 'img_suv' : 'carRear';
@@ -60,7 +67,7 @@ export default class StopDistance extends Phaser.Scene {
       .setTint(0xFF2A2A).setAlpha(0).setScale(0.42).setDepth(601)
       .setPosition(VPX + (fx - 0.5) * this.car.displayWidth, CAR_Y - (1 - fy) * this.car.displayHeight));
 
-    this.dim = this.add.rectangle(W / 2, H / 2, W, H, 0x05080D, 0).setDepth(700);
+    this.dim = this.add.rectangle(v.left, v.top, v.width, v.height, 0x05080D, 0).setOrigin(0).setDepth(700);
     iconButton(this, 44, 44, 'back', () => this.go('ExperienceIntro', { id: this.e.id })).setDepth(2000);
     soundToggle(this);
     this.cap = makeCaption(this, 150, 1000);
@@ -137,17 +144,18 @@ export default class StopDistance extends Phaser.Scene {
 
   drawRoad() {
     const g = this.roadG; g.clear();
-    for (let y = HY + 1; y < H; y += 4) {
+    const vb = this.vb;
+    for (let y = HY + 1; y < vb.bottom; y += 4) {
       const z = F * CAMH / (y + 2 - HY), k = F / z, wz = this.pos + z;
       const fog = clamp((z - 30) / 240, 0, 1) * 0.8;
       const col = c => lerpColor(c, COL.haze, fog);
       const seg = (m0, m1, c, minW) => {
         let a = VPX + m0 * k, b = VPX + m1 * k;
         if (minW && b - a < minW) { const m = (a + b) / 2; a = m - minW / 2; b = m + minW / 2; }
-        a = clamp(a, -4, W + 4); b = clamp(b, -4, W + 4);
+        a = clamp(a, vb.left - 4, vb.right + 4); b = clamp(b, vb.left - 4, vb.right + 4);
         if (b > a) { g.fillStyle(col(c), 1); g.fillRect(a, y, b - a, 5); }
       };
-      g.fillStyle(col(Math.floor(wz / 1.5) & 1 ? COL.walk : COL.walk2), 1); g.fillRect(0, y, W, 5);
+      g.fillStyle(col(Math.floor(wz / 1.5) & 1 ? COL.walk : COL.walk2), 1); g.fillRect(vb.left, y, vb.width, 5);
       seg(KERB_L - 0.25, KERB_L, COL.kerb);
       seg(KERB_L, KERB_R, Math.floor(wz / 6) & 1 ? COL.asph : COL.asph2);
       seg(KERB_R, KERB_R + 0.25, COL.kerb);

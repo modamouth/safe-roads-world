@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
 import { W, H, COLORS as C, FONT, state, track } from '../config.js';
-import { setupCam, T, button, soundToggle, iconButton, toast } from '../ui.js';
+import { setupCam, duskBg, T, button, soundToggle, iconButton, toast } from '../ui.js';
 import { drawIcon } from '../icons.js';
 import { zoneById } from '../zones.js';
 import { EXPERIENCES } from '../experiences.js';
@@ -19,8 +19,7 @@ export default class LabMenu extends Phaser.Scene {
     this.leaving = false; this._toast = null; // scene instances are reused between visits
     const z = zoneById('lab');
 
-    this.add.image(0, 0, 'bgdusk').setOrigin(0);
-    this.add.image(0, 0, 'vig').setOrigin(0).setDisplaySize(W, H);
+    duskBg(this);
     iconButton(this, 44, 44, 'back', () => { track('map_nav', { from: 'lab', to: 'map' }); this.go('Map', { select: 'lab' }); }).setDepth(2000);
     soundToggle(this);
 

@@ -3,7 +3,7 @@ import {
   W, H, HY, ROAD_HW, PXM, VF, VO, SPAN, IMPACT_Z, EDGE_COLOR,
   COLORS as C, SEV, state, track, clamp, lerp, easeOut, lerpColor, REDUCE_MOTION, DATA
 } from '../config.js';
-import { setupCam, T, button, brand, soundToggle, makeCaption, pop, Debris } from '../ui.js';
+import { setupCam, viewBounds, T, button, brand, soundToggle, makeCaption, pop, Debris } from '../ui.js';
 import { Sfx } from '../sfx.js';
 
 const KINDS = {
@@ -25,14 +25,11 @@ export default class Drive extends Phaser.Scene {
     this.curve = 0.5; this.curveTarget = 0.5; this.slow = 1; this.hitStop = 0;
     this.kuduLx = -1.6; this.kuduHop = 0; this.hit = false; this.kudu = null; this.onc = null;
 
-    if (this.real) {
-      this.add.image(0, 0, 'img_sky').setOrigin(0).setDisplaySize(W, HY + 40).setDepth(0);
-    } else {
-      this.add.image(0, 0, 'sky').setOrigin(0).setDisplaySize(W, HY + 40).setDepth(0);
-    }
+    const v = this.vb = viewBounds(this);
+    this.add.image(v.left, v.top, this.real ? 'img_sky' : 'sky').setOrigin(0).setDisplaySize(v.width, HY + 40 - v.top).setDepth(0);
     this.roadG = this.add.graphics().setDepth(1);
-    if (this.real) this.add.tileSprite(0, HY, W, H - HY, 'grain').setOrigin(0).setAlpha(0.12).setDepth(2);
-    if (this.real) this.add.image(0, HY - 30, 'hzfade').setOrigin(0).setDepth(3);
+    if (this.real) this.add.tileSprite(v.left, HY, v.width, v.bottom - HY, 'grain').setOrigin(0).setAlpha(0.12).setDepth(2);
+    if (this.real) this.add.image(v.left, HY - 30, 'hzfade').setOrigin(0).setDisplaySize(v.width, 80).setDepth(3);
 
     this.buildScenery();
 
@@ -40,7 +37,7 @@ export default class Drive extends Phaser.Scene {
     this.car = this.add.image(W / 2, 806, this.real ? 'img_suv' : 'carRear').setOrigin(0.5, 1).setDepth(600);
     this.car.setScale(this.real ? 190 / this.car.width : 0.95);
 
-    this.add.image(0, 0, 'vig').setOrigin(0).setDisplaySize(W, H).setDepth(900);
+    this.add.image(v.left, v.top, 'vig').setOrigin(0).setDisplaySize(v.width, v.height).setDepth(900);
     this.deb = new Debris(this, 960);
     brand(this); soundToggle(this);
 
@@ -203,14 +200,14 @@ export default class Drive extends Phaser.Scene {
   drawRoad() {
     const g = this.roadG; g.clear();
     const S = 4, span = H - HY;
-    for (let y = HY; y < H; y += S) {
+    for (let y = HY; y < this.vb.bottom; y += S) {
       const t = (y + S * 0.5 - HY) / span, z = 8 / t, wz = this.pos + z;
       const st = Math.floor(wz / 16) & 1;
       const fog = Math.pow(1 - t, 2.4) * 0.88;
       const hw = ROAD_HW * t;
       const off = this.curve * Math.pow(1 - t, 2) * 260;
       const cx = W / 2 - this.camX * hw + off;
-      g.fillStyle(lerpColor(st ? C.grassA : C.grassB, C.haze, fog), 1); g.fillRect(0, y, W, S + 1);
+      g.fillStyle(lerpColor(st ? C.grassA : C.grassB, C.haze, fog), 1); g.fillRect(this.vb.left, y, this.vb.width, S + 1);
       g.fillStyle(lerpColor(C.gravel, C.haze, fog), 1); g.fillRect(cx - hw * 1.22, y, hw * 2.44, S + 1);
       g.fillStyle(lerpColor(st ? C.asphalt : C.asphalt2, C.haze, fog), 1); g.fillRect(cx - hw, y, hw * 2, S + 1);
       const ew = Math.max(1, hw * 0.05);

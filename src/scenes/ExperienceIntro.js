@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
 import { W, H, COLORS as C, track } from '../config.js';
-import { setupCam, T, soundToggle, iconButton, toast } from '../ui.js';
+import { setupCam, duskBg, T, soundToggle, iconButton, toast } from '../ui.js';
 import { drawIcon } from '../icons.js';
 import { experienceById } from '../experiences.js';
 import { Sfx } from '../sfx.js';
@@ -19,8 +19,7 @@ export default class ExperienceIntro extends Phaser.Scene {
     const e = experienceById(data && data.id);
     this.e = e;
 
-    this.add.image(0, 0, 'bgdusk').setOrigin(0);
-    this.add.image(0, 0, 'vig').setOrigin(0).setDisplaySize(W, H);
+    duskBg(this);
     iconButton(this, 44, 44, 'back', () => this.go('LabMenu')).setDepth(2000);
     soundToggle(this);
     if (!e || !e.intro) { T(this, W / 2, H / 2, 'Coming soon', 30, '#FFFFFF'); return; }
