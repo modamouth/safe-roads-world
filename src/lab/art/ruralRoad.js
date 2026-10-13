@@ -1,0 +1,247 @@
+// Chase view down a Namibian rural road, drawn in perspective (no video).
+// World units are metres; z runs forward from the camera, x across the road
+// (left negative; we drive on the left).
+//
+//   params: {
+//     time: 'day' | 'dusk' | 'night', surface: 'tar' | 'gravel', weather: 'clear' | 'rain' | 'dust' | 'fog',
+//     hazard: 'cattle' | 'donkey' | 'kudu' | 'none', kmh, seeM (how far ahead you can see),
+//     reactionS, decel   (for braking tests), mode: 'scene' | 'stop' | 'microsleep'
+//   }
+//   setState(s, vars) — 'stop': drive at s.kmh; the hazard appears where it first
+//     becomes visible (s.seeM) and the car brakes after the reaction time. Writes
+//     vars.kmh, vars.seeM, vars.stopM, vars.gapM (metres to spare, negative if not),
+//     vars.hitKmh (speed on reaching the hazard; the scene freezes before contact).
+//   'microsleep': eyes close for s.seconds at s.kmh; writes vars.distM.
+//   'scene': restyles the view (time, weather, beam).
+import { COLORS as C, clamp, lerpColor, REDUCE_MOTION } from '../../config.js';
+import { QUALITY } from '../../quality.js';
+import { stopping, impactKmh, distanceAt } from '../core/derive.js';
+import { t } from '../content.js';
+import { clipTo, label } from './common.js';
+
+const CAMH = 5.5, Z_R = 19, CAR_LEN = 4.5, CAR_W = 1.85;
+const EDGE_L = -1.9, CENTRE = 1.7, EDGE_R = 5.3;
+const SKY = { day: [0x7FB8E6, 0xD9ECF7], dusk: [0x253A6B, 0xF2A65A], night: [0x060B16, 0x18243A] };
+const HAZE = { clear: 0xE6D7BE, rain: 0x8A97A6, dust: 0xC9A06A, fog: 0xC8CDD2 };
+
+// Simple animal silhouettes, generated once.
+function animalTexture(scene, kind) {
+  const key = 'lab_' + kind;
+  if (scene.textures.exists(key)) return key;
+  const g = scene.make.graphics({ x: 0, y: 0, add: false });
+  const body = kind === 'donkey' ? 0x8E8A84 : 0x5A4030;
+  g.fillStyle(body, 1);
+  if (kind === 'donkey') {
+    g.fillEllipse(60, 52, 90, 44); g.fillRect(24, 60, 10, 46); g.fillRect(86, 60, 10, 46); g.fillRect(40, 66, 9, 40); g.fillRect(72, 66, 9, 40);
+    g.fillEllipse(112, 34, 30, 22); g.fillTriangle(104, 26, 108, 2, 114, 26); g.fillTriangle(114, 24, 122, 2, 124, 26);
+  } else {
+    g.fillEllipse(62, 50, 104, 50); g.fillRect(20, 58, 12, 48); g.fillRect(92, 58, 12, 48); g.fillRect(38, 64, 11, 42); g.fillRect(74, 64, 11, 42);
+    g.fillEllipse(118, 40, 30, 26); g.fillStyle(0xE8E2D6, 1); g.fillTriangle(110, 30, 102, 18, 114, 28); g.fillTriangle(126, 28, 134, 16, 122, 30);
+  }
+  g.generateTexture(key, 140, 108); g.destroy();
+  return key;
+}
+
+export default function create(scene, parent, p, a) {
+  const c = scene.add.container(0, 0); parent.add(c);
+  const HY = a.y + a.h * 0.34, CAR_Y = a.y + a.h - 8, F = (CAR_Y - HY) * Z_R / CAMH, VPX = a.x + a.w / 2;
+  const look = { time: p.time || 'dusk', weather: p.weather || 'clear', surface: p.surface || 'tar', seeM: p.seeM || 150 };
+  const st = { pos: 0, kmh: p.kmh || 80, phase: 'cruise', drift: 0, hazardZ: null, eyes: 1, t: 0 };
+
+  const sky = scene.add.graphics(); const road = scene.add.graphics();
+  c.add([sky, road]);
+  const scn = [];
+  const add = (tex, wz, xm, sizeM, by, tint) => {
+    if (!scene.textures.exists(tex)) return null;
+    const im = scene.add.image(0, 0, tex).setOrigin(0.5, 1).setVisible(false);
+    Object.assign(im, { wz, xm, sizeM, by: by || 'h', baseTint: tint || 0xFFFFFF });
+    c.add(im); scn.push(im); return im;
+  };
+  const SPAN = 600, dens = QUALITY.density;
+  for (let z = 25; z < SPAN; z += 34 / dens) { add('acacia', z, -8 - (z * 7) % 6, 7, 'h', 0x8A7A5E); add('acacia', z + 17, 10 + (z * 3) % 5, 7, 'h', 0x8A7A5E); }
+  for (let z = 15; z < SPAN; z += 22 / dens) { add('bush', z, -4.6 - (z % 3), 1.6, 'h', 0x9A8A5E); add('bush', z + 9, 8 + (z % 4), 1.6, 'h', 0x9A8A5E); }
+  for (let z = 10; z < SPAN; z += 12) { add('post', z, -4.2, 1.2); add('post', z + 6, 7.4, 1.2); }
+  const hazardKey = p.hazard && p.hazard !== 'none' ? (p.hazard === 'kudu' ? 'kudu' : animalTexture(scene, p.hazard)) : null;
+  const animal = hazardKey ? add(hazardKey, 9999, -0.3, p.hazard === 'kudu' ? 2.4 : 2.3, 'w') : null;
+  const eyes = scene.add.graphics(); c.add(eyes);
+  const carKey = scene.textures.exists('img_suv') && scene.registry.get('REAL') ? 'img_suv' : 'carRear';
+  const car = scene.add.image(VPX, CAR_Y, carKey).setOrigin(0.5, 1);
+  car.setScale((CAR_W * F / Z_R) / car.width); c.add(car);
+  const brakeGlow = scene.add.graphics(); c.add(brakeGlow);
+  const fx = scene.add.graphics(); c.add(fx);
+  const hud = scene.add.container(0, 0); c.add(hud);
+  const blackout = scene.add.rectangle(a.x, a.y, a.w, a.h, 0x000000, 1).setOrigin(0).setAlpha(0); c.add(blackout);
+  const counter = label(scene, a.x + a.w / 2, a.y + a.h / 2, '', 34, '#FFFFFF').setAlpha(0); c.add(counter);
+
+  const ahead = z => z - Z_R - CAR_LEN;   // metres in front of our bumper
+  // How visible something at distance d is (1 = fully lit/clear, 0 = invisible).
+  const vis = d => {
+    if (look.time === 'night') return clamp(1 - (d - look.seeM * 0.92) / (look.seeM * 0.18), 0.04, 1);
+    if (look.weather === 'fog' || look.weather === 'dust') return clamp(1 - (d - look.seeM * 0.7) / (look.seeM * 0.6), 0.05, 1);
+    return 1;
+  };
+  const dark = () => (look.time === 'night' ? 0x05070C : HAZE[look.weather]);
+
+  const drawSky = () => {
+    sky.clear();
+    const [top, hor] = SKY[look.time];
+    sky.fillGradientStyle(top, top, hor, hor, 1); sky.fillRect(a.x, a.y, a.w, HY - a.y + 4);
+    if (look.time !== 'night') { sky.fillStyle(0x6B5A44, 0.6); sky.fillTriangle(a.x, HY, a.x + a.w * 0.25, HY - 22, a.x + a.w * 0.5, HY); sky.fillTriangle(a.x + a.w * 0.55, HY, a.x + a.w * 0.8, HY - 14, a.x + a.w, HY); }
+    if (look.weather !== 'clear') { sky.fillStyle(HAZE[look.weather], look.weather === 'rain' ? 0.35 : 0.6); sky.fillRect(a.x, a.y, a.w, HY - a.y + 4); }
+  };
+
+  const drawRoad = () => {
+    const g = road; g.clear();
+    const gravel = look.surface === 'gravel';
+    for (let y = HY + 1; y < a.y + a.h; y += 3) {
+      const z = F * CAMH / (y + 1.5 - HY), k = F / z, wz = st.pos + z, d = ahead(z);
+      const v = vis(d), fog = clamp((z - 30) / 400, 0, 1) * 0.5;
+      const shade = col0 => lerpColor(lerpColor(col0, HAZE[look.weather], fog), dark(), 1 - v);
+      const seg = (m0, m1, col0, minW) => {
+        let x0 = VPX + (m0 - st.drift) * k, x1 = VPX + (m1 - st.drift) * k;
+        if (minW && x1 - x0 < minW) { const m = (x0 + x1) / 2; x0 = m - minW / 2; x1 = m + minW / 2; }
+        x0 = clamp(x0, a.x - 4, a.x + a.w + 4); x1 = clamp(x1, a.x - 4, a.x + a.w + 4);
+        if (x1 > x0) { g.fillStyle(shade(col0), 1); g.fillRect(x0, y, x1 - x0, 4); }
+      };
+      g.fillStyle(shade(Math.floor(wz / 14) & 1 ? 0xD6A04A : 0xCB9542), 1); g.fillRect(a.x, y, a.w, 4);
+      if (gravel) {
+        seg(EDGE_L - 1.2, EDGE_R + 1.2, Math.floor(wz / 5) & 1 ? 0xC8A98C : 0xBF9F82);
+        if (look.weather === 'dust' || p.mode === 'scene') seg(-0.6, 0.6, 0xB5937A);   // wheel ruts
+      } else {
+        seg(EDGE_L - 0.9, EDGE_R + 0.9, 0xC8A98C);
+        seg(EDGE_L - 0.15, EDGE_R + 0.15, Math.floor(wz / 8) & 1 ? 0x403E41 : 0x484547);
+        seg(EDGE_L - 0.07, EDGE_L + 0.07, 0xFFCB2B, 1); seg(EDGE_R - 0.07, EDGE_R + 0.07, 0xFFCB2B, 1);
+        if ((((wz % 12) + 12) % 12) < 4) seg(CENTRE - 0.07, CENTRE + 0.07, 0xF2F2F2, 1);
+      }
+    }
+    // dipped/main beam glow on the road at night
+    if (look.time === 'night') {
+      const reach = Math.min(look.seeM, 160), yR = HY + F * CAMH / (reach + Z_R + CAR_LEN);
+      g.fillStyle(0xFFF2B0, 0.08); g.fillTriangle(VPX - a.w * 0.32, CAR_Y, VPX + a.w * 0.32, CAR_Y, VPX - st.drift * 6, yR);
+    }
+  };
+
+  const drawScenery = () => {
+    eyes.clear();
+    scn.forEach(o => {
+      const z = o.wz - st.pos;
+      if (z < 7 || z > 520) { o.setVisible(false); if (o !== animal && z < 7) o.wz += SPAN; return; }
+      const kk = F / z, x = VPX + (o.xm - st.drift) * kk, y = HY + F * CAMH / z;
+      const sc = o.by === 'w' ? o.sizeM * kk / o.width : o.sizeM * kk / o.height;
+      const v = vis(ahead(z));
+      o.setVisible(true).setPosition(x, y).setScale(sc).setDepth(-z);
+      o.setTint(lerpColor(o.baseTint, dark(), 1 - v)).setAlpha(clamp(1.2 - z / 520, 0.25, 1));
+      // At night, an animal beyond the lights shows only as eyeshine.
+      if (o === animal && look.time === 'night' && v < 0.5) {
+        o.setAlpha(0.15);
+        eyes.fillStyle(0xFFF6C8, 0.9); eyes.fillCircle(x + o.displayWidth * 0.36, y - o.displayHeight * 0.68, Math.max(1.2, kk * 0.06)); eyes.fillCircle(x + o.displayWidth * 0.42, y - o.displayHeight * 0.68, Math.max(1.2, kk * 0.06));
+      }
+    });
+    c.sort('depth');
+    // keep overlays on top after sorting
+    [eyes, car, brakeGlow, fx, hud, blackout, counter].forEach(o => c.bringToTop(o));
+  };
+
+  const drawWeather = () => {
+    fx.clear();
+    if (look.weather === 'rain') {
+      fx.lineStyle(1, 0xDDE6F0, 0.45);
+      for (let i = 0; i < 40 * QUALITY.density; i++) { const x = a.x + ((i * 97 + st.t * 300) % a.w), y = a.y + ((i * 53 + st.t * 900) % a.h); fx.lineBetween(x, y, x - 4, y + 14); }
+    }
+    if (look.weather === 'dust') { fx.fillStyle(0xC9A06A, 0.18); fx.fillRect(a.x, a.y, a.w, a.h); }
+  };
+
+  const ruler = (seeM, stopM, ok) => {
+    hud.removeAll(true);
+    const z1 = seeM + Z_R + CAR_LEN, y1 = HY + F * CAMH / z1;
+    const gfx = scene.add.graphics(); hud.add(gfx);
+    gfx.lineStyle(2, 0xFFFFFF, 0.9); gfx.lineBetween(a.x + 30, y1, a.x + a.w - 30, y1);
+    hud.add(label(scene, a.x + 14, y1 - 12, t('art.road.seen', { m: Math.round(seeM) }), 13, '#FFFFFF', { backgroundColor: '#05080DCC', padding: { x: 5, y: 2 } }).setOrigin(0, 0.5));
+    if (stopM != null) {
+      hud.add(label(scene, a.x + a.w / 2, a.y + 22, t(ok ? 'art.road.stopped' : 'art.road.short', { m: Math.round(Math.abs(seeM - stopM)) }), 15, '#FFFFFF',
+        { backgroundColor: ok ? '#1E6B45' : '#8E2A2D', padding: { x: 8, y: 4 } }));
+    }
+  };
+
+  const draw = () => { drawRoad(); drawScenery(); drawWeather(); };
+  drawSky(); draw();
+
+  let run = null;
+  const inst = {
+    setState(s, vars) {
+      Object.assign(look, { time: s.time || look.time, weather: s.weather || look.weather, surface: s.surface || look.surface, seeM: s.seeM || look.seeM });
+      drawSky();
+      const mode = s.mode || p.mode || 'scene';
+      if (mode === 'scene') { if (s.kmh) st.kmh = s.kmh; draw(); return null; }
+      if (mode === 'microsleep') return inst.microsleep(s.kmh || p.kmh, s.seconds, vars);
+      return inst.stopTest(s.kmh, look.seeM, s.reactionS || p.reactionS, s.decel || p.decel, vars);
+    },
+    stopTest(kmh, seeM, reactionS, decel, vars) {
+      const s = stopping(kmh, reactionS, decel), ok = s.total <= seeM;
+      const hit = ok ? 0 : impactKmh(kmh, seeM, reactionS, decel);
+      Object.assign(vars, { kmh, seeM: Math.round(seeM), stopM: Math.round(s.total), gapM: Math.round(seeM - s.total), hitKmh: Math.round(hit) });
+      hud.removeAll(true); brakeGlow.clear(); car.y = CAR_Y;
+      st.kmh = kmh; st.pos = 0; st.drift = 0;
+      // The hazard sits exactly where it first becomes visible.
+      if (animal) animal.wz = seeM + Z_R + CAR_LEN + 40;   // 40 m of approach before it comes into view
+      return new Promise(res => {
+        run = { t: -40 / (kmh / 3.6), kmh, seeM, s, ok, res, reactionS, decel, braking: false, startPos: null };
+        if (REDUCE_MOTION) { // jump straight to the outcome
+          st.pos = 40 + Math.min(s.total, seeM - 4); finish();
+        }
+      });
+    },
+    microsleep(kmh, seconds, vars) {
+      const d = distanceAt(kmh, seconds);
+      Object.assign(vars, { kmh, seconds, distM: Math.round(d) });
+      hud.removeAll(true);
+      return new Promise(res => {
+        run = { micro: true, t: 0, kmh, seconds, d, res };
+        if (REDUCE_MOTION) { blackout.setAlpha(0); counter.setAlpha(0); run = null; res(); }
+      });
+    },
+    update(time, dt) {
+      st.t += dt;
+      if (run && run.micro) {
+        const r = run, v = r.kmh / 3.6;
+        r.t += dt;
+        st.pos += v * dt;
+        const k = clamp(r.t / r.seconds, 0, 1);
+        blackout.setAlpha(r.t < 0.25 ? r.t / 0.25 : r.t > r.seconds ? clamp(1 - (r.t - r.seconds) / 0.4, 0, 1) : 1);
+        counter.setAlpha(blackout.alpha).setText(Math.round(distanceAt(r.kmh, Math.min(r.t, r.seconds))) + ' m');
+        st.drift = -Math.sin(k * Math.PI * 0.5) * 1.6;                       // drifting towards the edge
+        if (r.t > r.seconds + 0.45) { run = null; blackout.setAlpha(0); counter.setAlpha(0); st.drift = 0; draw(); r.res(); return; }
+      } else if (run) {
+        const r = run, v = r.kmh / 3.6;
+        r.t += dt;
+        if (r.t < 0) st.pos += v * dt;                                       // approach until the hazard is first visible
+        else {
+          const tb = r.t - r.reactionS;
+          let d;
+          if (tb <= 0) d = v * r.t;
+          else { if (!r.braking) { r.braking = true; brakeGlow.fillStyle(0xFF2A2A, 0.9); brakeGlow.fillCircle(car.x - car.displayWidth * 0.33, car.y - car.displayHeight * 0.5, 5); brakeGlow.fillCircle(car.x + car.displayWidth * 0.33, car.y - car.displayHeight * 0.5, 5); }
+            const tt = Math.min(tb, v / r.decel); d = v * r.reactionS + v * tt - 0.5 * r.decel * tt * tt; }
+          if (r.startPos == null) r.startPos = st.pos;   // where the hazard first became visible
+          st.pos = r.startPos + d;
+          if (!r.ok && d >= r.seeM - 4) finish();
+          else if (r.braking && d >= r.s.total - 0.01) finish();
+        }
+      } else if (p.mode === 'scene' || !run) {
+        st.pos += (st.kmh / 3.6) * dt * 0.35;                                // slow idle cruise
+      }
+      draw();
+    },
+    destroy() {}
+  };
+  function finish() {
+    const r = run; if (!r) return;
+    run = null;
+    ruler(r.seeM, r.s.total, r.ok);
+    if (!r.ok) { const dim = scene.add.rectangle(a.x, a.y, a.w, a.h, 0x05080D, 0.35).setOrigin(0); hud.addAt(dim, 0); }
+    draw();
+    r.res();
+  }
+  const m = clipTo(scene, c, a);
+  inst.destroy = () => { c.destroy(); m.destroy(); };
+  return inst;
+}

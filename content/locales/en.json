@@ -1,0 +1,212 @@
+{
+  "lab": {
+    "missing": "This experience isn't available.",
+    "back": "Back",
+    "step": "Step {n} of {of}",
+    "draftBadge": "DRAFT CONTENT: NOT YET APPROVED",
+    "start": "Start",
+    "resume": "Resume",
+    "startOver": "Start over",
+    "playAgain": "Play again",
+    "stamped": "✓ Stamped in your Passport",
+    "pickTopic": "Choose a topic",
+    "done": "Done",
+    "continue": "Continue",
+    "confirm": "Confirm",
+    "check": "Check",
+    "next": "Next",
+    "previous": "Previous",
+    "finish": "Finish",
+    "tryAgain": "Try again",
+    "tryAnother": "Try another",
+    "loading": "Loading…",
+    "error": "Something went wrong showing this part.",
+    "skipScene": "Skip this part",
+    "unverified": "Placeholder figure: the source is still being checked.",
+    "source": "Source: {list}",
+    "sourcePending": "Source: still being checked.",
+    "sourcePartly": "Some sources are still being checked.",
+    "stampWord": "LEARNING LAB",
+    "topicDone": "Well done",
+    "expStamp": "You've finished every topic. A new stamp is in your Passport.",
+    "topicStamp": "A new stamp is in your Passport.",
+    "alreadyStamped": "You already have this stamp. Thanks for practising again.",
+    "nextTopic": "Next: {topic}",
+    "passport": "My Passport",
+    "toLab": "Learning Lab"
+  },
+  "menu": {
+    "subtitle": "Choose something to learn and try",
+    "passport": "My Passport",
+    "comingSoon": "Coming soon",
+    "done": "✓ Done",
+    "progress": "{n} of {of} topics",
+    "minutes": "{n} min",
+    "play": "Play",
+    "labProgress": "{n} of {of} experiences done"
+  },
+  "notice": {
+    "heading": "A note before you start",
+    "help": "If this is hard for you, you can skip the parts about injuries and still finish the topic. If a crash has affected you, the support links at the end can help.",
+    "continue": "Continue",
+    "skip": "Skip the parts about injuries"
+  },
+  "predict": {
+    "eyebrow": "Your best guess",
+    "note": "Pick one. You'll find out at the end."
+  },
+  "verdict": {
+    "good": "Good choice",
+    "ok": "Not the best",
+    "bad": "Not safe"
+  },
+  "choice": {
+    "chose": "You chose: {option}"
+  },
+  "toggle": {
+    "tryAll": "Try every option to continue"
+  },
+  "quiz": {
+    "count": "Question {n} of {of}",
+    "selectAll": "Select all that apply",
+    "yourAnswer": "Your answer",
+    "rightAnswer": "Right answer",
+    "correct": "Correct",
+    "partly": "Partly right",
+    "incorrect": "Not quite",
+    "seeScore": "See your score",
+    "scoreEyebrow": "Your score",
+    "score": "{n} out of {of}",
+    "introCount": "{n} questions"
+  },
+  "hotspot": {
+    "mark": {
+      "sel": "selected",
+      "ok": "correct",
+      "wrong": "not one of them",
+      "missed": "missed"
+    },
+    "legend": {
+      "ok": "✓ found",
+      "wrong": "✕ not one of them",
+      "missed": "! missed"
+    },
+    "title": {
+      "green": "You found them all",
+      "orange": "Almost",
+      "red": "Not quite"
+    }
+  },
+  "place": {
+    "back": "▼ Back",
+    "forward": "▲ Forward",
+    "backLong": "Move back",
+    "forwardLong": "Move forward",
+    "confirm": "Confirm position",
+    "moved": "Moved",
+    "help": "Drag the vehicle, or use the Forward and Back buttons, then confirm."
+  },
+  "point": {
+    "label": "Point {letter}: {label}",
+    "seen": "already tried",
+    "see": "See point {letter}",
+    "tryAnother": "Try another point"
+  },
+  "stepper": {
+    "count": "{n} of {of}"
+  },
+  "chart": {
+    "pictogram": "{n} in {of}"
+  },
+  "reveal": {
+    "answer": "The answer",
+    "right": "You got it",
+    "wrong": "Not quite",
+    "yours": "Your guess: {guess}"
+  },
+  "remember": {
+    "heading": "Take it with you"
+  },
+  "stories": {
+    "eyebrow": "A story",
+    "read": "Read the story",
+    "skip": "Skip"
+  },
+  "resources": {
+    "heading": "Find out more"
+  },
+  "passport": {
+    "title": "Your Passport",
+    "stamps": "{n} of {of} Learning Lab stamps",
+    "empty": "Finish a Learning Lab topic to earn your first stamp.",
+    "save": "Save my Passport on WhatsApp",
+    "saveStub": "Prototype only. In the pilot this opens the WhatsApp save flow.",
+    "toLab": "Learning Lab",
+    "map": "Mission Map",
+    "saved": "Progress is saved on this device."
+  },
+  "art": {
+    "risk": {
+      "high": "High risk",
+      "mid": "Some risk",
+      "low": "Low risk"
+    },
+    "gear": {
+      "helmet": "Helmet",
+      "jacket": "Jacket",
+      "gloves": "Gloves",
+      "trousers": "Trousers",
+      "boots": "Boots",
+      "visible": "Be seen"
+    },
+    "passing": {
+      "close": "✕ too close",
+      "room": "✓ room"
+    },
+    "feature": {
+      "seatbelt": "Seatbelt",
+      "airbag": "Airbag",
+      "abs": "ABS brakes",
+      "esc": "Stability control (ESC)",
+      "tyres": "Tyres",
+      "lights": "Headlights",
+      "headrest": "Head restraint",
+      "mirrors": "Mirrors"
+    },
+    "esc": {
+      "on": "✓ With ESC: stays on the road",
+      "off": "✕ Without ESC: runs wide"
+    },
+    "belt": {
+      "on": "✓ Belted: held in the seat",
+      "off": "✕ No belt: thrown forward"
+    },
+    "child": {
+      "firm": "Fitted firmly: barely moves",
+      "loose": "Fitted loosely: lurches forward",
+      "snug": "Harness snug: held in place",
+      "slack": "Harness loose: slides forward",
+      "beltGood": "Belt on shoulder and hips",
+      "beltBad": "Belt on neck and belly"
+    },
+    "treatment": {
+      "with": "With the treatment",
+      "without": "Without it"
+    },
+    "road": {
+      "seen": "First seen: {m} m ahead",
+      "stopped": "✓ Stopped with {m} m to spare",
+      "short": "✕ Still moving: {m} m short"
+    },
+    "city": {
+      "stopped": "✓ Stopped {m} m before the pedestrian",
+      "short": "✕ Couldn’t stop: {m} m short"
+    },
+    "cross": {
+      "shop": "SHOP",
+      "nearMiss": "✕ Near miss: nobody could see in time",
+      "yielded": "✓ The driver saw you and stopped",
+      "waited": "✓ You waited until the road was clear"
+    }
+  }
+}

@@ -1,6 +1,7 @@
 import { W, H, Z, COLORS as C, FONT } from './config.js';
 import { Sfx } from './sfx.js';
 import { drawIcon } from './icons.js';
+import { mirror } from './a11y.js';
 
 // The game uses Scale.EXPAND: the 540x960 design area is always fully visible
 // and centred, and taller/wider screens show extra world around it (no
@@ -48,7 +49,7 @@ export function button(scene, x, y, w, h, label, cb, o) {
   // o.hitW / o.hitH enlarge the tap area beyond the drawn shape (min 44 px tall by default).
   const zone = scene.add.zone(0, 0, Math.max(w, o.hitW || 0), Math.max(h, o.hitH || 0, 44)).setInteractive({ useHandCursor: true });
   c.add([g, t, zone]);
-  c.enabled = true; c.active = false; c.hi = false;
+  c.enabled = true; c.active = false; c.hi = false; c.focused = false;
   c.redraw = function (pressed) {
     g.clear();
     let fill = o.fill != null ? o.fill : 0xFFFFFF, a = o.fillA != null ? o.fillA : 0.14, col = o.color || '#FFFFFF';
@@ -58,6 +59,7 @@ export function button(scene, x, y, w, h, label, cb, o) {
     g.fillStyle(fill, a);
     g.fillRoundedRect(-w / 2, -h / 2, w, h, r);
     if (o.stroke != null) { g.lineStyle(2, o.stroke, c.enabled ? 1 : 0.4); g.strokeRoundedRect(-w / 2, -h / 2, w, h, r); }
+    if (c.focused) focusRing(g, -w / 2, -h / 2, w, h, r);
     t.setColor(col);
     c.setScale(pressed ? 0.97 : 1);
   };
@@ -65,12 +67,23 @@ export function button(scene, x, y, w, h, label, cb, o) {
   zone.on('pointerout', () => { c.hi = false; c.redraw(); });
   zone.on('pointerdown', () => { if (c.enabled) c.redraw(true); });
   zone.on('pointerup', () => { c.redraw(); if (c.enabled) { Sfx.init(scene); Sfx.click(); if (cb) cb(); } });
-  c.setLabel = s => t.setText(s);
+  // o.a11y overrides the accessible name (e.g. when the visible label is a bare number).
+  const m = mirror(c, o.a11y || label, () => { Sfx.init(scene); Sfx.click(); if (cb) cb(); },
+    { onFocus: v => { c.focused = v; c.redraw(); }, isEnabled: () => c.enabled, isPressed: o.toggle ? () => c.active : null });
+  c.setLabel = s => { t.setText(s); if (m && !o.a11y) m.setLabel(s); };
   c.setEnabled = v => { c.enabled = v; c.redraw(); };
   c.setActive = v => { c.active = v; c.redraw(); };
   c.redraw();
   return c;
 }
+
+/** Keyboard focus outline: white with a dark edge so it shows on any background. */
+export function focusRing(g, x, y, w, h, r) {
+  g.lineStyle(6, 0x05080D, 0.9); g.strokeRoundedRect(x - 6, y - 6, w + 12, h + 12, r + 5);
+  g.lineStyle(3, 0xFFFFFF, 1); g.strokeRoundedRect(x - 6, y - 6, w + 12, h + 12, r + 5);
+}
+
+const ICON_LABELS = { back: 'Back', close: 'Close', more: 'More' };
 
 export function soundToggle(scene) {
   const b = button(scene, W - 74, 44, 116, 40, Sfx.muted ? 'Sound off' : 'Sound on', () => {
@@ -89,14 +102,18 @@ export function iconButton(scene, x, y, name, cb, o) {
   const g = scene.add.graphics();
   const zone = scene.add.zone(0, 0, 66, 66).setInteractive({ useHandCursor: true });
   c.add([g, zone]);
+  let focused = false;
   const draw = hi => {
     g.clear();
     g.fillStyle(0xFFFFFF, hi ? 0.24 : 0.12); g.fillCircle(0, 0, r);
     drawIcon(g, name, 0, 0, r * 0.95, o.color != null ? o.color : 0xFFFFFF);
+    if (focused) { g.lineStyle(6, 0x05080D, 0.9); g.strokeCircle(0, 0, r + 6); g.lineStyle(3, 0xFFFFFF, 1); g.strokeCircle(0, 0, r + 6); }
   };
+  const act = () => { Sfx.init(scene); Sfx.click(); if (cb) cb(); };
   zone.on('pointerover', () => draw(true));
   zone.on('pointerout', () => draw(false));
-  zone.on('pointerup', () => { Sfx.init(scene); Sfx.click(); if (cb) cb(); });
+  zone.on('pointerup', act);
+  mirror(c, o.label || ICON_LABELS[name] || name, act, { onFocus: v => { focused = v; draw(false); } });
   draw(false);
   return c;
 }

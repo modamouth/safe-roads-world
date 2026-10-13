@@ -1,0 +1,123 @@
+// Vehicle safety pictograms.
+//   params.view:
+//     'side'  side view of a car; highlight(id) marks one feature:
+//             'seatbelt' | 'airbag' | 'abs' | 'esc' | 'tyres' | 'lights' | 'headrest' | 'mirrors'
+//     'skid'  top-down bend on a wet road; setState({ on }) shows the path with and without ESC
+//     'belt'  side view of a crash-test dummy in a sudden stop; setState({ on }) with and without a seatbelt
+import { COLORS as C, REDUCE_MOTION } from '../../config.js';
+import { t } from '../content.js';
+import { clipTo, label, tweenTo } from './common.js';
+
+export default function create(scene, parent, p, a) {
+  const c = scene.add.container(0, 0); parent.add(c);
+  const g = scene.add.graphics(); c.add(g);
+  const tags = scene.add.container(0, 0); c.add(tags);
+  const st = { hi: null, on: false, k: 0 };
+  const view = p.view || 'side';
+
+  const bgPanel = () => { g.fillStyle(0x0E1622, 1); g.fillRoundedRect(a.x, a.y, a.w, a.h, 18); };
+
+  // --- side view -------------------------------------------------------------
+  const cx = a.x + a.w / 2, gy = a.y + a.h * 0.72, L = a.w * 0.78, Hh = L * 0.3;
+  const x0 = cx - L / 2;
+  const SPOTS = {
+    seatbelt: [0.47, -0.62], airbag: [0.36, -0.55], abs: [0.2, -0.02], esc: [0.5, -0.25], tyres: [0.8, -0.02],
+    lights: [0.03, -0.42], headrest: [0.55, -0.85], mirrors: [0.33, -0.72]
+  };
+  const side = () => {
+    bgPanel();
+    g.fillStyle(0x4A494D, 1); g.fillRect(a.x, gy + Hh * 0.18, a.w, a.h);
+    // body
+    g.fillStyle(0xE8E2D6, 1);
+    g.fillRoundedRect(x0, gy - Hh * 0.55, L, Hh * 0.55, 14);
+    g.fillPoints([{ x: x0 + L * 0.22, y: gy - Hh * 0.55 }, { x: x0 + L * 0.34, y: gy - Hh }, { x: x0 + L * 0.7, y: gy - Hh }, { x: x0 + L * 0.84, y: gy - Hh * 0.55 }], true);
+    g.fillStyle(0x24364B, 0.9);
+    g.fillPoints([{ x: x0 + L * 0.26, y: gy - Hh * 0.58 }, { x: x0 + L * 0.36, y: gy - Hh * 0.94 }, { x: x0 + L * 0.51, y: gy - Hh * 0.94 }, { x: x0 + L * 0.51, y: gy - Hh * 0.58 }], true);
+    g.fillPoints([{ x: x0 + L * 0.53, y: gy - Hh * 0.58 }, { x: x0 + L * 0.53, y: gy - Hh * 0.94 }, { x: x0 + L * 0.68, y: gy - Hh * 0.94 }, { x: x0 + L * 0.8, y: gy - Hh * 0.58 }], true);
+    // occupants: simple head + headrest + belt
+    g.fillStyle(0x6B737D, 1); g.fillRoundedRect(x0 + L * 0.53, gy - Hh * 0.9, L * 0.04, Hh * 0.22, 4);
+    g.fillStyle(0xC7B9A6, 1); g.fillCircle(x0 + L * 0.47, gy - Hh * 0.78, Hh * 0.1);
+    g.lineStyle(4, 0x1D2733, 1); g.lineBetween(x0 + L * 0.5, gy - Hh * 0.72, x0 + L * 0.44, gy - Hh * 0.4);
+    // wheels
+    [0.2, 0.8].forEach(f => { g.fillStyle(0x1C1C1E, 1); g.fillCircle(x0 + L * f, gy, Hh * 0.2); g.fillStyle(0x9AA6B5, 1); g.fillCircle(x0 + L * f, gy, Hh * 0.09); });
+    g.fillStyle(0xFFF2B0, 1); g.fillRoundedRect(x0 - 2, gy - Hh * 0.46, 10, 12, 3);
+    g.fillStyle(0x1D2733, 1); g.fillRect(x0 + L * 0.31, gy - Hh * 0.74, 10, 8);
+    if (st.hi && SPOTS[st.hi]) {
+      const [fx, fy] = SPOTS[st.hi], px = x0 + L * fx, py = gy + Hh * fy;
+      g.lineStyle(4, C.yellow, 1); g.strokeCircle(px, py, 20);
+      g.lineStyle(2, C.yellow, 1); g.lineBetween(px, py - 20, px, a.y + 38);
+      tags.add(label(scene, px, a.y + 26, t('art.feature.' + st.hi), 15, '#0B1B2E', { backgroundColor: '#FFCB2B', padding: { x: 8, y: 4 } }));
+    }
+  };
+
+  // --- skid (top-down bend) ------------------------------------------------------
+  // Quadratic curve for the bend; without ESC the car runs wide after mid-bend (understeer).
+  const P0 = [a.x + a.w * 0.62, a.y + a.h + 10], P1 = [a.x + a.w * 0.62, a.y + a.h * 0.12], P2 = [a.x - 20, a.y + a.h * 0.12], P3 = [a.x + a.w * 0.78, a.y - 20];
+  const bez = (k, end) => [0, 1].map(d => (1 - k) * (1 - k) * P0[d] + 2 * (1 - k) * k * P1[d] + k * k * end[d]);
+  const path = (k, on) => {
+    const base = bez(k, P2);
+    if (on) return { x: base[0], y: base[1] };
+    const wide = bez(k, P3), m = Math.min(1, Math.max(0, (k - 0.35) / 0.65)), s2 = m * m * (3 - 2 * m);
+    return { x: base[0] + (wide[0] - base[0]) * s2, y: base[1] + (wide[1] - base[1]) * s2 };
+  };
+  const skid = () => {
+    bgPanel();
+    g.fillStyle(0x6E8A4E, 1); g.fillRoundedRect(a.x, a.y, a.w, a.h, 18);
+    g.lineStyle(a.w * 0.2, 0x4A494D, 1); g.beginPath();
+    for (let i = 0; i <= 20; i++) { const q = path(i / 20, true); i ? g.lineTo(q.x, q.y) : g.moveTo(q.x, q.y); }
+    g.strokePath();
+    g.lineStyle(2, 0xF2F2F2, 0.7);
+    for (let i = 0; i < 20; i += 2) { const q1 = path(i / 20, true), q2 = path((i + 1) / 20, true); g.lineBetween(q1.x, q1.y, q2.x, q2.y); }
+    // wet sheen
+    g.fillStyle(0x9EDCF0, 0.12); for (let i = 0; i < 14; i++) g.fillEllipse(a.x + (i * 67) % a.w, a.y + (i * 113) % a.h, 40, 10);
+    // trail and car
+    g.lineStyle(3, st.on ? C.green : C.red, 0.85); g.beginPath();
+    for (let i = 0; i <= 30; i++) { const q = path(st.k * i / 30, st.on); i ? g.lineTo(q.x, q.y) : g.moveTo(q.x, q.y); }
+    g.strokePath();
+    const q = path(st.k, st.on);
+    const q0 = path(Math.max(0, st.k - 0.02), st.on), ang = (q0.x === q.x && q0.y === q.y ? -Math.PI / 2 : Math.atan2(q.y - q0.y, q.x - q0.x)) + (st.on ? 0 : st.k * 0.9);
+    const car = scene.add.graphics(); tags.add(car);
+    car.fillStyle(0xF4F5F6, 1); car.fillRoundedRect(-16, -9, 32, 18, 5); car.fillStyle(0x24364B, 1); car.fillRect(4, -7, 6, 14);
+    car.setPosition(q.x, q.y).setRotation(ang);
+    if (st.k >= 1) tags.add(label(scene, q.x, Math.max(a.y + 24, q.y - 30), t(st.on ? 'art.esc.on' : 'art.esc.off'), 14, '#FFFFFF', { backgroundColor: '#05080DCC', padding: { x: 6, y: 3 } }));
+  };
+
+  // --- belt (dummy in a sudden stop) ------------------------------------------------------
+  const belt = () => {
+    bgPanel();
+    const sx = a.x + a.w * 0.62, sy = a.y + a.h * 0.72, u = a.h / 10;
+    // seat and dashboard
+    g.fillStyle(0x4A5058, 1); g.fillRoundedRect(sx - 0.2 * u, sy - 4.2 * u, 0.9 * u, 4.4 * u, 6); g.fillRoundedRect(sx - 2.6 * u, sy - 0.3 * u, 3.2 * u, 0.9 * u, 6);
+    g.fillStyle(0x34495E, 1); g.fillRoundedRect(a.x + a.w * 0.08, sy - 3.2 * u, 1.8 * u, 2.2 * u, 8);
+    g.lineStyle(4, 0x1C1C1E, 1); g.strokeCircle(a.x + a.w * 0.08 + 2.4 * u, sy - 3.0 * u, 0.9 * u);
+    // dummy leans forward by k (much further without a belt)
+    const lean = st.k * (st.on ? 0.35 : 1.15), hx = sx - 0.6 * u - lean * 2.6 * u, hy = sy - 3.7 * u + lean * 1.2 * u;
+    g.lineStyle(0.9 * u, 0xFFCB2B, 1); g.lineBetween(sx - 0.3 * u, sy - 0.3 * u, hx + 0.3 * u, hy + 0.9 * u);   // torso
+    g.fillStyle(0xFFCB2B, 1); g.fillCircle(hx, hy, 0.75 * u);
+    g.fillStyle(0x05080D, 1); g.fillCircle(hx - 0.15 * u, hy - 0.1 * u, 0.12 * u);                                 // dummy target mark
+    g.lineStyle(0.55 * u, 0xFFCB2B, 1); g.lineBetween(sx - 0.4 * u, sy - 0.1 * u, sx - 2.4 * u, sy + 0.1 * u);    // legs
+    if (st.on) { g.lineStyle(5, 0x1D2733, 1); g.lineBetween(sx + 0.1 * u, sy - 3.4 * u, sx - 1.0 * u - lean * 0.6 * u, sy - 0.4 * u); }
+    tags.add(label(scene, a.x + a.w / 2, a.y + 24, t(st.on ? 'art.belt.on' : 'art.belt.off'), 14, '#FFFFFF', { backgroundColor: '#05080DCC', padding: { x: 6, y: 3 } }));
+  };
+
+  const draw = () => { g.clear(); tags.removeAll(true); (view === 'skid' ? skid : view === 'belt' ? belt : side)(); };
+  const inst = {
+    highlight(id) { st.hi = id; draw(); },
+    async setState(s) {
+      if (s.highlight !== undefined) st.hi = s.highlight;
+      if (s.on !== undefined) {
+        st.on = !!s.on; st.k = 0; draw();
+        await tweenTo(scene, st, { k: 1 }, REDUCE_MOTION ? 0 : 1100, REDUCE_MOTION);
+      }
+      draw();
+    },
+    update() { if (st.k > 0 && st.k < 1) draw(); },
+    destroy() {}
+  };
+  if (p.highlight) st.hi = p.highlight;
+  if (view !== 'side') st.k = 0;
+  draw();
+  const m = clipTo(scene, c, a);
+  inst.destroy = () => { c.destroy(); m.destroy(); };
+  return inst;
+}
