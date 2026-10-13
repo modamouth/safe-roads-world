@@ -1,0 +1,522 @@
+{
+  "slug": "heavy",
+  "version": 2,
+  "status": "draft",
+  "locale": "en",
+  "order": 5,
+  "label": "Heavy vehicle",
+  "title": "Heavy vehicle safety",
+  "headline": "Big vehicles, big blind spots, long stops",
+  "intro": "Fuel tankers, trucks and buses keep the B1 moving. Learn where their drivers can't see you, and why you should never cut in front of one.",
+  "icon": "heavy",
+  "minutes": 6,
+  "sources": [
+    "int.brake.dry",
+    "int.reaction.surprise",
+    "int.taxi-length",
+    "int.truck.brake",
+    "int.truck.react",
+    "int.truck.stop80",
+    "int.uk.gap",
+    "na.law.speed-heavy",
+    "na.stat.heavy-crashes-2026",
+    "na.stat.heavy-deaths-2026",
+    "na.stat.heavy-injured-2026",
+    "na.stat.heavy-share"
+  ],
+  "topics": [
+    {
+      "id": "blind-spots",
+      "title": "Blind spots",
+      "icon": "blind_spot",
+      "scenes": [
+        {
+          "id": "predict",
+          "type": "prediction",
+          "question": "Heavy trucks and buses are about {claim:na.stat.heavy-share} of vehicles registered in Namibia. In {n:2026}, up to mid-September, how many people died in crashes involving heavy vehicles?",
+          "format": "numeric",
+          "options": [
+            15,
+            48,
+            95
+          ],
+          "answerClaim": "na.stat.heavy-deaths-2026"
+        },
+        {
+          "id": "setting",
+          "type": "story",
+          "art": {
+            "kind": "truck-lanes",
+            "params": {
+              "car": true,
+              "carY": -4
+            },
+            "alt": "Top-down view of a multi-lane road. Your white car is in the lane to the left of a long fuel tanker."
+          },
+          "lines": [
+            "You're driving north on a dual carriageway near Okahandja. A fuel tanker is in the lane to your right.",
+            "You've been driving beside it for a while. Suddenly its left indicator starts to flash."
+          ]
+        },
+        {
+          "id": "place",
+          "type": "place-on-road",
+          "prompt": "Move your car to where the tanker driver can see you.",
+          "art": {
+            "kind": "truck-lanes",
+            "params": {
+              "car": true,
+              "carY": -4,
+              "indicating": true
+            },
+            "alt": "Top-down view: the tanker is indicating left and your car is beside it. Drag your car forward or back along your lane."
+          },
+          "start": -4,
+          "range": [
+            -24,
+            5
+          ],
+          "step": 1,
+          "zones": [
+            {
+              "from": -24,
+              "to": -7.2,
+              "result": "safe"
+            },
+            {
+              "from": 2.6,
+              "to": 5,
+              "result": "ahead"
+            }
+          ],
+          "fallback": "inside",
+          "results": {
+            "safe": {
+              "tone": "good",
+              "title": "The driver can see you",
+              "body": "You're well behind the tanker. If you can see the driver's face in their side mirror, they can see you. Hanging back also leaves room if it turns."
+            },
+            "ahead": {
+              "tone": "ok",
+              "title": "Seen, but risky",
+              "body": "The driver can see you ahead, but a loaded tanker can't stop quickly if you need to slow down. Dropping back is safer."
+            },
+            "inside": {
+              "tone": "bad",
+              "title": "Still in the blind spot",
+              "body": "Part of your car is where the driver can't see it. If the tanker turns left now, it could hit you.",
+              "retry": true
+            }
+          }
+        },
+        {
+          "id": "spot",
+          "type": "tap-hotspots",
+          "prompt": "Tap every road user the truck driver can't see.",
+          "art": {
+            "kind": "truck-lanes",
+            "params": {
+              "car": false
+            },
+            "alt": "Top-down view of the tanker with eighteen road users around it: cars, a minibus taxi, motorbikes, bicycles and people walking."
+          },
+          "items": [
+            {
+              "id": "ped-front",
+              "label": "Person walking just in front of the cab",
+              "kind": "ped",
+              "x": 0,
+              "y": 1.8,
+              "correct": true
+            },
+            {
+              "id": "moto-left",
+              "label": "Motorbike beside the cab, on the left",
+              "kind": "moto",
+              "x": -3.5,
+              "y": -2.4,
+              "color": "#2E9E5B",
+              "correct": true
+            },
+            {
+              "id": "car-far-left",
+              "label": "Purple car two lanes to the left",
+              "kind": "car",
+              "x": -7,
+              "y": -4,
+              "color": "#7B5CC9",
+              "correct": true
+            },
+            {
+              "id": "bike-left",
+              "label": "Cyclist on the far left, beside the tank",
+              "kind": "bike",
+              "x": -9.5,
+              "y": -10,
+              "color": "#333333",
+              "correct": true
+            },
+            {
+              "id": "car-left-back",
+              "label": "Yellow car on the left, level with the back of the tank",
+              "kind": "car",
+              "x": -3.5,
+              "y": -8,
+              "color": "#E5B93A",
+              "correct": false
+            },
+            {
+              "id": "car-left-ahead",
+              "label": "Orange car ahead on the left",
+              "kind": "car",
+              "x": -3.5,
+              "y": 3.6,
+              "color": "#D8642B",
+              "correct": false
+            },
+            {
+              "id": "ped-far",
+              "label": "Person walking on the far left, ahead",
+              "kind": "ped",
+              "x": -9,
+              "y": 4.2,
+              "correct": false
+            },
+            {
+              "id": "car-right",
+              "label": "Teal car beside the cab, on the right",
+              "kind": "car",
+              "x": 3.5,
+              "y": -2.6,
+              "color": "#46B8B0",
+              "correct": true
+            },
+            {
+              "id": "car-far-right",
+              "label": "Blue car two lanes to the right",
+              "kind": "car",
+              "x": 7,
+              "y": -6,
+              "color": "#3C7FC2",
+              "correct": true
+            },
+            {
+              "id": "moto-right-ahead",
+              "label": "Red motorbike ahead on the right",
+              "kind": "moto",
+              "x": 3.5,
+              "y": 2.6,
+              "color": "#C0392B",
+              "correct": false
+            },
+            {
+              "id": "bike-right-ahead",
+              "label": "Cyclist ahead, two lanes to the right",
+              "kind": "bike",
+              "x": 7.5,
+              "y": 1.6,
+              "color": "#2E7D4F",
+              "correct": false
+            },
+            {
+              "id": "moto-right-back",
+              "label": "Motorbike on the right, level with the tank",
+              "kind": "moto",
+              "x": 3.5,
+              "y": -9.5,
+              "color": "#34495E",
+              "correct": false
+            },
+            {
+              "id": "bike-right-back",
+              "label": "Cyclist far right, near the back",
+              "kind": "bike",
+              "x": 7,
+              "y": -12,
+              "color": "#2E9E5B",
+              "correct": false
+            },
+            {
+              "id": "car-behind",
+              "label": "Grey car right behind the tanker",
+              "kind": "car",
+              "x": 0,
+              "y": -19,
+              "color": "#8A8F96",
+              "correct": true
+            },
+            {
+              "id": "taxi-behind-left",
+              "label": "Minibus taxi behind, on the left",
+              "kind": "taxi",
+              "x": -3.5,
+              "y": -20.5,
+              "correct": false
+            },
+            {
+              "id": "car-behind-right",
+              "label": "Purple car behind, on the right",
+              "kind": "car",
+              "x": 3.5,
+              "y": -19.5,
+              "color": "#6A4FB5",
+              "correct": false
+            },
+            {
+              "id": "car-behind-far-left",
+              "label": "Red car far behind on the left",
+              "kind": "car",
+              "x": -7.5,
+              "y": -20,
+              "color": "#A93226",
+              "correct": false
+            },
+            {
+              "id": "car-behind-far-right",
+              "label": "Black car far behind on the right",
+              "kind": "car",
+              "x": 7,
+              "y": -20,
+              "color": "#222831",
+              "correct": false
+            }
+          ],
+          "feedback": {
+            "green": "You found every road user in the driver's blind spots.",
+            "orange": "Some are right, but not all. The shaded zones show where the driver can't see.",
+            "red": "These road users are outside the blind spots. The shaded zones show where the driver can't see."
+          }
+        },
+        {
+          "id": "zones",
+          "type": "stepper",
+          "title": "The four blind spots",
+          "art": {
+            "kind": "truck-lanes",
+            "params": {
+              "car": false,
+              "numbers": true,
+              "zones": [
+                1,
+                2,
+                3,
+                4
+              ]
+            },
+            "alt": "The tanker with four numbered blind-spot zones: left side, right side, in front and behind."
+          },
+          "steps": [
+            {
+              "title": "Left side: the biggest",
+              "body": "The driver sits on the right, so the left side hides the most. It can cover more than one lane and run back along the tank. Don't stay there, and never pass a truck on the left as it turns.",
+              "highlight": "1"
+            },
+            {
+              "title": "Right side",
+              "body": "On the driver's side the blind spot runs back from the cab. When you overtake on the right, do it without lingering beside the truck.",
+              "highlight": "2"
+            },
+            {
+              "title": "Just in front",
+              "body": "Right in front of a high cab, the driver can't see low cars, children, motorbikes or animals. If you pull in ahead, leave plenty of room.",
+              "highlight": "3"
+            },
+            {
+              "title": "Close behind",
+              "body": "Tucked in behind the tank, the driver can't see you and you can't see the road ahead. Drop back until you can see the truck's mirrors.",
+              "highlight": "4"
+            }
+          ]
+        },
+        {
+          "id": "answer",
+          "type": "reveal",
+          "of": "predict",
+          "explain": "From the start of {n:2026} to mid-September, {claim:na.stat.heavy-deaths-2026} people died and {claim:na.stat.heavy-injured-2026} were injured in {claim:na.stat.heavy-crashes-2026} crashes involving heavy vehicles."
+        },
+        {
+          "id": "remember",
+          "type": "always-remember",
+          "lines": [
+            "If you can't see the driver in their mirror, they can't see you.",
+            "Don't sit beside a truck. Pass it without lingering, or drop back.",
+            "Give turning trucks room. They swing wide and can use more than one lane."
+          ]
+        },
+        {
+          "id": "resources",
+          "type": "resources",
+          "items": [
+            {
+              "name": "Roads Authority of Namibia",
+              "desc": "Road network, freight routes and NaTIS.",
+              "url": "https://www.ra.org.na/"
+            },
+            {
+              "name": "MVA Fund",
+              "desc": "Crash figures and road safety campaigns.",
+              "url": "https://www.mvafund.com.na/"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "braking",
+      "title": "Braking distance",
+      "icon": "truck_brake",
+      "scenes": [
+        {
+          "id": "predict",
+          "type": "prediction",
+          "question": "A loaded truck is travelling at {claim:na.law.speed-heavy}, its legal maximum in Namibia. About how many metres does it need to stop on a dry road?",
+          "format": "numeric",
+          "options": [
+            40,
+            65,
+            98,
+            150
+          ],
+          "unit": "m",
+          "answerClaim": "int.truck.stop80"
+        },
+        {
+          "id": "setting",
+          "type": "story",
+          "art": {
+            "kind": "card",
+            "params": {
+              "icon": "truck",
+              "tint": "#E8743B",
+              "extras": [
+                "highway",
+                "car_speed"
+              ]
+            },
+            "alt": "A truck with symbols for a highway and a car."
+          },
+          "lines": [
+            "You're driving into Windhoek on a dual carriageway. A loaded truck is in the left lane beside you.",
+            "You're both doing the same speed. You need to turn left at the traffic lights ahead."
+          ]
+        },
+        {
+          "id": "decide",
+          "type": "choice",
+          "prompt": "The light ahead turns yellow. What do you do?",
+          "art": {
+            "kind": "truck-junction",
+            "params": {
+              "speedKmh": 80,
+              "truckReactS": "$claim:int.truck.react",
+              "truckDecel": "$claim:int.truck.brake"
+            },
+            "alt": "Top-down view: your car is in the right lane, beside a loaded truck in the left lane, approaching traffic lights with two cars waiting in your lane."
+          },
+          "options": [
+            {
+              "id": "move",
+              "label": "Move into the left lane, in front of the truck",
+              "verdict": "bad",
+              "play": true,
+              "title": "Too close to call",
+              "reason": "The truck couldn't stop for you. It would still have been doing about {var:truckKmh} km/h when it reached your car. Never cut in front of a heavy vehicle that's braking."
+            },
+            {
+              "id": "stay",
+              "label": "Stay in my lane and wait",
+              "verdict": "good",
+              "play": true,
+              "title": "Good call",
+              "reason": "You kept out of the space the truck needs to stop. Turn left once it's safe, even if it means going round the block."
+            }
+          ]
+        },
+        {
+          "id": "compare",
+          "type": "toggle-lab",
+          "prompt": "Compare a car and a loaded truck at the same speed.",
+          "art": {
+            "kind": "distance-strip",
+            "params": {
+              "calc": "stopping",
+              "rows": [
+                {
+                  "label": "Car",
+                  "reactionS": "$claim:int.reaction.surprise",
+                  "decel": "$claim:int.brake.dry"
+                },
+                {
+                  "label": "Loaded truck",
+                  "reactionS": "$claim:int.truck.react",
+                  "decel": "$claim:int.truck.brake"
+                }
+              ],
+              "maxM": 120,
+              "taxiM": "$claim:int.taxi-length"
+            },
+            "alt": "Two bars showing the distance a car and a loaded truck travel before stopping, with minibus taxis drawn underneath for scale."
+          },
+          "requireAll": true,
+          "states": [
+            {
+              "id": "40",
+              "label": "{n:40} km/h",
+              "params": {
+                "kmh": 40
+              },
+              "caption": "At {var:kmh} km/h: a car needs about {var:d0} m, a loaded truck about {var:d1} m. That's about {var:taxis1} minibus taxis nose to tail."
+            },
+            {
+              "id": "60",
+              "label": "{n:60} km/h",
+              "params": {
+                "kmh": 60
+              },
+              "caption": "At {var:kmh} km/h: a car needs about {var:d0} m, a loaded truck about {var:d1} m. That's about {var:taxis1} minibus taxis nose to tail."
+            },
+            {
+              "id": "80",
+              "label": "{n:80} km/h",
+              "params": {
+                "kmh": 80
+              },
+              "caption": "At {var:kmh} km/h: a car needs about {var:d0} m, a loaded truck about {var:d1} m. That's about {var:taxis1} minibus taxis nose to tail."
+            }
+          ]
+        },
+        {
+          "id": "answer",
+          "type": "reveal",
+          "of": "predict",
+          "explain": "At {claim:na.law.speed-heavy} a loaded truck needs roughly {claim:int.truck.stop80} to stop on a dry road. Its air brakes take a moment to work, and its weight takes a long time to slow. Real distances vary with the load, the brakes and the road."
+        },
+        {
+          "id": "remember",
+          "type": "always-remember",
+          "lines": [
+            "Never cut in front of a truck, especially near traffic lights or a turn.",
+            "A loaded truck needs far more road to stop than your car does.",
+            "Keep at least {claim:int.uk.gap} behind a truck, and more in rain or dust."
+          ]
+        },
+        {
+          "id": "resources",
+          "type": "resources",
+          "items": [
+            {
+              "name": "Roads Authority of Namibia",
+              "desc": "Road network, freight routes and NaTIS.",
+              "url": "https://www.ra.org.na/"
+            },
+            {
+              "name": "MVA Fund",
+              "desc": "Crash figures and road safety campaigns.",
+              "url": "https://www.mvafund.com.na/"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

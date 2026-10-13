@@ -45,7 +45,7 @@ export function sceneClaims(scene) {
   proseStrings(scene).forEach(s => claimRefs(s.text).forEach(c => ids.add(c)));
   paramRefs(scene).forEach(c => ids.add(c));
   if (scene.answerClaim) ids.add(scene.answerClaim);
-  (scene.points || []).forEach(p => ids.add(p.claim));
+  if (scene.type === 'chart') (scene.points || []).forEach(p => ids.add(p.claim));
   if (scene.pictogram) ids.add(scene.pictogram.claim);
   if (scene.derive) scene.derive.claims.forEach(c => ids.add(c));
   return [...ids];

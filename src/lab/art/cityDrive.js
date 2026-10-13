@@ -18,7 +18,7 @@ const COL = { walk: 0xD8C8A6, walk2: 0xCFBE9A, kerb: 0xB9B6AE, asph: 0x4A494D, a
 export default function create(scene, parent, p, a) {
   const c = scene.add.container(0, 0); parent.add(c);
   const HY = a.y + a.h * 0.36, CAR_Y = a.y + a.h - 6, F = (CAR_Y - HY) * Z_R / CAMH, VPX = a.x + a.w / 2;
-  const PRE = 30;                                       // metres driven before the pedestrian steps out
+  const PRE = 20;                                       // metres driven before the pedestrian steps out
   const ZP = Z_R + CAR_LEN + PRE + p.hazardM;           // pedestrian's world z
   const st = { pos: 0, wet: false, t: 0 };
 
@@ -93,6 +93,7 @@ export default function create(scene, parent, p, a) {
       const hit = ok ? 0 : impactKmh(kmh, p.hazardM, p.reactionS, decel);
       Object.assign(vars, { kmh, surface: s.surface || 'dry', stopM: Math.round(sd.total), gapM: Math.round(p.hazardM - sd.total), hitKmh: Math.round(hit), hazardM: p.hazardM });
       hud.removeAll(true); st.pos = 0; Object.assign(pedState, { x: -3.0, on: false, goal: null });
+      if (run) run.res();   // a newer state replaces one still running
       return new Promise(res => {
         run = { t: 0, v: kmh / 3.6, sd, ok, res, decel, phase: 'approach' };
         if (REDUCE_MOTION) { st.pos = PRE + Math.min(sd.total, p.hazardM - 4); pedState.on = true; pedState.x = -0.5; finish(); }

@@ -3,7 +3,9 @@ import { W, H, COLORS as C, FONT, state, track, REDUCE_MOTION } from '../config.
 import { setupCam, viewBounds, T, button, soundToggle, iconButton, panel, toast } from '../ui.js';
 import { drawIcon } from '../icons.js';
 import { MAP_ZONES, zoneById } from '../zones.js';
-import { EXPERIENCES } from '../experiences.js';
+import { EXPERIENCES, labProgress } from '../experiences.js';
+import { mirror } from '../a11y.js';
+import { t } from '../lab/content.js';
 import { artKey, cover, optKey } from '../worldArt.js';
 import { Sfx } from '../sfx.js';
 
@@ -90,6 +92,7 @@ export default class MapScene extends Phaser.Scene {
     const hit = this.add.zone(0, 0, 76, 76).setInteractive({ useHandCursor: true });
     hit.on('pointerup', () => { Sfx.init(this); Sfx.click(); this.select(z.id, true); });
     c.add(hit);
+    mirror(hit, z.label + (z.status === 'playable' ? '' : ', coming soon'), () => { Sfx.init(this); Sfx.click(); this.select(z.id, true); });
     return { c, halo, r, z };
   }
 
@@ -147,6 +150,9 @@ export default class MapScene extends Phaser.Scene {
     const title = this.add.text(x0 + pad, y, cta.title || z.label, { fontFamily: FONT, fontSize: '26px', color: '#FFFFFF', fontStyle: 'bold', resolution: 2 });
     items.push(title); y += title.height + 8;
     if (cta.showExperiences) {
+      const lp = labProgress();
+      const prog = this.add.text(x0 + pad, y, t('menu.labProgress', { n: lp.done, of: lp.of }), { fontFamily: FONT, fontSize: '15px', color: '#FFCB2B', fontStyle: 'bold', resolution: 2 });
+      items.push(prog); y += prog.height + 8;
       // One row of up to 5 stacked chips (icon over label) keeps the card short
       // enough that it never covers the Windhoek node.
       // Four chips: with more than 4 experiences, the 4th becomes "More". Locked ones are dimmed.
@@ -228,6 +234,7 @@ export default class MapScene extends Phaser.Scene {
       T(this, cx, NAV_Y + 60, n.label, 16, active ? '#FFCB2B' : '#B9C6D6').setDepth(1600);
       const hit = this.add.zone(cx, NAV_Y + (H - NAV_Y) / 2, iw, H - NAV_Y).setInteractive({ useHandCursor: true }).setDepth(1700);
       hit.on('pointerup', () => { Sfx.init(this); Sfx.click(); this.nav(n.id); });
+      mirror(hit, n.label, () => { Sfx.init(this); Sfx.click(); this.nav(n.id); });
     });
   }
 

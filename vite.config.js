@@ -9,7 +9,7 @@ import { defineConfig } from 'vite';
 // downloaded; this stops casual copying, it isn't encryption.)
 export default defineConfig(({ mode }) => ({
   base: './',
-  server: { port: 5173, open: true },
+  server: { port: 5173, open: !process.env.PLAYWRIGHT },
   build: {
     outDir: 'dist',
     assetsDir: 'assets',

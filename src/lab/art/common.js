@@ -36,6 +36,7 @@ export const col = (v, d) => (typeof v === 'number' ? v : typeof v === 'string' 
 export function tweenTo(scene, obj, props, ms, reduce) {
   return new Promise(res => {
     if (reduce || !ms) { Object.assign(obj, props); res(); return; }
+    scene.tweens.killTweensOf(obj);   // a newer tween replaces one still running
     scene.tweens.add({ targets: obj, ...props, duration: ms, ease: 'Sine.easeInOut', onComplete: () => res() });
   });
 }

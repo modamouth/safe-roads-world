@@ -40,7 +40,7 @@ export default async function placeOnRoad(ctx, sc) {
     ctx.answer({ position: Math.round(v * 10) / 10, result: res });
     ctx.result(copy.tone === 'good', { result: res });
     verdict(scene, layer, { tone: copy.tone, title: ctx.text(copy.title), body: ctx.text(copy.body) }, 0, { bottomAt: 836 });
-    if (copy.retry) ctx.primary(t('lab.tryAgain'), () => ctx.again(), 900);
-    else ctx.primary(t('lab.continue'), () => ctx.next(), 900);
+    if (copy.retry) ctx.primary(t('lab.tryAgain'), () => ctx.again(), 880);
+    else ctx.primary(t('lab.continue'), () => ctx.next(), 880);
   }, 896);
 }

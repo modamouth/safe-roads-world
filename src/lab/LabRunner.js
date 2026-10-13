@@ -52,7 +52,7 @@ export default class LabRunner extends Phaser.Scene {
   }
 
   update(time, delta) {
-    const dt = Math.min(delta / 1000, 0.05);
+    const dt = Math.min(delta / 1000, 0.1);   // slow devices: let animations catch up rather than run in slow motion
     for (const a of this.arts) if (a.update) a.update(time, dt);
   }
 

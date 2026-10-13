@@ -1,0 +1,488 @@
+{
+  "slug": "pedestrian",
+  "version": 2,
+  "status": "draft",
+  "locale": "en",
+  "order": 2,
+  "label": "Pedestrian",
+  "title": "Pedestrian safety",
+  "headline": "Every trip starts and ends on foot",
+  "intro": "In Namibia, about one in three people killed on the roads is walking. See the street from behind the wheel, then from the pavement.",
+  "icon": "pedestrian",
+  "minutes": 5,
+  "contentNotice": {
+    "text": "Some parts talk about the risk of a person on foot being killed or seriously injured. There are no crash images: scenes stop before any contact."
+  },
+  "sources": [
+    "int.brake.dry",
+    "int.brake.wet",
+    "int.reaction.surprise",
+    "int.stop.car60",
+    "int.stop.car60wet",
+    "int.tefft.37",
+    "int.tefft.51",
+    "int.tefft.68",
+    "int.tefft.80",
+    "int.tefft.93",
+    "int.who.ped-50-65",
+    "na.law.ped-50m",
+    "na.law.ped-check",
+    "na.law.ped-face",
+    "na.law.ped-yield",
+    "na.law.speed-urban",
+    "na.stat.ped-deaths-2025",
+    "na.stat.ped-rise-2025",
+    "na.stat.ped-share",
+    "na.support.lifeline"
+  ],
+  "topics": [
+    {
+      "id": "driving",
+      "title": "Driving",
+      "icon": "steering",
+      "blurb": "How far you need to stop in town",
+      "scenes": [
+        {
+          "id": "predict",
+          "type": "prediction",
+          "question": "On a dry road, about how many metres does an average family car need to stop from {claim:na.law.speed-urban}, the usual town limit?",
+          "format": "numeric",
+          "options": [
+            25,
+            33,
+            45,
+            60
+          ],
+          "unit": "m",
+          "answerClaim": "int.stop.car60"
+        },
+        {
+          "id": "setting",
+          "type": "story",
+          "art": {
+            "kind": "card",
+            "params": {
+              "icon": "steering",
+              "tint": "#1FA3B5",
+              "extras": [
+                "pedestrian",
+                "taxi",
+                "walker"
+              ]
+            },
+            "alt": "A steering wheel surrounded by symbols for people walking and a minibus taxi."
+          },
+          "lines": [
+            "It's the end of the working day in Windhoek. You're driving along a busy street lined with shops.",
+            "Minibus taxis are pulling in to drop people off. People are crossing between parked cars to reach them."
+          ]
+        },
+        {
+          "id": "stop-lab",
+          "type": "toggle-lab",
+          "prompt": "Someone steps out from between parked vehicles ahead of you. Try each speed: can you stop?",
+          "art": {
+            "kind": "city-drive",
+            "params": {
+              "hazardM": 30,
+              "reactionS": "$claim:int.reaction.surprise",
+              "decelDry": "$claim:int.brake.dry",
+              "decelWet": "$claim:int.brake.wet"
+            },
+            "alt": "Chase view down a Windhoek street with parked taxis and cars. A pedestrian steps out from between them ahead of you."
+          },
+          "requireAll": true,
+          "states": [
+            {
+              "id": "40",
+              "label": "{n:40} km/h",
+              "params": {
+                "kmh": 40,
+                "surface": "dry"
+              },
+              "caption": "At {var:kmh} km/h you need {var:stopM} m to stop. The person stepped out {var:hazardM} m ahead."
+            },
+            {
+              "id": "50",
+              "label": "{n:50} km/h",
+              "params": {
+                "kmh": 50,
+                "surface": "dry"
+              },
+              "caption": "At {var:kmh} km/h you need {var:stopM} m to stop. The person stepped out {var:hazardM} m ahead."
+            },
+            {
+              "id": "60",
+              "label": "{n:60} km/h",
+              "params": {
+                "kmh": 60,
+                "surface": "dry"
+              },
+              "caption": "At {var:kmh} km/h you need {var:stopM} m to stop. The person stepped out {var:hazardM} m ahead."
+            }
+          ]
+        },
+        {
+          "id": "wet-lab",
+          "type": "toggle-lab",
+          "prompt": "Now the same street after a storm. Compare a dry road with a wet one at the same speed.",
+          "art": {
+            "kind": "city-drive",
+            "params": {
+              "hazardM": 30,
+              "reactionS": "$claim:int.reaction.surprise",
+              "decelDry": "$claim:int.brake.dry",
+              "decelWet": "$claim:int.brake.wet"
+            },
+            "alt": "The same street, dry or wet after rain, with a pedestrian stepping out ahead."
+          },
+          "requireAll": true,
+          "states": [
+            {
+              "id": "dry",
+              "label": "Dry",
+              "params": {
+                "kmh": 40,
+                "surface": "dry"
+              },
+              "caption": "Dry road at {var:kmh} km/h: you need {var:stopM} m to stop."
+            },
+            {
+              "id": "wet",
+              "label": "Wet",
+              "params": {
+                "kmh": 40,
+                "surface": "wet"
+              },
+              "caption": "Wet road at {var:kmh} km/h: you need {var:stopM} m. Tyres grip less, so braking takes longer."
+            }
+          ]
+        },
+        {
+          "id": "risk-chart",
+          "type": "chart",
+          "title": "If a car hits a person walking: their risk of dying",
+          "kind": "line",
+          "x": {
+            "label": "Speed of the car",
+            "unit": "km/h"
+          },
+          "y": {
+            "label": "Risk of death",
+            "unit": "%",
+            "max": 100
+          },
+          "points": [
+            {
+              "x": 37,
+              "claim": "int.tefft.37"
+            },
+            {
+              "x": 51,
+              "claim": "int.tefft.51"
+            },
+            {
+              "x": 68,
+              "claim": "int.tefft.68"
+            },
+            {
+              "x": 80,
+              "claim": "int.tefft.80"
+            },
+            {
+              "x": 93,
+              "claim": "int.tefft.93"
+            }
+          ],
+          "caption": "A small rise in speed sharply raises the risk. The WHO says a person's risk of dying is about {claim:int.who.ped-50-65|value} times higher when hit at {n:65} km/h than at {n:50} km/h."
+        },
+        {
+          "id": "answer",
+          "type": "reveal",
+          "of": "predict",
+          "explain": "At {claim:na.law.speed-urban} on a dry road, an average car needs about {claim:int.stop.car60} to stop: you travel a long way while you react, before you even touch the brake. On a wet road it's about {claim:int.stop.car60wet}."
+        },
+        {
+          "id": "spot",
+          "type": "tap-hotspots",
+          "prompt": "Tap every place where a person could step into the road in front of you.",
+          "art": {
+            "kind": "crossing-street",
+            "params": {
+              "carKmh": 50,
+              "crossY": 14,
+              "shopBrand": "woermann-brock"
+            },
+            "alt": "Top-down view of the street: a taxi stop with parked minibus taxis, vendor stalls on the pavement, a zebra crossing with a refuge island, and office buildings."
+          },
+          "items": [
+            {
+              "id": "taxi-gap",
+              "label": "The gap between the parked taxis",
+              "x": 1.2,
+              "y": -7.2,
+              "correct": true
+            },
+            {
+              "id": "stalls",
+              "label": "Beside the vendor stalls",
+              "x": -1.4,
+              "y": -3,
+              "correct": true
+            },
+            {
+              "id": "crossing",
+              "label": "The zebra crossing",
+              "x": 3,
+              "y": 14,
+              "correct": true
+            },
+            {
+              "id": "wall",
+              "label": "The wall of the office building",
+              "x": -6,
+              "y": 19,
+              "correct": false
+            }
+          ],
+          "feedback": {
+            "green": "People step out from between taxis, from busy stalls and onto crossings. Slow down and expect them.",
+            "orange": "Some of these you found, some you missed. Taxi stops, stalls and crossings are where people step out.",
+            "red": "Look again: taxi stops, stalls and crossings are where people step into the road."
+          },
+          "retry": true
+        },
+        {
+          "id": "remember",
+          "type": "always-remember",
+          "lines": [
+            "Where people are walking, slow down. Every km/h less shortens your stopping distance.",
+            "Expect people to step out from between taxis, parked cars and stalls.",
+            "Stop for people on a zebra crossing. In Namibia it's the law, and it's their right of way."
+          ],
+          "claims": [
+            "na.law.ped-yield"
+          ]
+        },
+        {
+          "id": "resources",
+          "type": "resources",
+          "items": [
+            {
+              "name": "MVA Fund",
+              "desc": "Pedestrian safety campaigns and support after a crash.",
+              "url": "https://www.mvafund.com.na/"
+            },
+            {
+              "name": "National Road Safety Council",
+              "desc": "Namibia's road safety campaigns.",
+              "url": "https://www.nrsc.org.na/"
+            },
+            {
+              "name": "WHO: Road safety",
+              "desc": "Global evidence on speed and people walking.",
+              "url": "https://www.who.int/health-topics/road-safety"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "walking",
+      "title": "Walking",
+      "icon": "walker",
+      "blurb": "Choosing where to cross",
+      "scenes": [
+        {
+          "id": "predict",
+          "type": "prediction",
+          "question": "In {n:2021}, what share of people killed on Namibia's roads were pedestrians?",
+          "format": "numeric",
+          "options": [
+            10,
+            20,
+            33,
+            50
+          ],
+          "unit": "%",
+          "answerClaim": "na.stat.ped-share"
+        },
+        {
+          "id": "setting",
+          "type": "story",
+          "art": {
+            "kind": "card",
+            "params": {
+              "icon": "walker",
+              "tint": "#E8743B",
+              "extras": [
+                "taxi",
+                "city"
+              ]
+            },
+            "alt": "A person walking, with symbols for a minibus taxi and the city."
+          },
+          "lines": [
+            "You've just got off a minibus taxi on a busy Windhoek street. The supermarket is on the other side.",
+            "There are taxis parked at the stop, stalls on the pavement, and a zebra crossing a little further along."
+          ]
+        },
+        {
+          "id": "where",
+          "type": "pick-a-point",
+          "prompt": "Where will you cross? Tap a point.",
+          "art": {
+            "kind": "crossing-street",
+            "params": {
+              "carKmh": 50,
+              "crossY": 14,
+              "shopBrand": "woermann-brock",
+              "spots": {
+                "a": "nearmiss",
+                "b": "yield",
+                "c": "wait"
+              }
+            },
+            "alt": "Top-down view of the street: you're on the left pavement by the taxi stop. A zebra crossing with a refuge island is a short walk up the street. Shaded areas show what parked vehicles hide from you."
+          },
+          "until": "all",
+          "points": [
+            {
+              "id": "a",
+              "label": "Between the taxis",
+              "x": 1,
+              "y": -7.2,
+              "verdict": "bad",
+              "play": true,
+              "title": "Hidden from drivers",
+              "reason": "The taxis block your view of the traffic, and drivers can't see you until you step out. And with a crossing this close, the law expects you to use it."
+            },
+            {
+              "id": "b",
+              "label": "At the zebra crossing",
+              "x": -0.4,
+              "y": 14,
+              "verdict": "good",
+              "play": true,
+              "title": "The safest place",
+              "reason": "Drivers must yield to you on the crossing, and the refuge island lets you cross one direction of traffic at a time. Still wait until you're sure cars are stopping."
+            },
+            {
+              "id": "c",
+              "label": "By the stalls",
+              "x": -0.4,
+              "y": 4,
+              "verdict": "ok",
+              "play": true,
+              "title": "You can see, but…",
+              "reason": "You had a clear view and waited for a gap. But you're less than {claim:na.law.ped-50m} from a crossing, so Namibian law says to cross there instead."
+            }
+          ]
+        },
+        {
+          "id": "share-chart",
+          "type": "chart",
+          "title": "People on foot among those killed on Namibia's roads, {n:2021}",
+          "kind": "pictogram",
+          "pictogram": {
+            "of": 3,
+            "claim": "na.stat.ped-share",
+            "per": 100,
+            "icon": "walker"
+          },
+          "caption": "About {claim:na.stat.ped-share} of people killed on the roads were walking. Early in {n:2025}, {claim:na.stat.ped-deaths-2025} pedestrians died in just over four months, {claim:na.stat.ped-rise-2025} more than a year before."
+        },
+        {
+          "id": "answer",
+          "type": "reveal",
+          "of": "predict",
+          "explain": "{claim:na.stat.ped-share} of people killed on Namibian roads in {n:2021} were pedestrians: about one in three."
+        },
+        {
+          "id": "walk-safe",
+          "type": "stepper",
+          "title": "Walking safely",
+          "steps": [
+            {
+              "title": "Use the crossing",
+              "body": "If there's a pedestrian crossing or an intersection within {claim:na.law.ped-50m}, the law says to cross there."
+            },
+            {
+              "title": "Stop, look and listen",
+              "body": "Check both ways, and keep looking as you cross. Don't step out until you're sure drivers have seen you and are stopping."
+            },
+            {
+              "title": "Never step out from behind a taxi",
+              "body": "A stopped taxi or bus hides you from drivers coming past it. Wait until it has gone, or walk to where you can see clearly."
+            },
+            {
+              "title": "Face the traffic",
+              "body": "Where there's no pavement, walk on the right-hand side of the road, facing oncoming vehicles, so you can see them coming."
+            },
+            {
+              "title": "Be seen at night",
+              "body": "Wear something light or reflective, and use your phone's torch. Drivers on dipped lights see you much later than you think."
+            }
+          ],
+          "claims": [
+            "na.law.ped-face",
+            "na.law.ped-check"
+          ]
+        },
+        {
+          "id": "remember",
+          "type": "always-remember",
+          "lines": [
+            "Cross at a crossing or intersection when there's one nearby.",
+            "Never assume a driver has seen you. Wait until they stop.",
+            "Phone away, eyes up, every time you cross."
+          ]
+        },
+        {
+          "id": "story",
+          "type": "stories",
+          "sensitive": true,
+          "title": "The short cut",
+          "fictional": true,
+          "label": "A made-up story, based on common situations",
+          "warning": "This story mentions a pedestrian being hurt. It doesn't describe the injury in detail.",
+          "paragraphs": [
+            "Every afternoon Selma got off the taxi on the busy side of the road. The crossing was only a short walk away, but the short cut between the parked taxis was quicker.",
+            "One day a car came past the taxis just as she stepped out. The driver braked, but couldn't stop in time.",
+            "Selma's leg was broken and she missed most of her final term at school. 'It was a few seconds saved,' she says. 'It cost me months.'",
+            "She walks to the crossing now, and tells her younger brother to do the same."
+          ],
+          "signpost": {
+            "text": "If a crash has affected you or someone close to you, you don't have to deal with it alone. LifeLine/ChildLine Namibia offers free counselling: call {claim:na.support.lifeline}.",
+            "links": [
+              {
+                "name": "LifeLine/ChildLine Namibia",
+                "url": "https://www.lifelinechildline.org.na/"
+              },
+              {
+                "name": "MVA Fund: support after a crash",
+                "url": "https://www.mvafund.com.na/"
+              }
+            ]
+          }
+        },
+        {
+          "id": "resources",
+          "type": "resources",
+          "items": [
+            {
+              "name": "MVA Fund",
+              "desc": "Pedestrian safety campaigns and support after a crash.",
+              "url": "https://www.mvafund.com.na/"
+            },
+            {
+              "name": "National Road Safety Council",
+              "desc": "Namibia's road safety campaigns.",
+              "url": "https://www.nrsc.org.na/"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

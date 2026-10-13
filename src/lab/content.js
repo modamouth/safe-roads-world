@@ -51,10 +51,11 @@ export function sourceLine(ids) {
   ids.forEach(id => {
     const c = claim(id);
     if (!c || !c.source) { pending = true; return; }
-    const k = c.source.publisher + '|' + c.source.title;
+    const k = c.source.publisher + '|' + c.source.date;
     if (seen.has(k)) return;
     seen.add(k);
-    parts.push(c.source.publisher + ', ' + c.source.title + (c.source.date ? ' (' + c.source.date + ')' : ''));
+    // Short form on screen (publisher and date); full titles and links are in the content register.
+    parts.push(c.source.publisher + (c.source.date ? ' (' + c.source.date.replace(/^accessed /, '') + ')' : ''));
   });
   if (!parts.length) return pending && !RELEASE ? t('lab.sourcePending') : '';
   return t('lab.source', { list: parts.join('; ') }) + (pending && !RELEASE ? ' ' + t('lab.sourcePartly') : '');

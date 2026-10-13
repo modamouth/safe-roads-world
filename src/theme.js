@@ -21,7 +21,7 @@ export const INK = {
 export const SPACE = { gutter: 28, gap: 16, panelPad: 24, radius: 18 };
 
 // Layout bands in the 540x960 design space.
-export const BAND = { chrome: 88, artTop: 100, artBottom: 520, primaryY: 872, footY: 934 };
+export const BAND = { chrome: 88, artTop: 100, artBottom: 520, primaryY: 856, footY: 940 };
 
 // Verdicts never rely on colour alone: each has a symbol and a word.
 export const VERDICT = {

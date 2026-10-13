@@ -57,7 +57,7 @@ export default async function pickAPoint(ctx, sc) {
     const needAll = sc.until === 'all';
     if ((needAll && !all) || (!needAll && pt.verdict !== 'good')) {
       const nextUnseen = sc.points.findIndex(p => !visited[p.id]);
-      ctx.primary(needAll && pt.verdict === 'good' ? t('point.see', { letter: letter(nextUnseen) }) : t('point.tryAnother'), () => ctx.again(), 900);
-    } else ctx.primary(t('lab.continue'), () => ctx.next(), 900);
+      ctx.primary(needAll && pt.verdict === 'good' ? t('point.see', { letter: letter(nextUnseen) }) : t('point.tryAnother'), () => ctx.again(), 880);
+    } else ctx.primary(t('lab.continue'), () => ctx.next(), 880);
   }
 }

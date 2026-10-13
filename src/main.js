@@ -8,7 +8,7 @@ import LabMenu from './scenes/LabMenu.js';
 import LabRunner from './lab/LabRunner.js';
 import Passport from './scenes/Passport.js';
 
-new Phaser.Game({
+const game = new Phaser.Game({
   type: Phaser.AUTO,
   parent: 'game',
   width: GW,
@@ -19,3 +19,6 @@ new Phaser.Game({
   render: { antialias: true },
   scene: [Boot, Title, MapScene, CityRunStub, LabMenu, LabRunner, Passport]
 });
+
+// Dev builds expose the game for debugging and end-to-end tests; production builds don't.
+if (import.meta.env.DEV) window.__srwGame = game;

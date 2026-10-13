@@ -350,7 +350,6 @@
       "id": "na.law.moto-pillion",
       "text": "No more than two people may ride on a motorcycle (not counting a side-car).",
       "value": 2,
-      "unit": "people",
       "source": {
         "publisher": "Government of Namibia (annotated by the Legal Assistance Centre)",
         "title": "Road Traffic and Transport Regulations, 2001 (GN 53 of 2001), as amended",
@@ -764,7 +763,6 @@
       "id": "na.stat.deaths-2021",
       "text": "Road deaths reported in Namibia in 2021.",
       "value": 540,
-      "unit": "deaths",
       "source": {
         "publisher": "World Health Organization",
         "title": "Global status report on road safety 2023: Namibia country profile",
@@ -812,7 +810,6 @@
       "id": "na.stat.vehicles",
       "text": "Registered vehicles in Namibia in 2021.",
       "value": 401476,
-      "unit": "vehicles",
       "source": {
         "publisher": "World Health Organization",
         "title": "Global status report on road safety 2023: Namibia country profile",
@@ -875,7 +872,6 @@
       "id": "na.stat.heavy-deaths-2026",
       "text": "People killed in crashes involving heavy vehicles in Namibia, 1 January to 16 September 2026.",
       "value": 48,
-      "unit": "deaths",
       "source": {
         "publisher": "Namibia Economist (reporting MVA Fund figures)",
         "title": "Rising truck crashes trigger urgent road safety warning in Erongo and Otjozondjupa",
@@ -891,7 +887,6 @@
       "id": "na.stat.heavy-injured-2026",
       "text": "People injured in crashes involving heavy vehicles in Namibia, 1 January to 16 September 2026.",
       "value": 211,
-      "unit": "people",
       "source": {
         "publisher": "Namibia Economist (reporting MVA Fund figures)",
         "title": "Rising truck crashes trigger urgent road safety warning in Erongo and Otjozondjupa",
@@ -907,7 +902,6 @@
       "id": "na.stat.heavy-crashes-2026",
       "text": "Crashes involving heavy vehicles in Namibia, 1 January to 16 September 2026.",
       "value": 112,
-      "unit": "crashes",
       "source": {
         "publisher": "Namibia Economist (reporting MVA Fund figures)",
         "title": "Rising truck crashes trigger urgent road safety warning in Erongo and Otjozondjupa",
@@ -923,7 +917,6 @@
       "id": "na.stat.ped-deaths-2025",
       "text": "Pedestrians killed on Namibian roads between 1 January and 7 May 2025.",
       "value": 66,
-      "unit": "pedestrians",
       "source": {
         "publisher": "Motor Vehicle Accident (MVA) Fund of Namibia",
         "title": "MVA Fund observes an alarming increase in pedestrian crashes",
@@ -955,7 +948,6 @@
       "id": "na.stat.animal-collisions",
       "text": "Collisions with domestic animals (mostly cattle, donkeys and dogs) recorded on Namibian roads from 2020 to 2025.",
       "value": 5529,
-      "unit": "collisions",
       "source": {
         "publisher": "Namibian Broadcasting Corporation (NBC News)",
         "title": "Animals visibility pilot launched in Omusati",

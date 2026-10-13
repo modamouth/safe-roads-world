@@ -21,28 +21,28 @@ export default async function toggleLab(ctx, sc) {
 
   const prompt = para(scene, layer, ctx.text(sc.prompt), 584, { size: TYPE.body, color: INK.muted });
   const segY = prompt.y + prompt.height + 40;
-  let capBox = null, busy = false;
+  let capBox = null, seq = 0;
   const seg = segmented(scene, layer, sc.states.map(s => ({ id: s.id, label: ctx.text(s.label) })), segY, s => show(s.id), initial);
 
   const cont = ctx.primary(t('lab.continue'), () => ctx.next());
   const update = () => cont.setEnabled(!sc.requireAll || sc.states.every(s => seen.has(s.id)));
   if (sc.requireAll) para(scene, layer, t('toggle.tryAll'), segY + 44, { size: TYPE.tiny, color: INK.faint });
 
+  // Picking a state while another is still animating replaces it; the older one's result is ignored.
   async function show(id) {
-    if (busy) return;
+    const my = ++seq;
     const s = sc.states.find(x => x.id === id);
     seg.setCurrent(id);
     seen.add(id); update();
     ctx.answer([...seen], { state: id });
     if (capBox) { capBox.destroy(); capBox = null; }
-    busy = true;
     if (art.setState) await art.setState(Object.assign({ id }, resolveParams(s.params || {}, claim)), ctx.vars);
-    busy = false;
-    if (!scene.scene.isActive()) return;
+    if (my !== seq || !scene.scene.isActive()) return;
     if (s.caption) {
       capBox = scene.add.container(0, 0); layer.add(capBox);
+      // Under the controls, so it never hides the part of the picture that matters.
       const tx = para(scene, null, ctx.text(s.caption), 0, { size: TYPE.body, color: INK.strong, width: W - 96 });
-      const h = tx.height + 30, top = 566 - h;
+      const h = tx.height + 30, top = segY + (sc.requireAll ? 66 : 48);
       capBox.add(panel(scene, SPACE.gutter + 8, top, W - SPACE.gutter * 2 - 16, h, { alpha: 0.9, r: 14 }));
       tx.setY(top + 15); capBox.add(tx);
     }

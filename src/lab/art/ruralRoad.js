@@ -19,7 +19,8 @@ import { stopping, impactKmh, distanceAt } from '../core/derive.js';
 import { t } from '../content.js';
 import { clipTo, label } from './common.js';
 
-const CAMH = 5.5, Z_R = 19, CAR_LEN = 4.5, CAR_W = 1.85;
+const CAMH = 5.5, Z_R = 19, CAR_LEN = 4.5, CAR_W = 1.85, APPROACH = 20;
+const FREEZE = 12;   // when the car can't stop, freeze this far short of the animal so it stays in view (no impact is shown)
 const EDGE_L = -1.9, CENTRE = 1.7, EDGE_R = 5.3;
 const SKY = { day: [0x7FB8E6, 0xD9ECF7], dusk: [0x253A6B, 0xF2A65A], night: [0x060B16, 0x18243A] };
 const HAZE = { clear: 0xE6D7BE, rain: 0x8A97A6, dust: 0xC9A06A, fog: 0xC8CDD2 };
@@ -183,11 +184,12 @@ export default function create(scene, parent, p, a) {
       hud.removeAll(true); brakeGlow.clear(); car.y = CAR_Y;
       st.kmh = kmh; st.pos = 0; st.drift = 0;
       // The hazard sits exactly where it first becomes visible.
-      if (animal) animal.wz = seeM + Z_R + CAR_LEN + 40;   // 40 m of approach before it comes into view
+      if (animal) animal.wz = seeM + Z_R + CAR_LEN + APPROACH;   // a short approach before it comes into view
+      if (run) run.res();   // a newer state replaces one still running
       return new Promise(res => {
-        run = { t: -40 / (kmh / 3.6), kmh, seeM, s, ok, res, reactionS, decel, braking: false, startPos: null };
+        run = { t: -APPROACH / (kmh / 3.6), kmh, seeM, s, ok, res, reactionS, decel, braking: false, startPos: null };
         if (REDUCE_MOTION) { // jump straight to the outcome
-          st.pos = 40 + Math.min(s.total, seeM - 4); finish();
+          st.pos = APPROACH + Math.min(s.total, seeM - FREEZE); finish();
         }
       });
     },
@@ -195,6 +197,7 @@ export default function create(scene, parent, p, a) {
       const d = distanceAt(kmh, seconds);
       Object.assign(vars, { kmh, seconds, distM: Math.round(d) });
       hud.removeAll(true);
+      if (run) run.res();
       return new Promise(res => {
         run = { micro: true, t: 0, kmh, seconds, d, res };
         if (REDUCE_MOTION) { blackout.setAlpha(0); counter.setAlpha(0); run = null; res(); }
@@ -223,7 +226,7 @@ export default function create(scene, parent, p, a) {
             const tt = Math.min(tb, v / r.decel); d = v * r.reactionS + v * tt - 0.5 * r.decel * tt * tt; }
           if (r.startPos == null) r.startPos = st.pos;   // where the hazard first became visible
           st.pos = r.startPos + d;
-          if (!r.ok && d >= r.seeM - 4) finish();
+          if (!r.ok && d >= r.seeM - FREEZE) finish();
           else if (r.braking && d >= r.s.total - 0.01) finish();
         }
       } else if (p.mode === 'scene' || !run) {

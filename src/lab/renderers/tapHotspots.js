@@ -64,9 +64,9 @@ export default async function tapHotspots(ctx, sc) {
     if (r.missed) legend.push(t('hotspot.legend.missed'));
     verdict(scene, layer, { tone: TONE[r.verdict], title: t('hotspot.title.' + r.verdict), body: ctx.text(sc.feedback[r.verdict]) + '\n' + legend.join('  ') }, 0, { bottomAt: 836, size: TYPE.small });
     if (sc.retry && r.verdict !== 'green') {
-      ctx.secondary(t('lab.tryAgain'), () => ctx.again(), 900, { w: 200 }).setX(W / 2 - 112);
-      ctx.primary(t('lab.continue'), () => ctx.next(), 900, { w: 200 }).setX(W / 2 + 112);
-    } else ctx.primary(t('lab.continue'), () => ctx.next(), 900);
+      ctx.secondary(t('lab.tryAgain'), () => ctx.again(), 880, { w: 200 }).setX(W / 2 - 112);
+      ctx.primary(t('lab.continue'), () => ctx.next(), 880, { w: 200 }).setX(W / 2 + 112);
+    } else ctx.primary(t('lab.continue'), () => ctx.next(), 880);
   });
   check.setEnabled(false);
 }
