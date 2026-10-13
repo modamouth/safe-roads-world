@@ -1,0 +1,436 @@
+{
+  "slug": "conditions",
+  "version": 1,
+  "status": "draft",
+  "locale": "en",
+  "order": 7,
+  "label": "Drive to conditions",
+  "title": "Driving to the conditions",
+  "headline": "Gravel, dust, floods and fog",
+  "intro": "More than half of Namibia's roads are gravel, and the weather can change fast. Learn how to slow down and adapt before the road decides for you.",
+  "icon": "conditions",
+  "minutes": 6,
+  "sources": [
+    "int.brake.dry",
+    "int.brake.gravel",
+    "int.nws.water-car",
+    "int.nws.water-person",
+    "int.nws.water-suv",
+    "int.reaction.surprise",
+    "int.taxi-length",
+    "na.law.lights-150",
+    "na.law.speed-gravel",
+    "na.stat.gravel-share"
+  ],
+  "topics": [
+    {
+      "id": "gravel",
+      "title": "Gravel roads",
+      "icon": "gravel",
+      "blurb": "Loose surfaces and longer stops",
+      "scenes": [
+        {
+          "id": "predict",
+          "type": "prediction",
+          "question": "What share of Namibia's national road network is gravel?",
+          "format": "numeric",
+          "options": [
+            20,
+            35,
+            53,
+            70
+          ],
+          "answerClaim": "na.stat.gravel-share",
+          "unit": "%"
+        },
+        {
+          "id": "setting",
+          "type": "story",
+          "lines": [
+            "You're driving to a farm outside Gobabis. The tar ends and the road turns to gravel.",
+            "The limit on an untarred road outside town is {claim:na.law.speed-gravel}, but that's a maximum, not a target."
+          ],
+          "art": {
+            "kind": "rural-road",
+            "params": {
+              "time": "day",
+              "surface": "gravel",
+              "hazard": "none",
+              "kmh": 80,
+              "mode": "scene"
+            },
+            "alt": "A gravel road through dry bush in the middle of the day."
+          }
+        },
+        {
+          "id": "stop",
+          "type": "toggle-lab",
+          "prompt": "Loose gravel gives your tyres much less grip. Compare stopping distances on tar and on gravel at the same speed.",
+          "art": {
+            "kind": "distance-strip",
+            "params": {
+              "calc": "stopping",
+              "maxM": 160,
+              "taxiM": "$claim:int.taxi-length",
+              "rows": [
+                {
+                  "label": "Dry tar",
+                  "reactionS": "$claim:int.reaction.surprise",
+                  "decel": "$claim:int.brake.dry"
+                },
+                {
+                  "label": "Gravel",
+                  "reactionS": "$claim:int.reaction.surprise",
+                  "decel": "$claim:int.brake.gravel"
+                }
+              ]
+            },
+            "alt": "Two bars comparing stopping distance on dry tar and on gravel, with minibus-taxi lengths for scale."
+          },
+          "requireAll": true,
+          "states": [
+            {
+              "id": "80",
+              "label": "{n:80} km/h",
+              "params": {
+                "kmh": 80
+              },
+              "caption": "At {n:80} km/h: about {var:d0} m on tar, but {var:d1} m on gravel."
+            },
+            {
+              "id": "100",
+              "label": "{n:100} km/h",
+              "params": {
+                "kmh": 100
+              },
+              "caption": "At {n:100} km/h: about {var:d0} m on tar, but {var:d1} m on gravel, about {var:taxis1} taxi lengths."
+            }
+          ]
+        },
+        {
+          "id": "answer",
+          "type": "reveal",
+          "of": "predict",
+          "explain": "About {claim:na.stat.gravel-share} of Namibia's national roads are gravel. On loose gravel your car needs much further to stop, so slow down well below the limit."
+        },
+        {
+          "id": "tips",
+          "type": "stepper",
+          "title": "On gravel",
+          "art": {
+            "kind": "rural-road",
+            "params": {
+              "time": "day",
+              "surface": "gravel",
+              "weather": "dust",
+              "hazard": "none",
+              "kmh": 60,
+              "mode": "scene"
+            },
+            "alt": "A gravel road with dust hanging in the air."
+          },
+          "steps": [
+            {
+              "title": "Slow down",
+              "body": "Choose a speed at which you can stop within the distance you can see."
+            },
+            {
+              "title": "Leave a bigger gap",
+              "body": "Stay well back out of the dust of the car ahead: at least double your usual gap."
+            },
+            {
+              "title": "Steer gently",
+              "body": "No sudden turns or hard braking. On loose stones the car can slide or roll."
+            },
+            {
+              "title": "Headlights on",
+              "body": "Dust hides you from oncoming drivers. Lights help them see you."
+            }
+          ]
+        },
+        {
+          "id": "remember",
+          "type": "always-remember",
+          "lines": [
+            "On gravel, drive well below the limit: you need much further to stop.",
+            "Hang back out of the dust and keep your headlights on.",
+            "Gentle steering and braking keep you on the road."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "floods",
+      "title": "Flooded crossings",
+      "icon": "conditions",
+      "blurb": "If it's flooded, forget it",
+      "scenes": [
+        {
+          "id": "predict",
+          "type": "prediction",
+          "question": "How deep does rushing water need to be to carry away most cars?",
+          "format": "numeric",
+          "options": [
+            10,
+            30,
+            60,
+            100
+          ],
+          "answerClaim": "int.nws.water-car",
+          "unit": "cm"
+        },
+        {
+          "id": "setting",
+          "type": "story",
+          "lines": [
+            "It rained hard upstream overnight. The road dips through a riverbed, and water is running across it.",
+            "It doesn't look very deep, and the other side is close."
+          ],
+          "art": {
+            "kind": "water-crossing",
+            "params": {
+              "vehicle": "car",
+              "marks": [
+                {
+                  "cm": "$claim:int.nws.water-person",
+                  "label": "Knocks a person over"
+                },
+                {
+                  "cm": "$claim:int.nws.water-car",
+                  "label": "Floats most cars"
+                },
+                {
+                  "cm": "$claim:int.nws.water-suv",
+                  "label": "Moves SUVs and bakkies"
+                }
+              ]
+            },
+            "alt": "Side view of a road dipping through a riverbed, with water across it and a depth post."
+          }
+        },
+        {
+          "id": "depth",
+          "type": "toggle-lab",
+          "prompt": "You can't see how deep or fast the water is, or whether the road underneath has washed away. See what different depths do.",
+          "art": {
+            "kind": "water-crossing",
+            "params": {
+              "vehicle": "car",
+              "marks": [
+                {
+                  "cm": "$claim:int.nws.water-person",
+                  "label": "Knocks a person over"
+                },
+                {
+                  "cm": "$claim:int.nws.water-car",
+                  "label": "Floats most cars"
+                },
+                {
+                  "cm": "$claim:int.nws.water-suv",
+                  "label": "Moves SUVs and bakkies"
+                }
+              ]
+            },
+            "alt": "Side view of the crossing with the water rising against a depth post."
+          },
+          "requireAll": true,
+          "states": [
+            {
+              "id": "ankle",
+              "label": "Ankle deep",
+              "params": {
+                "depthCm": "$claim:int.nws.water-person",
+                "flowing": true
+              },
+              "caption": "Fast water only {claim:int.nws.water-person} deep can knock an adult off their feet."
+            },
+            {
+              "id": "knee",
+              "label": "Knee deep",
+              "params": {
+                "depthCm": "$claim:int.nws.water-car",
+                "flowing": true
+              },
+              "caption": "Rushing water {claim:int.nws.water-car} deep can carry away most cars."
+            },
+            {
+              "id": "thigh",
+              "label": "Thigh deep",
+              "params": {
+                "depthCm": "$claim:int.nws.water-suv",
+                "flowing": true
+              },
+              "caption": "At {claim:int.nws.water-suv}, even SUVs and bakkies can be swept away."
+            }
+          ]
+        },
+        {
+          "id": "answer",
+          "type": "reveal",
+          "of": "predict",
+          "explain": "Rushing water only {claim:int.nws.water-car} deep can carry away most cars. Water that looks calm can still be moving fast underneath."
+        },
+        {
+          "id": "remember",
+          "type": "always-remember",
+          "lines": [
+            "If a road is flooded, turn around and wait. Never drive, walk or ride through.",
+            "The road under the water may already be washed away.",
+            "Check the weather and road reports before you travel in the rainy season."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "visibility",
+      "title": "Dust and fog",
+      "icon": "conditions",
+      "blurb": "When you can't see far",
+      "scenes": [
+        {
+          "id": "predict",
+          "type": "prediction",
+          "question": "By law, your headlights must be on whenever people and vehicles aren't clearly visible at what distance?",
+          "format": "numeric",
+          "options": [
+            50,
+            100,
+            150,
+            300
+          ],
+          "answerClaim": "na.law.lights-150",
+          "unit": "m"
+        },
+        {
+          "id": "setting",
+          "type": "story",
+          "lines": [
+            "You're driving to Swakopmund. Near the coast, fog rolls in off the sea.",
+            "On the way back inland, a dust storm blows across the road."
+          ]
+        },
+        {
+          "id": "see",
+          "type": "toggle-lab",
+          "prompt": "How far ahead can you see? Compare a clear day, coastal fog and a dust storm.",
+          "art": {
+            "kind": "rural-road",
+            "params": {
+              "time": "day",
+              "surface": "tar",
+              "hazard": "none",
+              "kmh": 80,
+              "mode": "scene"
+            },
+            "alt": "A tarred road, shown in clear weather, fog and dust."
+          },
+          "requireAll": true,
+          "states": [
+            {
+              "id": "clear",
+              "label": "Clear",
+              "params": {
+                "weather": "clear",
+                "seeM": 300
+              },
+              "caption": "On a clear day you can see far ahead and have time to react."
+            },
+            {
+              "id": "fog",
+              "label": "Fog",
+              "params": {
+                "weather": "fog",
+                "seeM": 60
+              },
+              "caption": "In thick fog the road ahead disappears. Slow right down so you can stop within what you can see."
+            },
+            {
+              "id": "dust",
+              "label": "Dust",
+              "params": {
+                "weather": "dust",
+                "seeM": 50
+              },
+              "caption": "In a dust storm, pull well off the road if you can't see, and switch your lights on so others can see you."
+            }
+          ]
+        },
+        {
+          "id": "answer",
+          "type": "reveal",
+          "of": "predict",
+          "explain": "Your headlights must be on from sunset to sunrise, and whenever people and vehicles aren't clearly visible at {claim:na.law.lights-150}."
+        },
+        {
+          "id": "lights",
+          "type": "quiz-ladder",
+          "questions": [
+            {
+              "id": "fog",
+              "kind": "choice",
+              "prompt": "When may you use your fog lamps?",
+              "options": [
+                {
+                  "id": "poor",
+                  "label": "Only in fog, mist, dust or smoke",
+                  "correct": true
+                },
+                {
+                  "id": "night",
+                  "label": "Any time at night"
+                },
+                {
+                  "id": "always",
+                  "label": "Whenever you like"
+                }
+              ],
+              "reason": "Fog lamps may only be used when visibility is poor because of snow, fog, mist, dust or smoke."
+            },
+            {
+              "id": "beam",
+              "kind": "choice",
+              "prompt": "In fog, which headlights help most?",
+              "options": [
+                {
+                  "id": "dipped",
+                  "label": "Dipped headlights",
+                  "correct": true
+                },
+                {
+                  "id": "main",
+                  "label": "Main beam"
+                }
+              ],
+              "reason": "Main beam reflects off the fog back into your eyes. Dipped headlights light the road without the glare."
+            }
+          ]
+        },
+        {
+          "id": "remember",
+          "type": "always-remember",
+          "lines": [
+            "Slow down until you can stop within the distance you can see.",
+            "Lights on in fog and dust, dipped not main beam.",
+            "Don't overtake when you can't see. If it's too bad, pull well off and wait."
+          ]
+        },
+        {
+          "id": "resources",
+          "type": "resources",
+          "items": [
+            {
+              "name": "MVA Fund",
+              "desc": "Road safety campaigns and support after a crash.",
+              "url": "https://www.mvafund.com.na/"
+            },
+            {
+              "name": "National Road Safety Council",
+              "desc": "Namibia's road safety campaigns.",
+              "url": "https://www.nrsc.org.na/"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

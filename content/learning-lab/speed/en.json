@@ -11,7 +11,7 @@
   "icon": "car_speed",
   "minutes": 4,
   "contentNotice": {
-    "text": "This experience talks about the risk of being killed or seriously injured in a crash. It uses diagrams and charts, not crash images."
+    "text": "This experience talks about the risk of being killed or seriously injured in a crash. It includes a crash test with a crash-test dummy. No people are shown hurt."
   },
   "sources": [
     "int.brake.dry",
@@ -87,6 +87,79 @@
               "value": 120
             }
           ]
+        },
+        {
+          "id": "kudu",
+          "type": "choice",
+          "prompt": "A kudu bull is standing at the side of the road ahead. It's about to leap out in front of you. What do you do?",
+          "art": {
+            "kind": "rural-road",
+            "params": {
+              "time": "dusk",
+              "surface": "tar",
+              "hazard": "kudu",
+              "mode": "swerve"
+            },
+            "alt": "Dusk on the tarred road. A kudu stands on the left verge ahead; an oncoming pickup is in the other lane."
+          },
+          "options": [
+            {
+              "id": "brake",
+              "label": "Brake firmly and stay in my lane",
+              "verdict": "good",
+              "play": true,
+              "reason": "Braking hard in a straight line keeps you on the road and out of oncoming traffic. Slowing down early gives the animal time to move and makes any impact far less severe."
+            },
+            {
+              "id": "swerve",
+              "label": "Swerve to miss it",
+              "verdict": "bad",
+              "play": true,
+              "reason": "Swerving at {var:speed} km/h took you straight into an oncoming pickup. A sudden swerve can also roll the car or send it off the road. Brake firmly in a straight line instead."
+            }
+          ]
+        },
+        {
+          "id": "crash-lab",
+          "type": "toggle-lab",
+          "sensitive": true,
+          "prompt": "You were driving at {var:speed} km/h. See what that does to the car and the dummy.",
+          "art": {
+            "kind": "crash-lab",
+            "params": {},
+            "alt": "A crash-test hall. A white car with a crash-test dummy at the wheel drives into a concrete barrier."
+          },
+          "requireAll": true,
+          "states": [
+            {
+              "id": "80",
+              "label": "{n:80} km/h",
+              "params": {
+                "kmh": 80,
+                "level": "light"
+              },
+              "caption": "At {n:80} km/h the front crumples deep into the engine bay."
+            },
+            {
+              "id": "100",
+              "label": "{n:100} km/h",
+              "params": {
+                "kmh": 100,
+                "level": "medium"
+              },
+              "caption": "At {n:100} km/h the whole front is crushed and the cabin starts to deform."
+            },
+            {
+              "id": "120",
+              "label": "{n:120} km/h",
+              "params": {
+                "kmh": 120,
+                "level": "severe"
+              },
+              "caption": "At {n:120} km/h the crush reaches the cabin. The car can no longer protect the people inside."
+            }
+          ],
+          "initial": "$var:speed"
         },
         {
           "id": "headlights",

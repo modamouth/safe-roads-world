@@ -1,0 +1,321 @@
+{
+  "slug": "vehicle-safety",
+  "version": 1,
+  "status": "draft",
+  "locale": "en",
+  "order": 6,
+  "label": "Vehicle safety",
+  "title": "A safer vehicle",
+  "headline": "What's keeping you safe in your car?",
+  "intro": "Many cars on Namibian roads are older imports. Learn which safety features matter most, and how to use the ones you have.",
+  "icon": "car_shield",
+  "minutes": 5,
+  "sources": [
+    "int.gncap.africa",
+    "int.iihs.esc-rollover",
+    "int.iihs.esc-single",
+    "int.who.seatbelt",
+    "na.law.tread",
+    "na.stat.esc-law"
+  ],
+  "topics": [
+    {
+      "id": "features",
+      "title": "Safety features",
+      "icon": "car_shield",
+      "blurb": "The parts that protect you",
+      "scenes": [
+        {
+          "id": "predict",
+          "type": "prediction",
+          "question": "Electronic stability control (ESC) cuts the risk of a fatal single-vehicle crash in a car or SUV by about how much?",
+          "format": "numeric",
+          "options": [
+            10,
+            25,
+            50
+          ],
+          "answerClaim": "int.iihs.esc-single",
+          "unit": "%"
+        },
+        {
+          "id": "setting",
+          "type": "story",
+          "lines": [
+            "You're buying a second-hand car. Two cars cost the same.",
+            "One is newer and has stability control and airbags. The other is older, with neither."
+          ],
+          "art": {
+            "kind": "card",
+            "params": {
+              "icon": "car_shield",
+              "tint": "#1FA3B5",
+              "extras": [
+                "star",
+                "check"
+              ]
+            },
+            "alt": "A car with a safety shield symbol."
+          }
+        },
+        {
+          "id": "esc",
+          "type": "toggle-lab",
+          "prompt": "Rain on a bend, and you take it a little too fast. Compare a car with and without stability control.",
+          "art": {
+            "kind": "car-features",
+            "params": {
+              "view": "skid"
+            },
+            "alt": "Top-down view of a wet bend, showing the path a car takes with and without stability control."
+          },
+          "requireAll": true,
+          "states": [
+            {
+              "id": "off",
+              "label": "Without ESC",
+              "params": {
+                "on": false
+              },
+              "caption": "Without ESC, the back of the car slides out and it runs wide, off the road or into the other lane."
+            },
+            {
+              "id": "on",
+              "label": "With ESC",
+              "params": {
+                "on": true
+              },
+              "caption": "ESC brakes single wheels in a split second and keeps the car on its line."
+            }
+          ]
+        },
+        {
+          "id": "tour",
+          "type": "stepper",
+          "title": "Features that protect you",
+          "art": {
+            "kind": "car-features",
+            "params": {
+              "view": "side"
+            },
+            "alt": "Side view of a car with one safety feature highlighted at a time."
+          },
+          "steps": [
+            {
+              "title": "Seatbelts",
+              "body": "Your first line of protection. Every seat, every trip.",
+              "highlight": "seatbelt"
+            },
+            {
+              "title": "Airbags",
+              "body": "They work with your seatbelt, not instead of it.",
+              "highlight": "airbag"
+            },
+            {
+              "title": "ABS brakes",
+              "body": "Let you keep steering while you brake hard.",
+              "highlight": "abs"
+            },
+            {
+              "title": "Stability control",
+              "body": "Stops skids before they start. Namibia doesn't require it, so check whether a car has it.",
+              "highlight": "esc"
+            },
+            {
+              "title": "Tyres",
+              "body": "The only part touching the road. The law requires a tread at least {claim:na.law.tread} deep across the whole tyre.",
+              "highlight": "tyres"
+            },
+            {
+              "title": "Head restraints",
+              "body": "Set the top level with the top of your head to protect your neck.",
+              "highlight": "headrest"
+            }
+          ]
+        },
+        {
+          "id": "answer",
+          "type": "reveal",
+          "of": "predict",
+          "explain": "ESC cuts the risk of a fatal single-vehicle crash by about {claim:int.iihs.esc-single}, and of a fatal rollover in a car by {claim:int.iihs.esc-rollover}. Yet {claim:na.stat.esc-law}: Namibia has no law requiring it."
+        },
+        {
+          "id": "ratings",
+          "type": "story",
+          "lines": [
+            "Crash tests rate how well a car protects the people inside. Global NCAP's tests of cars sold in Africa have given some models {claim:int.gncap.africa} for adult protection.",
+            "Before you buy, look up the model's crash rating, and choose the safest car you can afford."
+          ],
+          "art": {
+            "kind": "card",
+            "params": {
+              "icon": "star",
+              "tint": "#FFCB2B",
+              "extras": [
+                "car_shield"
+              ]
+            },
+            "alt": "Five rating stars, some filled and some empty."
+          }
+        },
+        {
+          "id": "remember",
+          "type": "always-remember",
+          "lines": [
+            "Choose the safest car you can afford: look up its crash rating first.",
+            "Check your tyres and lights regularly.",
+            "Safety features help, but you're still the one driving."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "seatbelt",
+      "title": "Seatbelts",
+      "icon": "car_shield",
+      "blurb": "Every seat, every trip",
+      "scenes": [
+        {
+          "id": "predict",
+          "type": "prediction",
+          "question": "Wearing a seatbelt can cut the risk of death for people in a vehicle by up to how much?",
+          "format": "numeric",
+          "options": [
+            15,
+            30,
+            50
+          ],
+          "answerClaim": "int.who.seatbelt",
+          "unit": "%"
+        },
+        {
+          "id": "setting",
+          "type": "story",
+          "lines": [
+            "You're in the back of a friend's car for a short drive across town.",
+            "Nobody in the back is wearing a belt. It's only a few minutes."
+          ],
+          "art": {
+            "kind": "card",
+            "params": {
+              "icon": "car_shield",
+              "tint": "#E8743B",
+              "extras": [
+                "check"
+              ]
+            },
+            "alt": "A car with a seatbelt symbol."
+          }
+        },
+        {
+          "id": "belt",
+          "type": "toggle-lab",
+          "sensitive": true,
+          "prompt": "The car in front stops suddenly. Compare a crash-test dummy with and without a seatbelt.",
+          "art": {
+            "kind": "car-features",
+            "params": {
+              "view": "belt"
+            },
+            "alt": "Side view of a crash-test dummy in a car seat during a sudden stop."
+          },
+          "requireAll": true,
+          "states": [
+            {
+              "id": "off",
+              "label": "No belt",
+              "params": {
+                "on": false
+              },
+              "caption": "Without a belt, the dummy keeps moving at the car's speed until it hits the seat, the dashboard or another person."
+            },
+            {
+              "id": "on",
+              "label": "Belted",
+              "params": {
+                "on": true
+              },
+              "caption": "The belt holds the dummy in its seat and spreads the force across the strong bones of the chest and hips."
+            }
+          ]
+        },
+        {
+          "id": "answer",
+          "type": "reveal",
+          "of": "predict",
+          "explain": "A seatbelt can cut the risk of death for people in a vehicle by up to {claim:int.who.seatbelt}. In Namibia every adult must wear one, in the front and the back."
+        },
+        {
+          "id": "law",
+          "type": "quiz-ladder",
+          "questions": [
+            {
+              "id": "rear",
+              "kind": "truefalse",
+              "prompt": "In Namibia, passengers in the back seat don't have to wear a seatbelt.",
+              "options": [
+                {
+                  "id": "true",
+                  "label": "True"
+                },
+                {
+                  "id": "false",
+                  "label": "False",
+                  "correct": true
+                }
+              ],
+              "reason": "Every adult must wear a seatbelt in any seat that has one, front or back."
+            },
+            {
+              "id": "bin",
+              "kind": "truefalse",
+              "prompt": "It's legal to carry paying passengers in the back of a bakkie.",
+              "options": [
+                {
+                  "id": "true",
+                  "label": "True"
+                },
+                {
+                  "id": "false",
+                  "label": "False",
+                  "correct": true
+                }
+              ],
+              "reason": "Nobody may carry people for payment in a goods compartment, such as a bakkie's load bin."
+            }
+          ]
+        },
+        {
+          "id": "remember",
+          "type": "always-remember",
+          "lines": [
+            "Belt up in every seat, on every trip, however short.",
+            "As the driver, make sure everyone is belted before you move off.",
+            "Never ride on a load bin, the roof or a running board."
+          ]
+        },
+        {
+          "id": "resources",
+          "type": "resources",
+          "items": [
+            {
+              "name": "MVA Fund",
+              "desc": "Road safety campaigns and support after a crash.",
+              "url": "https://www.mvafund.com.na/"
+            },
+            {
+              "name": "National Road Safety Council",
+              "desc": "Namibia's road safety campaigns.",
+              "url": "https://www.nrsc.org.na/"
+            },
+            {
+              "name": "Global NCAP",
+              "desc": "Crash-test ratings, including cars sold in Africa.",
+              "url": "https://www.globalncap.org/"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

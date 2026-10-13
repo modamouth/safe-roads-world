@@ -1,0 +1,390 @@
+{
+  "slug": "alcohol-drugs",
+  "version": 1,
+  "status": "draft",
+  "locale": "en",
+  "order": 11,
+  "label": "Alcohol & drugs",
+  "title": "Alcohol, drugs and driving",
+  "headline": "Feeling fine isn't the same as being fine",
+  "intro": "Alcohol, drugs and some medicines slow you down long before you feel it. See how risk rises, and what the law says.",
+  "icon": "alcohol",
+  "minutes": 6,
+  "sources": [
+    "int.bac.rr-005",
+    "int.bac.rr-008",
+    "int.bac.rr-010",
+    "int.bac.rr-015",
+    "int.who.amphetamine",
+    "na.law.bac-blood",
+    "na.law.dui-fine",
+    "na.law.dui-prison",
+    "na.law.dui-suspend-1",
+    "na.law.dui-suspend-2",
+    "na.law.dui-suspend-3",
+    "na.support.lifeline"
+  ],
+  "topics": [
+    {
+      "id": "alcohol",
+      "title": "Alcohol",
+      "icon": "alcohol",
+      "blurb": "How risk rises with every drink",
+      "scenes": [
+        {
+          "id": "predict",
+          "type": "prediction",
+          "question": "A driver at a blood alcohol level of {n:0.08} g/dl is about how many times more likely to crash than a sober driver?",
+          "format": "numeric",
+          "options": [
+            1.2,
+            2.69,
+            6
+          ],
+          "answerClaim": "int.bac.rr-008",
+          "unit": "x"
+        },
+        {
+          "id": "setting",
+          "type": "story",
+          "lines": [
+            "It's Saturday. You've had a few beers at a friend's braai and you feel fine.",
+            "Home is only ten minutes away."
+          ],
+          "art": {
+            "kind": "card",
+            "params": {
+              "icon": "alcohol",
+              "tint": "#E8743B",
+              "extras": [
+                "info"
+              ]
+            },
+            "alt": "A bottle and a car key."
+          }
+        },
+        {
+          "id": "risk",
+          "type": "chart",
+          "title": "Crash risk and blood alcohol",
+          "kind": "line",
+          "x": {
+            "label": "Blood alcohol",
+            "unit": "g/dl"
+          },
+          "y": {
+            "label": "Times more likely to crash"
+          },
+          "points": [
+            {
+              "x": "0.05",
+              "claim": "int.bac.rr-005"
+            },
+            {
+              "x": "0.08",
+              "claim": "int.bac.rr-008"
+            },
+            {
+              "x": "0.10",
+              "claim": "int.bac.rr-010"
+            },
+            {
+              "x": "0.15",
+              "claim": "int.bac.rr-015"
+            }
+          ],
+          "caption": "The risk doesn't rise in a straight line: it climbs steeply after a few drinks. At {n:0.15} g/dl a driver is about {claim:int.bac.rr-015} more likely to crash."
+        },
+        {
+          "id": "answer",
+          "type": "reveal",
+          "of": "predict",
+          "explain": "At {n:0.08} g/dl a driver is about {claim:int.bac.rr-008} more likely to crash than a sober one. Namibia's limit is {claim:na.law.bac-blood} of blood, and you can be charged with driving under the influence at any level."
+        },
+        {
+          "id": "law",
+          "type": "quiz-ladder",
+          "intro": "What happens if you're caught?",
+          "questions": [
+            {
+              "id": "fine",
+              "kind": "choice",
+              "prompt": "What's the maximum fine for drink-driving?",
+              "options": [
+                {
+                  "id": "big",
+                  "label": "{claim:na.law.dui-fine}",
+                  "correct": true
+                },
+                {
+                  "id": "small",
+                  "label": "N${n:500}"
+                },
+                {
+                  "id": "mid",
+                  "label": "N${n:2000}"
+                }
+              ],
+              "reason": "The maximum is a fine of {claim:na.law.dui-fine} or prison for up to {claim:na.law.dui-prison}, or both."
+            },
+            {
+              "id": "suspend",
+              "kind": "choice",
+              "prompt": "After a first conviction, your licence is suspended for at least:",
+              "options": [
+                {
+                  "id": "s3",
+                  "label": "{claim:na.law.dui-suspend-1}",
+                  "correct": true
+                },
+                {
+                  "id": "none",
+                  "label": "No suspension"
+                },
+                {
+                  "id": "week",
+                  "label": "One week"
+                }
+              ],
+              "reason": "At least {claim:na.law.dui-suspend-1} after a first conviction, {claim:na.law.dui-suspend-2} after a second, and {claim:na.law.dui-suspend-3} after a third."
+            },
+            {
+              "id": "refuse",
+              "kind": "truefalse",
+              "prompt": "You can refuse a breath test if you feel sober.",
+              "options": [
+                {
+                  "id": "true",
+                  "label": "True"
+                },
+                {
+                  "id": "false",
+                  "label": "False",
+                  "correct": true
+                }
+              ],
+              "reason": "Refusing a breath or blood test without a health reason is an offence in itself."
+            },
+            {
+              "id": "plan",
+              "kind": "choice",
+              "line": "You're the designated driver, but your friends keep offering you drinks.",
+              "prompt": "What's the safest plan?",
+              "options": [
+                {
+                  "id": "none",
+                  "label": "Stick to soft drinks all night",
+                  "correct": true
+                },
+                {
+                  "id": "one",
+                  "label": "Have one, then wait an hour"
+                },
+                {
+                  "id": "coffee",
+                  "label": "Drink coffee before you drive"
+                }
+              ],
+              "reason": "There's no safe number of drinks or waiting time you can count on. Coffee doesn't sober you up."
+            }
+          ],
+          "score": {
+            "bands": [
+              {
+                "min": 0,
+                "title": "Worth knowing",
+                "body": "The penalties are heavy. Read the reasons again."
+              },
+              {
+                "min": 0.5,
+                "title": "Mostly right",
+                "body": "Check the ones you missed."
+              },
+              {
+                "min": 1,
+                "title": "Spot on",
+                "body": "You know the law."
+              }
+            ]
+          }
+        },
+        {
+          "id": "remember",
+          "type": "always-remember",
+          "lines": [
+            "If you drink, don't drive. Plan your way home before you start.",
+            "Feeling fine doesn't mean you're under the limit.",
+            "Never get in a car with a driver who has been drinking."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "drugs",
+      "title": "Drugs and medicines",
+      "icon": "alcohol",
+      "blurb": "Including the ones from a pharmacy",
+      "scenes": [
+        {
+          "id": "predict",
+          "type": "prediction",
+          "question": "The risk of a fatal crash among people who have used amphetamines is about how many times higher?",
+          "format": "numeric",
+          "options": [
+            3,
+            5,
+            8
+          ],
+          "answerClaim": "int.who.amphetamine",
+          "unit": "x"
+        },
+        {
+          "id": "setting",
+          "type": "story",
+          "lines": [
+            "You've got a bad cold. The pharmacist gave you tablets and said they might make you drowsy.",
+            "You need to drive to work tomorrow morning."
+          ],
+          "art": {
+            "kind": "card",
+            "params": {
+              "icon": "alcohol",
+              "tint": "#1FA3B5",
+              "extras": [
+                "info"
+              ]
+            },
+            "alt": "A medicine packet beside a car key."
+          }
+        },
+        {
+          "id": "quiz",
+          "type": "quiz-ladder",
+          "questions": [
+            {
+              "id": "dagga",
+              "kind": "truefalse",
+              "prompt": "Dagga (cannabis) doesn't affect your driving if you're used to it.",
+              "options": [
+                {
+                  "id": "true",
+                  "label": "True"
+                },
+                {
+                  "id": "false",
+                  "label": "False",
+                  "correct": true
+                }
+              ],
+              "reason": "Cannabis affects attention, reaction time and your ability to judge distance and speed, whether or not you feel it."
+            },
+            {
+              "id": "meds",
+              "kind": "multi",
+              "prompt": "Which can make you drowsy or slow your reactions? Pick all that apply.",
+              "options": [
+                {
+                  "id": "allergy",
+                  "label": "Some allergy tablets",
+                  "correct": true
+                },
+                {
+                  "id": "sleep",
+                  "label": "Sleeping tablets",
+                  "correct": true
+                },
+                {
+                  "id": "pain",
+                  "label": "Some strong painkillers",
+                  "correct": true
+                },
+                {
+                  "id": "anxiety",
+                  "label": "Some anxiety or depression medicines",
+                  "correct": true
+                }
+              ],
+              "reason": "Many medicines, including some for allergies, sleep, pain, anxiety and depression, can cause drowsiness or slow reactions."
+            },
+            {
+              "id": "ask",
+              "kind": "choice",
+              "line": "You're not sure whether your new prescription affects driving.",
+              "prompt": "What should you do?",
+              "options": [
+                {
+                  "id": "ask",
+                  "label": "Ask your doctor or pharmacist, and don't drive until you know",
+                  "correct": true
+                },
+                {
+                  "id": "feel",
+                  "label": "Drive if you feel alright"
+                }
+              ],
+              "reason": "Ask a doctor or pharmacist. Driving under the influence of a drug with a narcotic effect is an offence, even if it was prescribed."
+            }
+          ]
+        },
+        {
+          "id": "answer",
+          "type": "reveal",
+          "of": "predict",
+          "explain": "People who have used amphetamines are about {claim:int.who.amphetamine} more likely to be in a fatal crash."
+        },
+        {
+          "id": "remember",
+          "type": "always-remember",
+          "lines": [
+            "If you take drugs, don't drive.",
+            "Read the label and ask your pharmacist whether a medicine affects driving.",
+            "If you feel drowsy, don't drive. Get a lift or wait."
+          ]
+        },
+        {
+          "id": "story",
+          "type": "stories",
+          "sensitive": true,
+          "title": "The last round",
+          "fictional": true,
+          "label": "A made-up story, based on common situations",
+          "warning": "This story mentions a crash in which people were hurt. It doesn't describe the injuries in detail.",
+          "paragraphs": [
+            "Petrus had driven home after parties before. He always felt fine.",
+            "That night he misjudged a bend outside Rundu and hit a car coming the other way. The other driver was badly hurt.",
+            "He lost his licence and his job as a delivery driver. 'I thought it was my risk to take,' he says. 'It wasn't. It was theirs too.'"
+          ],
+          "signpost": {
+            "text": "If a crash has affected you or someone close to you, you don't have to deal with it alone. LifeLine/ChildLine Namibia offers free counselling: call {claim:na.support.lifeline}.",
+            "links": [
+              {
+                "name": "LifeLine/ChildLine Namibia",
+                "url": "https://www.lifelinechildline.org.na/"
+              },
+              {
+                "name": "MVA Fund: support after a crash",
+                "url": "https://www.mvafund.com.na/"
+              }
+            ]
+          }
+        },
+        {
+          "id": "resources",
+          "type": "resources",
+          "items": [
+            {
+              "name": "MVA Fund",
+              "desc": "Road safety campaigns and support after a crash.",
+              "url": "https://www.mvafund.com.na/"
+            },
+            {
+              "name": "National Road Safety Council",
+              "desc": "Namibia's road safety campaigns.",
+              "url": "https://www.nrsc.org.na/"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

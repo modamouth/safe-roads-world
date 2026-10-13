@@ -1,0 +1,348 @@
+{
+  "slug": "fatigue",
+  "version": 1,
+  "status": "draft",
+  "locale": "en",
+  "order": 12,
+  "label": "Fatigue",
+  "title": "Tired driving",
+  "headline": "You can't fight sleep at the wheel",
+  "intro": "Namibia's long, straight roads make tired driving easy and deadly. See how far you travel in a microsleep, and plan a safer trip.",
+  "icon": "fatigue",
+  "minutes": 5,
+  "sources": [
+    "int.fatigue.awake",
+    "int.fatigue.microsleep",
+    "int.uk.break",
+    "int.uk.break-every",
+    "na.law.driving-hours",
+    "na.stat.b1-distance",
+    "na.support.lifeline"
+  ],
+  "topics": [
+    {
+      "id": "microsleep",
+      "title": "Microsleeps",
+      "icon": "fatigue",
+      "blurb": "A few seconds with your eyes shut",
+      "scenes": [
+        {
+          "id": "predict",
+          "type": "prediction",
+          "question": "A microsleep is a brief sleep you don't control. Up to how many seconds can it last?",
+          "format": "numeric",
+          "options": [
+            2,
+            5,
+            15
+          ],
+          "answerClaim": "int.fatigue.microsleep",
+          "unit": "s"
+        },
+        {
+          "id": "setting",
+          "type": "story",
+          "lines": [
+            "You left Windhoek after work and you're heading north on the B1. It's dark and the road is straight.",
+            "Your eyes feel heavy, but you only have a couple of hours to go."
+          ],
+          "art": {
+            "kind": "rural-road",
+            "params": {
+              "time": "night",
+              "surface": "tar",
+              "hazard": "none",
+              "kmh": 120,
+              "mode": "scene",
+              "seeM": 100
+            },
+            "alt": "A straight tarred road at night, lit only by headlights."
+          }
+        },
+        {
+          "id": "eyes",
+          "type": "toggle-lab",
+          "prompt": "At {n:120} km/h, see how far the car travels while your eyes are shut.",
+          "art": {
+            "kind": "rural-road",
+            "params": {
+              "time": "night",
+              "surface": "tar",
+              "hazard": "none",
+              "kmh": 120,
+              "mode": "microsleep",
+              "seeM": 100
+            },
+            "alt": "Night on the road. The screen goes dark while the car keeps moving and drifts toward the edge."
+          },
+          "requireAll": true,
+          "states": [
+            {
+              "id": "s1",
+              "label": "{n:1} second",
+              "params": {
+                "kmh": 120,
+                "seconds": 1
+              },
+              "caption": "In just {n:1} second you travel {var:distM} m with nobody steering."
+            },
+            {
+              "id": "s3",
+              "label": "{n:3} seconds",
+              "params": {
+                "kmh": 120,
+                "seconds": 3
+              },
+              "caption": "{n:3} seconds: {var:distM} m, enough to drift right off the road."
+            },
+            {
+              "id": "s5",
+              "label": "{n:5} seconds",
+              "params": {
+                "kmh": 120,
+                "seconds": 5
+              },
+              "caption": "{n:5} seconds: {var:distM} m. You won't remember it happened."
+            }
+          ]
+        },
+        {
+          "id": "answer",
+          "type": "reveal",
+          "of": "predict",
+          "explain": "A microsleep can last up to {claim:int.fatigue.microsleep}. After {claim:int.fatigue.awake} awake, people perform as badly as, or worse than, someone over the alcohol limit."
+        },
+        {
+          "id": "signs",
+          "type": "quiz-ladder",
+          "questions": [
+            {
+              "id": "signs",
+              "kind": "multi",
+              "prompt": "Which are signs that you're too tired to drive? Pick all that apply.",
+              "options": [
+                {
+                  "id": "yawn",
+                  "label": "Yawning a lot",
+                  "correct": true
+                },
+                {
+                  "id": "drift",
+                  "label": "Drifting in your lane",
+                  "correct": true
+                },
+                {
+                  "id": "missed",
+                  "label": "Missing a turn-off or sign",
+                  "correct": true
+                },
+                {
+                  "id": "heavy",
+                  "label": "Heavy eyelids",
+                  "correct": true
+                }
+              ],
+              "reason": "All of these are warning signs. By the time you notice them, a microsleep could be close."
+            },
+            {
+              "id": "fix",
+              "kind": "choice",
+              "prompt": "What actually fixes tiredness?",
+              "options": [
+                {
+                  "id": "sleep",
+                  "label": "Stopping to sleep",
+                  "correct": true
+                },
+                {
+                  "id": "window",
+                  "label": "Opening the window"
+                },
+                {
+                  "id": "music",
+                  "label": "Loud music"
+                }
+              ],
+              "reason": "Only sleep fixes tiredness. Fresh air and music don't keep you awake for long."
+            }
+          ]
+        },
+        {
+          "id": "remember",
+          "type": "always-remember",
+          "lines": [
+            "If you're tired, stop. Only sleep fixes tiredness.",
+            "Don't drive late at night after a full day's work.",
+            "Share the driving on long trips."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "trip",
+      "title": "Planning a long trip",
+      "icon": "fatigue",
+      "blurb": "Breaks on the B1",
+      "scenes": [
+        {
+          "id": "predict",
+          "type": "prediction",
+          "question": "On a long trip, how often should you take a break, at least?",
+          "format": "numeric",
+          "options": [
+            1,
+            2,
+            4
+          ],
+          "answerClaim": "int.uk.break-every",
+          "unit": "hours"
+        },
+        {
+          "id": "plan",
+          "type": "pick-a-point",
+          "prompt": "You're driving from Windhoek to Oshakati, about {claim:na.stat.b1-distance}. You've been driving for two hours. Where will you stop for a break?",
+          "art": {
+            "kind": "trip-map",
+            "params": {
+              "road": "B1",
+              "places": [
+                {
+                  "id": "whk",
+                  "name": "Windhoek",
+                  "y": 0,
+                  "kind": "town"
+                },
+                {
+                  "id": "oka",
+                  "name": "Okahandja",
+                  "y": 12,
+                  "kind": "town"
+                },
+                {
+                  "id": "rest1",
+                  "name": "Lay-by",
+                  "y": 26,
+                  "kind": "rest"
+                },
+                {
+                  "id": "otj",
+                  "name": "Otjiwarongo",
+                  "y": 38,
+                  "kind": "town"
+                },
+                {
+                  "id": "fuel",
+                  "name": "Fuel stop",
+                  "y": 52,
+                  "kind": "fuel"
+                },
+                {
+                  "id": "tsu",
+                  "name": "Tsumeb",
+                  "y": 64,
+                  "kind": "town"
+                },
+                {
+                  "id": "osh",
+                  "name": "Oshakati",
+                  "y": 96,
+                  "kind": "town"
+                }
+              ]
+            },
+            "alt": "A schematic map of the B1 north from Windhoek, with towns, a lay-by and a fuel stop."
+          },
+          "until": "correct",
+          "points": [
+            {
+              "id": "otj",
+              "label": "Otjiwarongo",
+              "x": 50,
+              "y": 38,
+              "verdict": "good",
+              "title": "A good break",
+              "reason": "After about two hours, stop in a town: get out, stretch, eat, and swap drivers if you can. Take at least {claim:int.uk.break}."
+            },
+            {
+              "id": "tsu",
+              "label": "Push on to Tsumeb",
+              "x": 50,
+              "y": 64,
+              "verdict": "bad",
+              "title": "Too long without a break",
+              "reason": "Pushing on adds more hours at the wheel. Tiredness builds without you noticing."
+            },
+            {
+              "id": "osh",
+              "label": "Keep going to Oshakati",
+              "x": 50,
+              "y": 96,
+              "verdict": "bad",
+              "title": "Don't drive it in one go",
+              "reason": "Driving the whole way without a break is how microsleeps happen."
+            }
+          ]
+        },
+        {
+          "id": "answer",
+          "type": "reveal",
+          "of": "predict",
+          "explain": "Take a break at least every {claim:int.uk.break-every}, for at least {claim:int.uk.break}. For some heavy and passenger vehicles, a planned Namibian rule would limit driving to {claim:na.law.driving-hours} without a break."
+        },
+        {
+          "id": "remember",
+          "type": "always-remember",
+          "lines": [
+            "Plan your breaks before you set off: at least every two hours.",
+            "Start the trip rested, and drive in daylight when you can.",
+            "If you feel sleepy, stop somewhere safe and nap."
+          ]
+        },
+        {
+          "id": "story",
+          "type": "stories",
+          "sensitive": true,
+          "title": "Nearly home",
+          "fictional": true,
+          "label": "A made-up story, based on common situations",
+          "warning": "This story mentions a crash. Nobody's injuries are described in detail.",
+          "paragraphs": [
+            "Maria had worked a full shift before driving north to see her family. She'd done the trip many times.",
+            "Past Tsumeb her eyes kept closing. She opened the window and turned the radio up.",
+            "The next thing she remembers is the car bouncing over the gravel shoulder. She stopped just short of a fence post.",
+            "'I was lucky,' she says. 'Now I sleep first and leave in the morning.'"
+          ],
+          "signpost": {
+            "text": "If a crash has affected you or someone close to you, you don't have to deal with it alone. LifeLine/ChildLine Namibia offers free counselling: call {claim:na.support.lifeline}.",
+            "links": [
+              {
+                "name": "LifeLine/ChildLine Namibia",
+                "url": "https://www.lifelinechildline.org.na/"
+              },
+              {
+                "name": "MVA Fund: support after a crash",
+                "url": "https://www.mvafund.com.na/"
+              }
+            ]
+          }
+        },
+        {
+          "id": "resources",
+          "type": "resources",
+          "items": [
+            {
+              "name": "MVA Fund",
+              "desc": "Road safety campaigns and support after a crash.",
+              "url": "https://www.mvafund.com.na/"
+            },
+            {
+              "name": "National Road Safety Council",
+              "desc": "Namibia's road safety campaigns.",
+              "url": "https://www.nrsc.org.na/"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

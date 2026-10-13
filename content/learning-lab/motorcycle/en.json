@@ -1,0 +1,352 @@
+{
+  "slug": "motorcycle",
+  "version": 1,
+  "status": "draft",
+  "locale": "en",
+  "order": 4,
+  "label": "Motorcycle",
+  "title": "Motorcycle safety",
+  "headline": "Your gear is your bodywork",
+  "intro": "On a motorbike there's no cabin, no airbag and no seatbelt. What you wear is all that stands between you and the road.",
+  "icon": "motorcycle",
+  "minutes": 5,
+  "contentNotice": {
+    "text": "Some parts talk about head injuries and the risk of being killed. Injuries are shown as simple diagrams, never as people."
+  },
+  "sources": [
+    "int.who.helmet-brain",
+    "int.who.helmet-death",
+    "na.law.helmet-child",
+    "na.law.moto-pillion",
+    "na.support.lifeline"
+  ],
+  "topics": [
+    {
+      "id": "helmet",
+      "title": "Helmets",
+      "icon": "motorcycle",
+      "blurb": "What a helmet does in a fall",
+      "scenes": [
+        {
+          "id": "predict",
+          "type": "prediction",
+          "question": "Wearing a helmet correctly cuts a motorcyclist's risk of brain injury by up to how much?",
+          "format": "numeric",
+          "options": [
+            25,
+            50,
+            74
+          ],
+          "answerClaim": "int.who.helmet-brain",
+          "unit": "%"
+        },
+        {
+          "id": "setting",
+          "type": "story",
+          "lines": [
+            "You've got a lift home from a friend on a motorbike. It's only a few streets.",
+            "There's one helmet, and your friend is wearing it."
+          ],
+          "art": {
+            "kind": "card",
+            "params": {
+              "icon": "motorcycle",
+              "tint": "#1FA3B5",
+              "extras": [
+                "badge"
+              ]
+            },
+            "alt": "A motorbike, with a helmet symbol beside it."
+          }
+        },
+        {
+          "id": "drop",
+          "type": "toggle-lab",
+          "sensitive": true,
+          "prompt": "In a fall, your head hits the road at the speed you were riding. Compare a head form dropped with and without a helmet.",
+          "art": {
+            "kind": "head-impact",
+            "params": {
+              "style": "motorcycle"
+            },
+            "alt": "A plain head form dropped onto a test block. Colours show where the impact would cause injury."
+          },
+          "requireAll": true,
+          "states": [
+            {
+              "id": "off",
+              "label": "No helmet",
+              "params": {
+                "helmet": false
+              },
+              "caption": "Without a helmet, the full force goes straight into the skull and brain."
+            },
+            {
+              "id": "on",
+              "label": "Helmet",
+              "params": {
+                "helmet": true
+              },
+              "caption": "The helmet's shell spreads the blow and its foam lining crushes slowly, so far less force reaches the brain."
+            }
+          ]
+        },
+        {
+          "id": "answer",
+          "type": "reveal",
+          "of": "predict",
+          "explain": "Wearing a helmet correctly cuts the risk of brain injury by up to {claim:int.who.helmet-brain}. A rider without one is more than {claim:int.who.helmet-death} as likely to die in a crash."
+        },
+        {
+          "id": "law",
+          "type": "quiz-ladder",
+          "intro": "What does Namibian law say?",
+          "questions": [
+            {
+              "id": "pillion",
+              "kind": "truefalse",
+              "prompt": "Only the rider has to wear a helmet. A passenger can ride without one.",
+              "options": [
+                {
+                  "id": "true",
+                  "label": "True"
+                },
+                {
+                  "id": "false",
+                  "label": "False",
+                  "correct": true
+                }
+              ],
+              "reason": "Both the rider and the passenger must wear a motorcycle helmet that fits, with the chin strap done up. The rider must make sure any passenger younger than {claim:na.law.helmet-child} wears one properly."
+            },
+            {
+              "id": "three",
+              "kind": "choice",
+              "prompt": "How many people may ride on a motorbike without a side-car?",
+              "options": [
+                {
+                  "id": "two",
+                  "label": "{claim:na.law.moto-pillion} at most",
+                  "correct": true
+                },
+                {
+                  "id": "three",
+                  "label": "As many as fit on the seat"
+                },
+                {
+                  "id": "one",
+                  "label": "Only the rider"
+                }
+              ],
+              "reason": "No more than {claim:na.law.moto-pillion} people may ride a motorbike: the rider and one passenger."
+            },
+            {
+              "id": "lights",
+              "kind": "choice",
+              "prompt": "When must a motorbike's headlight be on?",
+              "options": [
+                {
+                  "id": "always",
+                  "label": "All the time",
+                  "correct": true
+                },
+                {
+                  "id": "night",
+                  "label": "Only at night"
+                },
+                {
+                  "id": "rain",
+                  "label": "Only in rain or dust"
+                }
+              ],
+              "reason": "A motorbike's headlight must be on at all times, so other drivers see you sooner."
+            }
+          ]
+        },
+        {
+          "id": "remember",
+          "type": "always-remember",
+          "lines": [
+            "Every ride, every rider: helmet on and strapped, even for a short trip.",
+            "If there's only one helmet, the second person doesn't ride.",
+            "A cracked or dropped helmet won't protect you again. Replace it."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "gear",
+      "title": "Protective gear",
+      "icon": "motorcycle",
+      "blurb": "Dressing for a slide",
+      "scenes": [
+        {
+          "id": "predict",
+          "type": "prediction",
+          "question": "Compared with a rider wearing a helmet correctly, how many times as likely is a rider without one to die in a crash?",
+          "format": "numeric",
+          "options": [
+            2,
+            6,
+            10
+          ],
+          "answerClaim": "int.who.helmet-death",
+          "unit": "x"
+        },
+        {
+          "id": "setting",
+          "type": "story",
+          "lines": [
+            "It's hot, and you're only riding to the shops. Shorts and slops feel fine.",
+            "Then a car pulls out without seeing you, and you go down."
+          ],
+          "art": {
+            "kind": "card",
+            "params": {
+              "icon": "motorcycle",
+              "tint": "#E8743B",
+              "extras": [
+                "info"
+              ]
+            },
+            "alt": "A motorbike sliding, with a road-surface pattern."
+          }
+        },
+        {
+          "id": "compare",
+          "type": "toggle-lab",
+          "prompt": "In a slide, the road acts like sandpaper. Compare everyday clothes with full riding gear.",
+          "art": {
+            "kind": "rider-gear",
+            "params": {
+              "gear": "everyday"
+            },
+            "alt": "A rider pictogram, front view, with the body areas that gear protects marked."
+          },
+          "requireAll": true,
+          "states": [
+            {
+              "id": "everyday",
+              "label": "Everyday clothes",
+              "params": {
+                "gear": "everyday"
+              },
+              "caption": "Shorts, a T-shirt and slops wear through in moments. Hands, knees and feet take the worst of it."
+            },
+            {
+              "id": "full",
+              "label": "Full gear",
+              "params": {
+                "gear": "full"
+              },
+              "caption": "A jacket, gloves, long trousers and boots made for riding take the scraping instead of your skin."
+            }
+          ]
+        },
+        {
+          "id": "each",
+          "type": "stepper",
+          "title": "What each piece does",
+          "art": {
+            "kind": "rider-gear",
+            "params": {
+              "gear": "full"
+            },
+            "alt": "The rider pictogram in full gear, with one body area highlighted at a time."
+          },
+          "steps": [
+            {
+              "title": "Helmet",
+              "body": "Protects your brain. Choose one that fits snugly and fasten the strap every time.",
+              "highlight": "helmet"
+            },
+            {
+              "title": "Jacket",
+              "body": "Tough material with armour at the shoulders, elbows and back.",
+              "highlight": "jacket"
+            },
+            {
+              "title": "Gloves",
+              "body": "Your hands go down first in a fall. Gloves keep your palms and fingers working.",
+              "highlight": "gloves"
+            },
+            {
+              "title": "Trousers",
+              "body": "Long, tough trousers protect your hips and knees, not shorts.",
+              "highlight": "trousers"
+            },
+            {
+              "title": "Boots",
+              "body": "Cover your ankles. Slops come off and leave your feet bare.",
+              "highlight": "boots"
+            },
+            {
+              "title": "Be seen",
+              "body": "Bright or reflective colours help drivers spot you, day and night.",
+              "highlight": "visible"
+            }
+          ]
+        },
+        {
+          "id": "answer",
+          "type": "reveal",
+          "of": "predict",
+          "explain": "A rider without a helmet is more than {claim:int.who.helmet-death} as likely to die in a crash. The rest of your gear decides how badly you're hurt."
+        },
+        {
+          "id": "remember",
+          "type": "always-remember",
+          "lines": [
+            "Dress for the slide, not the ride: jacket, gloves, long trousers, boots.",
+            "Bright colours and your headlight help drivers see you.",
+            "Ride as if nobody has seen you, because often they haven't."
+          ]
+        },
+        {
+          "id": "story",
+          "type": "stories",
+          "sensitive": true,
+          "title": "The quick trip",
+          "fictional": true,
+          "label": "A made-up story, based on common situations",
+          "warning": "This story mentions a rider being hurt. It doesn't describe the injury in detail.",
+          "paragraphs": [
+            "Tomas only borrowed his cousin's bike to fetch bread. It was five minutes away, so he left the helmet on the hook and rode in a T-shirt.",
+            "A taxi stopped suddenly in front of him. He braked, slid, and went down on the tar.",
+            "His arms and knees were badly scraped and his wrist was broken. 'The doctor said my head missed the kerb by a hand's width,' he says.",
+            "Now the helmet and gloves go on before the engine starts, however short the trip."
+          ],
+          "signpost": {
+            "text": "If a crash has affected you or someone close to you, you don't have to deal with it alone. LifeLine/ChildLine Namibia offers free counselling: call {claim:na.support.lifeline}.",
+            "links": [
+              {
+                "name": "LifeLine/ChildLine Namibia",
+                "url": "https://www.lifelinechildline.org.na/"
+              },
+              {
+                "name": "MVA Fund: support after a crash",
+                "url": "https://www.mvafund.com.na/"
+              }
+            ]
+          }
+        },
+        {
+          "id": "resources",
+          "type": "resources",
+          "items": [
+            {
+              "name": "MVA Fund",
+              "desc": "Road safety campaigns and support after a crash.",
+              "url": "https://www.mvafund.com.na/"
+            },
+            {
+              "name": "National Road Safety Council",
+              "desc": "Namibia's road safety campaigns.",
+              "url": "https://www.nrsc.org.na/"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

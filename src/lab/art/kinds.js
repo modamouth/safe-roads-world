@@ -16,5 +16,6 @@ export const ART_KINDS = [
   'child-seat',      // child-seat pictogram: harness, seat and belt fit
   'trip-map',        // schematic B1 route with towns and rest stops
   'road-treatment',  // top-down road with a safety treatment shown or hidden
-  'water-crossing'   // side view of a low-water crossing, dry or in flood
+  'water-crossing',  // side view of a low-water crossing, dry or in flood
+  'crash-lab'        // crash-test lab: a car with a dummy driven into a barrier, damage by impact speed
 ];

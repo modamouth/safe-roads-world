@@ -196,7 +196,10 @@
     "road": {
       "seen": "First seen: {m} m ahead",
       "stopped": "✓ Stopped with {m} m to spare",
-      "short": "✕ Still moving: {m} m short"
+      "short": "✕ Still moving: {m} m short",
+      "lane": "✓ Stayed in your lane: the kudu crossed",
+      "oncoming": "✕ Swerved into the path of oncoming traffic",
+      "headon": "✕ Head-on crash at {kmh} km/h"
     },
     "city": {
       "stopped": "✓ Stopped {m} m before the pedestrian",

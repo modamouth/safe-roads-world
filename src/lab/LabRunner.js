@@ -180,7 +180,7 @@ export default class LabRunner extends Phaser.Scene {
     const vars = Object.assign({}, progress.answerOf(e.slug, topic.id, e.version, '$vars') || {});
     this.unverified = false; this.sources = [];
     const ctx = this.ctx = {
-      scene: this, exp: e, topic, sc, at, total: flow.length, flow, layer: this.layer, vars,
+      scene: this, exp: e, topic, sc, at, total: flow.length, flow, layer: this.layer, vars, skipSensitive: skip,
       text: s => { if (hasUnverified(s)) this.markUnverified(); return text(s, vars); },
       t,
       setVar: (k, v) => { vars[k] = v; progress.answer(e.slug, topic.id, e.version, '$vars', vars); },

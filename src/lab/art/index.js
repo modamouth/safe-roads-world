@@ -28,7 +28,8 @@ const LOADERS = {
   'child-seat': () => import('./childSeat.js'),
   'trip-map': () => import('./tripMap.js'),
   'road-treatment': () => import('./roadTreatment.js'),
-  'water-crossing': () => import('./waterCrossing.js')
+  'water-crossing': () => import('./waterCrossing.js'),
+  'crash-lab': () => import('./crashLab.js')
 };
 
 export const DEFAULT_AREA = { x: 28, y: 104, w: 484, h: 400 };

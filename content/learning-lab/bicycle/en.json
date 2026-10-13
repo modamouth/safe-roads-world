@@ -1,0 +1,266 @@
+{
+  "slug": "bicycle",
+  "version": 1,
+  "status": "draft",
+  "locale": "en",
+  "order": 5,
+  "label": "Bicycle",
+  "title": "Cycling safety",
+  "headline": "Give cyclists room to ride",
+  "intro": "Many Namibians cycle to work and school. Learn how to pass a cyclist safely, and how a helmet protects you when you ride.",
+  "icon": "bicycle",
+  "minutes": 4,
+  "contentNotice": {
+    "text": "Some parts talk about head injuries. Injuries are shown as simple diagrams, never as people."
+  },
+  "sources": [
+    "int.helmet-bike.fatal",
+    "int.helmet-bike.head",
+    "int.helmet-bike.serious",
+    "int.uk.cyclist-gap",
+    "na.law.pass-safe"
+  ],
+  "topics": [
+    {
+      "id": "passing",
+      "title": "Passing a cyclist",
+      "icon": "bicycle",
+      "blurb": "How much space is enough?",
+      "scenes": [
+        {
+          "id": "predict",
+          "type": "prediction",
+          "question": "Namibia's road regulations say to pass a cyclist at a 'safe distance'. Do they set a minimum number of metres?",
+          "format": "truefalse",
+          "options": [
+            {
+              "id": "true",
+              "label": "True"
+            },
+            {
+              "id": "false",
+              "label": "False"
+            }
+          ],
+          "answerClaim": "na.law.pass-safe",
+          "answer": "false"
+        },
+        {
+          "id": "setting",
+          "type": "story",
+          "lines": [
+            "You're driving out of town on a two-lane road. A cyclist is riding ahead of you, close to the edge.",
+            "There's no oncoming traffic yet. You want to pass."
+          ],
+          "art": {
+            "kind": "passing",
+            "params": {
+              "safeM": "$claim:int.uk.cyclist-gap",
+              "kmh": 60,
+              "scene": "rural"
+            },
+            "alt": "Top-down view of a car behind a cyclist on a two-lane road."
+          }
+        },
+        {
+          "id": "gap",
+          "type": "toggle-lab",
+          "prompt": "Wind from a passing car can push a cyclist sideways, and they may swerve around a pothole. Compare how much space you leave.",
+          "art": {
+            "kind": "passing",
+            "params": {
+              "safeM": "$claim:int.uk.cyclist-gap",
+              "kmh": 60,
+              "scene": "rural"
+            },
+            "alt": "Top-down view of a car overtaking a cyclist, with the side gap marked. A gap that is too small is hatched and labelled."
+          },
+          "requireAll": true,
+          "states": [
+            {
+              "id": "close",
+              "label": "Squeeze past",
+              "params": {
+                "gap": 0.6,
+                "kmh": 60
+              },
+              "caption": "Squeezing past leaves the cyclist no room to wobble or avoid a pothole."
+            },
+            {
+              "id": "wide",
+              "label": "Move out",
+              "params": {
+                "gap": 1.8,
+                "kmh": 60
+              },
+              "caption": "Moving well out, into the other lane when it's clear, gives the cyclist room. Wait behind them if you can't."
+            }
+          ]
+        },
+        {
+          "id": "answer",
+          "type": "reveal",
+          "of": "predict",
+          "explain": "The regulations don't set a number: they say to pass on the right at a safe distance. As a guide, the UK Highway Code asks for at least {claim:int.uk.cyclist-gap} at town speeds, and more when you're faster."
+        },
+        {
+          "id": "rules",
+          "type": "quiz-ladder",
+          "intro": "And when you're the one cycling?",
+          "questions": [
+            {
+              "id": "single",
+              "kind": "choice",
+              "prompt": "You're cycling with friends. How should you ride?",
+              "options": [
+                {
+                  "id": "single",
+                  "label": "In single file",
+                  "correct": true
+                },
+                {
+                  "id": "abreast",
+                  "label": "Side by side, to be seen"
+                },
+                {
+                  "id": "any",
+                  "label": "However you like"
+                }
+              ],
+              "reason": "Cyclists must ride in single file, except when overtaking another cyclist."
+            },
+            {
+              "id": "sidewalk",
+              "kind": "truefalse",
+              "prompt": "If the road is busy, you can ride your bicycle on the sidewalk.",
+              "options": [
+                {
+                  "id": "true",
+                  "label": "True"
+                },
+                {
+                  "id": "false",
+                  "label": "False",
+                  "correct": true
+                }
+              ],
+              "reason": "Nobody may ride or push a vehicle on a sidewalk, and that includes bicycles. Get off and walk it instead."
+            }
+          ]
+        },
+        {
+          "id": "remember",
+          "type": "always-remember",
+          "lines": [
+            "Pass a cyclist only when you can move well out. If you can't, wait.",
+            "Check your mirrors and look before opening a car door.",
+            "Cyclists: ride in single file, be seen, and stay off the sidewalk."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "helmet",
+      "title": "Bicycle helmets",
+      "icon": "bicycle",
+      "blurb": "What a helmet changes",
+      "scenes": [
+        {
+          "id": "predict",
+          "type": "prediction",
+          "question": "Wearing a bicycle helmet was linked to how much lower odds of a serious head injury?",
+          "format": "numeric",
+          "options": [
+            20,
+            45,
+            69
+          ],
+          "answerClaim": "int.helmet-bike.serious",
+          "unit": "%"
+        },
+        {
+          "id": "setting",
+          "type": "story",
+          "lines": [
+            "You're cycling to work. A parked car's door swings open right in front of you.",
+            "You brake, but you go over the handlebars."
+          ],
+          "art": {
+            "kind": "card",
+            "params": {
+              "icon": "bicycle",
+              "tint": "#3DBE7A",
+              "extras": [
+                "badge"
+              ]
+            },
+            "alt": "A bicycle, with a helmet symbol."
+          }
+        },
+        {
+          "id": "drop",
+          "type": "toggle-lab",
+          "sensitive": true,
+          "prompt": "Your head can hit the road even at cycling speed. Compare a head form with and without a bicycle helmet.",
+          "art": {
+            "kind": "head-impact",
+            "params": {
+              "style": "bicycle"
+            },
+            "alt": "A plain head form dropped onto a test block. Colours show where the impact would cause injury."
+          },
+          "requireAll": true,
+          "states": [
+            {
+              "id": "off",
+              "label": "No helmet",
+              "params": {
+                "helmet": false
+              },
+              "caption": "Without a helmet, the skull takes the whole blow."
+            },
+            {
+              "id": "on",
+              "label": "Helmet",
+              "params": {
+                "helmet": true
+              },
+              "caption": "The foam crushes and spreads the impact, so much less reaches the brain."
+            }
+          ]
+        },
+        {
+          "id": "answer",
+          "type": "reveal",
+          "of": "predict",
+          "explain": "In studies, wearing a bicycle helmet was linked to {claim:int.helmet-bike.serious} lower odds of serious head injury, {claim:int.helmet-bike.head} lower odds of any head injury and {claim:int.helmet-bike.fatal} lower odds of a fatal one."
+        },
+        {
+          "id": "remember",
+          "type": "always-remember",
+          "lines": [
+            "Wear a helmet that fits, on every ride.",
+            "Be seen: lights at night, bright or reflective clothes.",
+            "Watch for car doors opening and ride clear of parked cars."
+          ]
+        },
+        {
+          "id": "resources",
+          "type": "resources",
+          "items": [
+            {
+              "name": "MVA Fund",
+              "desc": "Road safety campaigns and support after a crash.",
+              "url": "https://www.mvafund.com.na/"
+            },
+            {
+              "name": "National Road Safety Council",
+              "desc": "Namibia's road safety campaigns.",
+              "url": "https://www.nrsc.org.na/"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

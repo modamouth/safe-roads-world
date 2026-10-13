@@ -1,0 +1,328 @@
+{
+  "slug": "road-rules",
+  "version": 1,
+  "status": "draft",
+  "locale": "en",
+  "order": 9,
+  "label": "Road rules",
+  "title": "Road rules",
+  "headline": "The rules people get wrong",
+  "intro": "Test yourself on the Namibian road rules that drivers most often get wrong, from traffic circles to dead traffic lights.",
+  "icon": "rules",
+  "minutes": 5,
+  "sources": [
+    "int.uk.gap",
+    "int.who.phone",
+    "na.law.speed-urban"
+  ],
+  "topics": [
+    {
+      "id": "moving",
+      "title": "Moving through traffic",
+      "icon": "rules",
+      "blurb": "Circles, lights and lanes",
+      "checkpoint": true,
+      "scenes": [
+        {
+          "id": "predict",
+          "type": "prediction",
+          "question": "What's the general speed limit on a public road inside a town in Namibia, unless a sign shows a lower one?",
+          "format": "numeric",
+          "options": [
+            40,
+            50,
+            60,
+            80
+          ],
+          "answerClaim": "na.law.speed-urban",
+          "unit": "km/h"
+        },
+        {
+          "id": "quiz",
+          "type": "quiz-ladder",
+          "intro": "Four everyday situations. What does the law say?",
+          "questions": [
+            {
+              "id": "circle",
+              "kind": "choice",
+              "line": "You're coming up to a traffic circle. A car is already going around it from your right.",
+              "prompt": "Who goes first?",
+              "options": [
+                {
+                  "id": "them",
+                  "label": "The car on your right",
+                  "correct": true
+                },
+                {
+                  "id": "you",
+                  "label": "You"
+                },
+                {
+                  "id": "bigger",
+                  "label": "Whoever is bigger"
+                }
+              ],
+              "reason": "At a traffic circle, yield to all traffic approaching from your right within the junction, unless a sign or officer says otherwise."
+            },
+            {
+              "id": "amber",
+              "kind": "choice",
+              "line": "The light ahead turns yellow. You're well back from the stop line.",
+              "prompt": "What should you do?",
+              "options": [
+                {
+                  "id": "stop",
+                  "label": "Stop behind the line",
+                  "correct": true
+                },
+                {
+                  "id": "go",
+                  "label": "Speed up to make it"
+                }
+              ],
+              "reason": "A steady yellow means stop behind the line. Only carry on if you're so close that you can't stop safely."
+            },
+            {
+              "id": "dead",
+              "kind": "choice",
+              "line": "The power's out and the traffic lights at a junction are dark.",
+              "prompt": "How do you treat the junction?",
+              "options": [
+                {
+                  "id": "stop4",
+                  "label": "As a four-way stop",
+                  "correct": true
+                },
+                {
+                  "id": "main",
+                  "label": "The busier road has right of way"
+                },
+                {
+                  "id": "go",
+                  "label": "Drive through carefully"
+                }
+              ],
+              "reason": "When no light is working, every driver must act as at a three-way or four-way stop."
+            },
+            {
+              "id": "shoulder",
+              "kind": "truefalse",
+              "line": "Traffic is crawling. The shoulder is empty.",
+              "prompt": "You may drive on the shoulder to get past.",
+              "options": [
+                {
+                  "id": "true",
+                  "label": "True"
+                },
+                {
+                  "id": "false",
+                  "label": "False",
+                  "correct": true
+                }
+              ],
+              "reason": "You may not drive on the shoulder of a public road."
+            }
+          ],
+          "score": {
+            "bands": [
+              {
+                "min": 0,
+                "title": "Time for a refresher",
+                "body": "Some of these rules surprise a lot of drivers. Read the regulations, then try again."
+              },
+              {
+                "min": 0.5,
+                "title": "Getting there",
+                "body": "You know most of them. Check the ones you missed."
+              },
+              {
+                "min": 1,
+                "title": "Spot on",
+                "body": "You know the rules that most people get wrong."
+              }
+            ]
+          }
+        },
+        {
+          "id": "answer",
+          "type": "reveal",
+          "of": "predict",
+          "explain": "Inside a town, the general limit is {claim:na.law.speed-urban}, unless a sign shows a lower one."
+        },
+        {
+          "id": "remember",
+          "type": "always-remember",
+          "lines": [
+            "Yield to traffic already in the circle from your right.",
+            "Yellow means stop if you safely can.",
+            "Dead traffic lights: treat the junction as a four-way stop."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "aware",
+      "title": "Staying aware",
+      "icon": "rules",
+      "blurb": "Phones, gaps and people",
+      "checkpoint": true,
+      "scenes": [
+        {
+          "id": "predict",
+          "type": "prediction",
+          "question": "Drivers using a mobile phone are about how many times more likely to crash?",
+          "format": "numeric",
+          "options": [
+            2,
+            4,
+            8
+          ],
+          "answerClaim": "int.who.phone",
+          "unit": "x"
+        },
+        {
+          "id": "quiz",
+          "type": "quiz-ladder",
+          "intro": "Four more situations.",
+          "questions": [
+            {
+              "id": "phone",
+              "kind": "choice",
+              "line": "Your phone rings while you're driving.",
+              "prompt": "What's allowed?",
+              "options": [
+                {
+                  "id": "handsfree",
+                  "label": "Hands-free, with the phone fixed or a headset",
+                  "correct": true
+                },
+                {
+                  "id": "hold",
+                  "label": "Holding it briefly at a red light"
+                },
+                {
+                  "id": "speaker",
+                  "label": "Holding it on speaker"
+                }
+              ],
+              "reason": "You may not drive while holding a phone. You may only use it hands-free, fixed to the car or through a headset."
+            },
+            {
+              "id": "gap",
+              "kind": "choice",
+              "line": "You're following a car on the highway.",
+              "prompt": "How close may you follow?",
+              "options": [
+                {
+                  "id": "prudent",
+                  "label": "No closer than is reasonable for the speed, traffic and road",
+                  "correct": true
+                },
+                {
+                  "id": "car",
+                  "label": "One car length"
+                },
+                {
+                  "id": "any",
+                  "label": "Any distance, if you're alert"
+                }
+              ],
+              "reason": "The law says no closer than is reasonable and prudent. As a guide, keep at least a {claim:int.uk.gap} gap, and double it on wet roads."
+            },
+            {
+              "id": "zebra",
+              "kind": "choice",
+              "line": "Someone has stepped onto a zebra crossing on your half of the road.",
+              "prompt": "What must you do?",
+              "options": [
+                {
+                  "id": "yield",
+                  "label": "Yield and let them cross",
+                  "correct": true
+                },
+                {
+                  "id": "hoot",
+                  "label": "Hoot and keep going"
+                }
+              ],
+              "reason": "Drivers must yield to a pedestrian on a crossing who is on their half of the road, or close to it."
+            },
+            {
+              "id": "bus",
+              "kind": "choice",
+              "line": "A bus has stopped and people are getting off.",
+              "prompt": "How do you pass it?",
+              "options": [
+                {
+                  "id": "care",
+                  "label": "Slowly, watching for people",
+                  "correct": true
+                },
+                {
+                  "id": "fast",
+                  "label": "Quickly, before it pulls off"
+                }
+              ],
+              "reason": "When passing a stationary bus, take care for people getting on or off, or walking to or from it."
+            }
+          ],
+          "score": {
+            "bands": [
+              {
+                "min": 0,
+                "title": "Time for a refresher",
+                "body": "Have another look at the ones you missed."
+              },
+              {
+                "min": 0.5,
+                "title": "Getting there",
+                "body": "Good, but check the ones you missed."
+              },
+              {
+                "min": 1,
+                "title": "Spot on",
+                "body": "Well done."
+              }
+            ]
+          }
+        },
+        {
+          "id": "answer",
+          "type": "reveal",
+          "of": "predict",
+          "explain": "Drivers using a phone are about {claim:int.who.phone} more likely to crash. In Namibia, holding a phone while driving is against the law."
+        },
+        {
+          "id": "remember",
+          "type": "always-remember",
+          "lines": [
+            "Phone out of your hand while you drive.",
+            "Leave a gap you could stop in.",
+            "People on foot first at crossings and around buses."
+          ]
+        },
+        {
+          "id": "resources",
+          "type": "resources",
+          "items": [
+            {
+              "name": "Road Traffic and Transport Regulations",
+              "desc": "The annotated regulations, published by the Legal Assistance Centre.",
+              "url": "https://www.lac.org.na/"
+            },
+            {
+              "name": "MVA Fund",
+              "desc": "Road safety campaigns and support after a crash.",
+              "url": "https://www.mvafund.com.na/"
+            },
+            {
+              "name": "National Road Safety Council",
+              "desc": "Namibia's road safety campaigns.",
+              "url": "https://www.nrsc.org.na/"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

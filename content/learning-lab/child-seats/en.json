@@ -1,0 +1,311 @@
+{
+  "slug": "child-seats",
+  "version": 1,
+  "status": "draft",
+  "locale": "en",
+  "order": 8,
+  "label": "Child car seats",
+  "title": "Child passengers",
+  "headline": "The right seat, fitted right",
+  "intro": "A child in a car needs more than a lap or an adult belt. See how a child seat protects them, and how to check it's done right.",
+  "icon": "child_seat",
+  "minutes": 5,
+  "contentNotice": {
+    "text": "This experience talks about children being hurt in crashes. It uses simple diagrams, not images of children."
+  },
+  "sources": [
+    "int.who.child-infant",
+    "na.law.adult-age",
+    "na.law.adult-height",
+    "na.stat.child-law",
+    "na.support.lifeline"
+  ],
+  "topics": [
+    {
+      "id": "seat",
+      "title": "Fitting a child seat",
+      "icon": "child_seat",
+      "blurb": "Firm seat, snug harness",
+      "scenes": [
+        {
+          "id": "predict",
+          "type": "prediction",
+          "question": "Child restraints cut deaths among infants in crashes by about how much?",
+          "format": "numeric",
+          "options": [
+            20,
+            45,
+            71
+          ],
+          "answerClaim": "int.who.child-infant",
+          "unit": "%"
+        },
+        {
+          "id": "setting",
+          "type": "story",
+          "lines": [
+            "You're driving your sister's toddler home. The child seat is in the back, but it was put in quickly.",
+            "It moves when you push it, and the straps are a bit loose."
+          ],
+          "art": {
+            "kind": "card",
+            "params": {
+              "icon": "child_seat",
+              "tint": "#1FA3B5",
+              "extras": [
+                "check"
+              ]
+            },
+            "alt": "A child car seat in the back of a car."
+          }
+        },
+        {
+          "id": "install",
+          "type": "toggle-lab",
+          "sensitive": true,
+          "prompt": "A car brakes hard in front of you. Compare a seat fitted loosely and one fitted firmly.",
+          "art": {
+            "kind": "child-seat",
+            "params": {
+              "view": "install"
+            },
+            "alt": "Side view of a child seat on a rear seat during a sudden stop."
+          },
+          "requireAll": true,
+          "states": [
+            {
+              "id": "loose",
+              "label": "Loose",
+              "params": {
+                "firm": false
+              },
+              "caption": "A loose seat lurches forward and the child goes with it."
+            },
+            {
+              "id": "firm",
+              "label": "Firm",
+              "params": {
+                "firm": true
+              },
+              "caption": "Fitted firmly, the seat barely moves and holds the child in place."
+            }
+          ]
+        },
+        {
+          "id": "harness",
+          "type": "toggle-lab",
+          "sensitive": true,
+          "prompt": "Now the harness. Compare loose straps with straps done up snugly.",
+          "art": {
+            "kind": "child-seat",
+            "params": {
+              "view": "harness"
+            },
+            "alt": "Side view of a child in a harnessed seat during a sudden stop."
+          },
+          "requireAll": true,
+          "states": [
+            {
+              "id": "slack",
+              "label": "Loose straps",
+              "params": {
+                "snug": false
+              },
+              "caption": "With slack in the straps, the child slides forward and can come out of them."
+            },
+            {
+              "id": "snug",
+              "label": "Snug straps",
+              "params": {
+                "snug": true
+              },
+              "caption": "Snug straps keep the child in the seat's protective shell."
+            }
+          ]
+        },
+        {
+          "id": "answer",
+          "type": "reveal",
+          "of": "predict",
+          "explain": "Child restraints cut deaths among infants by about {claim:int.who.child-infant}. But {claim:na.stat.child-law}: Namibian law only requires one if the car has one, so it's up to you."
+        },
+        {
+          "id": "remember",
+          "type": "always-remember",
+          "lines": [
+            "Fit the seat so it moves no more than a little when you push it.",
+            "Do the harness up snugly every trip. You should only fit one finger under the straps.",
+            "Children ride in the back, in a seat that suits their size."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "belt",
+      "title": "Out of the booster",
+      "icon": "child_seat",
+      "blurb": "When does an adult belt fit?",
+      "scenes": [
+        {
+          "id": "predict",
+          "type": "prediction",
+          "question": "For seatbelt rules, Namibian law counts a person as an adult once they're taller than how many metres?",
+          "format": "numeric",
+          "options": [
+            1.2,
+            1.35,
+            1.5
+          ],
+          "answerClaim": "na.law.adult-height",
+          "unit": "m"
+        },
+        {
+          "id": "setting",
+          "type": "story",
+          "lines": [
+            "Your nephew says he's too big for a booster seat now. He wants to sit on the back seat like an adult."
+          ],
+          "art": {
+            "kind": "card",
+            "params": {
+              "icon": "child_seat",
+              "tint": "#E8743B",
+              "extras": [
+                "info"
+              ]
+            },
+            "alt": "A child on a rear seat with an adult seatbelt."
+          }
+        },
+        {
+          "id": "fit",
+          "type": "toggle-lab",
+          "prompt": "An adult belt is made for an adult body. Compare where it sits on a child, with and without a booster.",
+          "art": {
+            "kind": "child-seat",
+            "params": {
+              "view": "belt"
+            },
+            "alt": "Side view of a child on a rear seat wearing an adult seatbelt."
+          },
+          "requireAll": true,
+          "states": [
+            {
+              "id": "without",
+              "label": "No booster",
+              "params": {
+                "booster": false
+              },
+              "caption": "Without a booster the belt crosses the neck and the soft belly, where it can cause serious injury."
+            },
+            {
+              "id": "with",
+              "label": "Booster",
+              "params": {
+                "booster": true
+              },
+              "caption": "A booster lifts the child so the belt crosses the shoulder and the hips instead."
+            }
+          ]
+        },
+        {
+          "id": "check",
+          "type": "stepper",
+          "title": "The five-step belt check",
+          "art": {
+            "kind": "child-seat",
+            "params": {
+              "view": "belt"
+            },
+            "alt": "The child on the rear seat, with one point of the belt check highlighted at a time."
+          },
+          "steps": [
+            {
+              "title": "Back against the seat",
+              "body": "Can they sit with their back right against the seat back?",
+              "highlight": "back"
+            },
+            {
+              "title": "Knees bend at the edge",
+              "body": "Do their knees bend over the front of the seat?",
+              "highlight": "knees"
+            },
+            {
+              "title": "Belt across the shoulder",
+              "body": "Does the belt cross the middle of the shoulder, not the neck?",
+              "highlight": "sash"
+            },
+            {
+              "title": "Belt low on the hips",
+              "body": "Does the lap part sit low across the tops of the thighs, not the belly?",
+              "highlight": "lap"
+            },
+            {
+              "title": "Stays like that",
+              "body": "Can they sit like this for the whole trip? If not, they still need a booster.",
+              "highlight": "stay"
+            }
+          ]
+        },
+        {
+          "id": "answer",
+          "type": "reveal",
+          "of": "predict",
+          "explain": "For seatbelt rules, someone taller than {claim:na.law.adult-height} or older than {claim:na.law.adult-age} counts as an adult. Being old enough isn't the same as the belt fitting: use the five-step check."
+        },
+        {
+          "id": "remember",
+          "type": "always-remember",
+          "lines": [
+            "Keep a child in a booster until the adult belt passes all five steps.",
+            "Every child must use a child seat or a belt, never your lap.",
+            "If there's no free belted seat, a child must sit in the back."
+          ]
+        },
+        {
+          "id": "story",
+          "type": "stories",
+          "sensitive": true,
+          "title": "Just around the corner",
+          "fictional": true,
+          "label": "A made-up story, based on common situations",
+          "warning": "This story mentions a child being hurt. It doesn't describe the injury in detail.",
+          "paragraphs": [
+            "Ndapewa was running late for school, so she put her son on the back seat without his booster. It was only around the corner.",
+            "A car pulled out in front of them and she braked hard. The belt slid up from his hips onto his belly.",
+            "He spent a week in hospital with bruising inside. 'He's fine now,' she says, 'but I'll never skip the booster again.'"
+          ],
+          "signpost": {
+            "text": "If a crash has affected you or someone close to you, you don't have to deal with it alone. LifeLine/ChildLine Namibia offers free counselling: call {claim:na.support.lifeline}.",
+            "links": [
+              {
+                "name": "LifeLine/ChildLine Namibia",
+                "url": "https://www.lifelinechildline.org.na/"
+              },
+              {
+                "name": "MVA Fund: support after a crash",
+                "url": "https://www.mvafund.com.na/"
+              }
+            ]
+          }
+        },
+        {
+          "id": "resources",
+          "type": "resources",
+          "items": [
+            {
+              "name": "MVA Fund",
+              "desc": "Road safety campaigns and support after a crash.",
+              "url": "https://www.mvafund.com.na/"
+            },
+            {
+              "name": "National Road Safety Council",
+              "desc": "Namibia's road safety campaigns.",
+              "url": "https://www.nrsc.org.na/"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

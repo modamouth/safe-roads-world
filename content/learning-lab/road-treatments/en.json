@@ -1,0 +1,205 @@
+{
+  "slug": "road-treatments",
+  "version": 1,
+  "status": "draft",
+  "locale": "en",
+  "order": 10,
+  "label": "Road design",
+  "title": "Roads that forgive mistakes",
+  "headline": "Good road design saves lives",
+  "intro": "Everyone makes mistakes on the road. Well-designed roads make sure a mistake doesn't cost a life. See how.",
+  "icon": "treatment",
+  "minutes": 4,
+  "sources": [
+    "int.fencing.wildlife",
+    "int.fhwa.lighting",
+    "int.fhwa.refuge",
+    "int.fhwa.rumble-centre",
+    "int.iihs.roundabout-injury",
+    "int.iihs.roundabout-ped"
+  ],
+  "topics": [
+    {
+      "id": "treatments",
+      "title": "Safer road design",
+      "icon": "treatment",
+      "blurb": "Five features, one idea",
+      "scenes": [
+        {
+          "id": "predict",
+          "type": "prediction",
+          "question": "Converting junctions to roundabouts cut pedestrian crashes in Europe by about how much?",
+          "format": "numeric",
+          "options": [
+            25,
+            50,
+            75
+          ],
+          "answerClaim": "int.iihs.roundabout-ped",
+          "unit": "%"
+        },
+        {
+          "id": "setting",
+          "type": "story",
+          "lines": [
+            "Roads can be built to expect human error: a moment of distraction, a tired driver, a misjudged gap.",
+            "Let's look at five road features and what they do."
+          ],
+          "art": {
+            "kind": "card",
+            "params": {
+              "icon": "treatment",
+              "tint": "#1FA3B5",
+              "extras": [
+                "check"
+              ]
+            },
+            "alt": "A road with safety markings."
+          }
+        },
+        {
+          "id": "rumble",
+          "type": "toggle-lab",
+          "prompt": "Rumble strips along the centre line. A tired driver drifts across.",
+          "art": {
+            "kind": "road-treatment",
+            "params": {
+              "treatment": "rumble",
+              "on": false
+            },
+            "alt": "Top-down road with centre-line rumble strips shown or hidden."
+          },
+          "states": [
+            {
+              "id": "off",
+              "label": "Without",
+              "params": {
+                "on": false
+              },
+              "caption": "Without them, a drifting car crosses into oncoming traffic silently."
+            },
+            {
+              "id": "on",
+              "label": "With",
+              "params": {
+                "on": true
+              },
+              "caption": "The noise and shaking wake the driver before they cross. Centre-line strips cut head-on crashes by about {claim:int.fhwa.rumble-centre}."
+            }
+          ],
+          "requireAll": true
+        },
+        {
+          "id": "refuge",
+          "type": "toggle-lab",
+          "prompt": "A refuge island in the middle of a wide road.",
+          "art": {
+            "kind": "road-treatment",
+            "params": {
+              "treatment": "refuge",
+              "on": false
+            },
+            "alt": "Top-down road with a pedestrian refuge island shown or hidden."
+          },
+          "states": [
+            {
+              "id": "off",
+              "label": "Without",
+              "params": {
+                "on": false
+              },
+              "caption": "Without it, people on foot must judge traffic from both directions at once."
+            },
+            {
+              "id": "on",
+              "label": "With",
+              "params": {
+                "on": true
+              },
+              "caption": "With it, they cross one direction at a time. Refuges cut pedestrian crashes by about {claim:int.fhwa.refuge}."
+            }
+          ],
+          "requireAll": true
+        },
+        {
+          "id": "roundabout",
+          "type": "toggle-lab",
+          "prompt": "A busy crossroads, and the same junction as a roundabout.",
+          "art": {
+            "kind": "road-treatment",
+            "params": {
+              "treatment": "roundabout",
+              "on": false
+            },
+            "alt": "Top-down junction shown as a crossroads or a roundabout."
+          },
+          "states": [
+            {
+              "id": "off",
+              "label": "Crossroads",
+              "params": {
+                "on": false
+              },
+              "caption": "At a crossroads, cars can meet at high speed and at right angles."
+            },
+            {
+              "id": "on",
+              "label": "Roundabout",
+              "params": {
+                "on": true
+              },
+              "caption": "A roundabout slows everyone down and turns side impacts into glancing ones. Injury crashes fell by {claim:int.iihs.roundabout-injury} in studies."
+            }
+          ],
+          "requireAll": true
+        },
+        {
+          "id": "more",
+          "type": "stepper",
+          "title": "Two more",
+          "steps": [
+            {
+              "title": "Street lighting",
+              "body": "Lighting helps drivers see people on foot at night. It cuts night-time pedestrian injury crashes by about {claim:int.fhwa.lighting}."
+            },
+            {
+              "title": "Wildlife fencing",
+              "body": "Fences with safe crossing points keep kudu and other large animals off the road. They cut large-animal collisions by about {claim:int.fencing.wildlife}."
+            }
+          ]
+        },
+        {
+          "id": "answer",
+          "type": "reveal",
+          "of": "predict",
+          "explain": "Converting junctions to roundabouts cut pedestrian crashes in Europe by about {claim:int.iihs.roundabout-ped}. Good design protects people even when someone makes a mistake."
+        },
+        {
+          "id": "remember",
+          "type": "always-remember",
+          "lines": [
+            "Roads, speeds, vehicles and people all work together to keep you safe.",
+            "Rumble strips are a warning: if you hit them, you need a break.",
+            "Use refuges, crossings and lit routes when you walk."
+          ]
+        },
+        {
+          "id": "resources",
+          "type": "resources",
+          "items": [
+            {
+              "name": "Roads Authority Namibia",
+              "desc": "Planning and maintaining Namibia's road network.",
+              "url": "https://www.ra.org.na/"
+            },
+            {
+              "name": "National Road Safety Council",
+              "desc": "Namibia's road safety campaigns.",
+              "url": "https://www.nrsc.org.na/"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

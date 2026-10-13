@@ -1,3 +1,4 @@
+import Phaser from 'phaser';
 // Chase view down a Namibian rural road, drawn in perspective (no video).
 // World units are metres; z runs forward from the camera, x across the road
 // (left negative; we drive on the left).
@@ -13,11 +14,19 @@
 //     vars.hitKmh (speed on reaching the hazard; the scene freezes before contact).
 //   'microsleep': eyes close for s.seconds at s.kmh; writes vars.distM.
 //   'scene': restyles the view (time, weather, beam).
+//   'swerve' (with hazard 'kudu'): a kudu stands on the verge ahead and an oncoming
+//     vehicle is in the other lane. play('brake' | 'swerve', vars) at vars.speed (or
+//     params.kmh): 'brake' stays in lane and slows while the kudu crosses; 'swerve'
+//     steers into the oncoming lane and collides head-on with the oncoming vehicle
+//     (shake, flash, debris; vehicles only, no people). Players who chose to skip
+//     the injury parts get a freeze before contact instead.
 import { COLORS as C, clamp, lerpColor, REDUCE_MOTION } from '../../config.js';
 import { QUALITY } from '../../quality.js';
 import { stopping, impactKmh, distanceAt } from '../core/derive.js';
 import { t } from '../content.js';
 import { clipTo, label } from './common.js';
+import { Debris, pop } from '../../ui.js';
+import { Sfx } from '../../sfx.js';
 
 const CAMH = 5.5, Z_R = 19, CAR_LEN = 4.5, CAR_W = 1.85, APPROACH = 20;
 const FREEZE = 12;   // when the car can't stop, freeze this far short of the animal so it stays in view (no impact is shown)
@@ -43,13 +52,37 @@ function animalTexture(scene, kind) {
   return key;
 }
 
-export default function create(scene, parent, p, a) {
+// Oncoming minibus (front view) for the swerve scene, when the photo isn't loaded.
+function vanTexture(scene) {
+  if (scene.textures.exists('vanFront')) return 'vanFront';
+  const mk = (key, w, h, fn) => { const g = scene.make.graphics({ x: 0, y: 0, add: false }); fn(g); g.generateTexture(key, w, h); g.destroy(); };
+  mk('vanFront', 200, 190, g => {
+    g.fillStyle(0x000000, 0.32); g.fillEllipse(100, 184, 186, 18);
+    g.fillStyle(0x0D1117, 1); g.fillRoundedRect(16, 146, 36, 40, 8); g.fillRoundedRect(148, 146, 36, 40, 8);
+    g.fillStyle(0xF4F1E8, 1); g.fillRoundedRect(8, 16, 184, 150, { tl: 30, tr: 30, bl: 12, br: 12 });
+    g.fillStyle(C.teal, 1); g.fillRect(8, 104, 184, 10);
+    g.fillStyle(0x17222F, 1); g.fillRoundedRect(24, 28, 152, 66, { tl: 22, tr: 22, bl: 6, br: 6 });
+    g.fillStyle(0x2C4058, 1); g.fillTriangle(30, 92, 70, 30, 96, 30); g.fillTriangle(30, 92, 96, 30, 100, 92);
+    g.fillStyle(0xF4F1E8, 1); g.fillRect(97, 28, 6, 66);
+    g.fillStyle(C.yellow, 1); g.fillRoundedRect(66, 4, 68, 14, 4);
+    g.fillStyle(0xFFF3B8, 1); g.fillRoundedRect(18, 122, 36, 24, 8); g.fillRoundedRect(146, 122, 36, 24, 8);
+    g.fillStyle(0x2B3440, 1); g.fillRoundedRect(64, 122, 72, 30, 4);
+    g.lineStyle(2, 0x55606E, 1); g.lineBetween(64, 130, 136, 130); g.lineBetween(64, 138, 136, 138); g.lineBetween(64, 146, 136, 146);
+    g.fillStyle(0x222B36, 1); g.fillRoundedRect(10, 156, 180, 22, 7);
+    g.fillStyle(0xFFFBEA, 1); g.fillRect(78, 159, 44, 14);
+  });
+
+  return 'vanFront';
+}
+
+export default function create(scene, parent, p, a, ctx) {
   const c = scene.add.container(0, 0); parent.add(c);
   const HY = a.y + a.h * 0.34, CAR_Y = a.y + a.h - 8, F = (CAR_Y - HY) * Z_R / CAMH, VPX = a.x + a.w / 2;
   const look = { time: p.time || 'dusk', weather: p.weather || 'clear', surface: p.surface || 'tar', seeM: p.seeM || 150 };
   const st = { pos: 0, kmh: p.kmh || 80, phase: 'cruise', drift: 0, hazardZ: null, eyes: 1, t: 0 };
 
-  const sky = scene.add.graphics(); const road = scene.add.graphics();
+  // Scenery sprites use depth -z, so the sky and road must sort behind all of them.
+  const sky = scene.add.graphics().setDepth(-1e6); const road = scene.add.graphics().setDepth(-1e6 + 1);
   c.add([sky, road]);
   const scn = [];
   const add = (tex, wz, xm, sizeM, by, tint) => {
@@ -64,6 +97,11 @@ export default function create(scene, parent, p, a) {
   for (let z = 10; z < SPAN; z += 12) { add('post', z, -4.2, 1.2); add('post', z + 6, 7.4, 1.2); }
   const hazardKey = p.hazard && p.hazard !== 'none' ? (p.hazard === 'kudu' ? 'kudu' : animalTexture(scene, p.hazard)) : null;
   const animal = hazardKey ? add(hazardKey, 9999, -0.3, p.hazard === 'kudu' ? 2.4 : 2.3, 'w') : null;
+  if (animal) animal.fixed = true;
+  const swerveMode = p.mode === 'swerve';
+  const oncoming = swerveMode ? add(scene.textures.exists('img_truck') ? 'img_truck' : vanTexture(scene), 9999, 3.5, 2.1, 'w') : null;
+  if (oncoming) oncoming.fixed = true;
+  if (swerveMode && animal) { animal.xm = -5.2; animal.wz = 42 + Z_R + CAR_LEN; oncoming.wz = 200 + Z_R + CAR_LEN; }
   const eyes = scene.add.graphics(); c.add(eyes);
   const carKey = scene.textures.exists('img_suv') && scene.registry.get('REAL') ? 'img_suv' : 'carRear';
   const car = scene.add.image(VPX, CAR_Y, carKey).setOrigin(0.5, 1);
@@ -71,6 +109,7 @@ export default function create(scene, parent, p, a) {
   const brakeGlow = scene.add.graphics(); c.add(brakeGlow);
   const fx = scene.add.graphics(); c.add(fx);
   const hud = scene.add.container(0, 0); c.add(hud);
+  const deb = new Debris(scene, 960);
   const blackout = scene.add.rectangle(a.x, a.y, a.w, a.h, 0x000000, 1).setOrigin(0).setAlpha(0); c.add(blackout);
   const counter = label(scene, a.x + a.w / 2, a.y + a.h / 2, '', 34, '#FFFFFF').setAlpha(0); c.add(counter);
 
@@ -126,8 +165,8 @@ export default function create(scene, parent, p, a) {
     eyes.clear();
     scn.forEach(o => {
       const z = o.wz - st.pos;
-      if (z < 7 || z > 520) { o.setVisible(false); if (o !== animal && z < 7) o.wz += SPAN; return; }
-      const kk = F / z, x = VPX + (o.xm - st.drift) * kk, y = HY + F * CAMH / z;
+      if (z < 7 || z > 520) { o.setVisible(false); if (!o.fixed && z < 7) o.wz += SPAN; return; }
+      const kk = F / z, x = VPX + (o.xm - st.drift) * kk, y = HY + F * CAMH / z - (o.hop || 0) * kk;
       const sc = o.by === 'w' ? o.sizeM * kk / o.width : o.sizeM * kk / o.height;
       const v = vis(ahead(z));
       o.setVisible(true).setPosition(x, y).setScale(sc).setDepth(-z);
@@ -193,6 +232,17 @@ export default function create(scene, parent, p, a) {
         }
       });
     },
+    play(id, vars) {
+      if (!swerveMode || !animal) return Promise.resolve();
+      const kmh = Number(vars.speed || p.kmh || 100);
+      Object.assign(vars, { kmh });
+      if (run) run.res();
+      hud.removeAll(true); brakeGlow.clear();
+      return new Promise(res => {
+        run = { swerve: true, choice: id, t: 0, kmh, v: kmh / 3.6, vOnc: 80 / 3.6, res };
+        if (REDUCE_MOTION) { finishSwerve(); }
+      });
+    },
     microsleep(kmh, seconds, vars) {
       const d = distanceAt(kmh, seconds);
       Object.assign(vars, { kmh, seconds, distM: Math.round(d) });
@@ -205,6 +255,31 @@ export default function create(scene, parent, p, a) {
     },
     update(time, dt) {
       st.t += dt;
+      deb.update(dt);
+      if (run && run.swerve) {
+        const r = run;
+        r.t += dt;
+        // the kudu leaps out from the verge and across the road
+        const k = clamp((r.t - 0.15) / 1.5, 0, 1);
+        animal.xm = -5.2 + 13.5 * k; animal.hop = k > 0 && k < 1 ? Math.abs(Math.sin(k * Math.PI * 3)) * 0.6 : 0;
+        if (r.choice === 'brake') {
+          if (r.t > 0.6) {
+            if (!r.braking) { r.braking = true; brakeGlow.fillStyle(0xFF2A2A, 0.9); brakeGlow.fillCircle(car.x - car.displayWidth * 0.33, car.y - car.displayHeight * 0.5, 5); brakeGlow.fillCircle(car.x + car.displayWidth * 0.33, car.y - car.displayHeight * 0.5, 5); }
+            r.v = Math.max(0, r.v - 7 * dt);
+          }
+          if (r.t > 2.8 || (r.v === 0 && k >= 1)) finishSwerve();
+        } else {
+          const ks = clamp((r.t - 0.35) / 0.7, 0, 1);
+          st.drift = 3.6 * Phaser.Math.Easing.Sine.InOut(ks);
+          car.angle = Math.sin(ks * Math.PI) * 6;
+          oncoming.wz -= r.vOnc * dt;
+          const gap = ahead(oncoming.wz - st.pos);
+          if (ks >= 1 && (ctx && ctx.skipSensitive ? gap <= 16 : gap <= 0.6)) { if (!(ctx && ctx.skipSensitive)) collide(r); finishSwerve(); }
+        }
+        st.pos += r.v * dt;
+        draw();
+        return;
+      }
       if (run && run.micro) {
         const r = run, v = r.kmh / 3.6;
         r.t += dt;
@@ -229,6 +304,8 @@ export default function create(scene, parent, p, a) {
           if (!r.ok && d >= r.seeM - FREEZE) finish();
           else if (r.braking && d >= r.s.total - 0.01) finish();
         }
+      } else if (swerveMode) {
+        // hold still until the player chooses
       } else if (p.mode === 'scene' || !run) {
         st.pos += (st.kmh / 3.6) * dt * 0.35;                                // slow idle cruise
       }
@@ -236,6 +313,38 @@ export default function create(scene, parent, p, a) {
     },
     destroy() {}
   };
+  // Head-on impact with the oncoming vehicle (restored from the original Speed drive).
+  function collide(r) {
+    // Severity follows the speed the player chose: 80 -> 0.33, 100 -> 0.67, 120 -> 1.
+    const k = clamp((r.kmh - 60) / 60, 0.2, 1), x = car.x, y = car.y - car.displayHeight * 0.45;
+    Sfx.init(scene); Sfx.impact(k);
+    if (!REDUCE_MOTION) { scene.cameras.main.shake(300 + 200 * k, 0.008 + 0.016 * k); scene.cameras.main.flash(120 + 100 * k, 255, 240, 220); }
+    deb.burst(x, y, Math.round(20 + 50 * k), 300 + 330 * k, -Math.PI / 2, Math.PI * 1.1);
+    pop(scene, x, y, 3 + 2.5 * k, 1);
+    scene.tweens.add({ targets: car, y: car.y + 6 + 12 * k, angle: -(3 + 7 * k), duration: 160 });
+    scene.tweens.add({ targets: oncoming, angle: 2 + 6 * k, duration: 200 });
+    oncoming.baseTint = lerpColor(0xFFFFFF, 0x6A6A6A, k);
+    for (let i = 0; i < Math.round(4 + 8 * k); i++) {
+      const sm = scene.add.image(x + (Math.random() - 0.5) * 120, y + Math.random() * 30, 'glow').setDepth(940).setTint(0x3A3A3A).setAlpha(0.55).setScale(0.3);
+      scene.tweens.add({ targets: sm, y: sm.y - 120 - Math.random() * 90, x: sm.x + (Math.random() - 0.5) * 60, scale: 1.3 + Math.random() * 1.4, alpha: 0, duration: 1400 + Math.random() * 900, delay: i * 60, onComplete: () => sm.destroy() });
+    }
+    r.crashed = true;
+  }
+  function finishSwerve() {
+    const r = run; if (!r) return;
+    run = null;
+    if (r.choice === 'brake') {
+      animal.xm = 8.3; animal.hop = 0;
+      hud.add(label(scene, a.x + a.w / 2, a.y + 22, t('art.road.lane'), 15, '#FFFFFF', { backgroundColor: '#1E6B45', padding: { x: 8, y: 4 } }));
+    } else {
+      st.drift = 3.6; if (!r.crashed) car.angle = 0;
+      if (REDUCE_MOTION) oncoming.wz = st.pos + 16 + Z_R + CAR_LEN;
+      hud.add(scene.add.rectangle(a.x, a.y, a.w, a.h, 0x05080D, 0.35).setOrigin(0));
+      hud.add(label(scene, a.x + a.w / 2, a.y + 22, t(r.crashed ? 'art.road.headon' : 'art.road.oncoming', { kmh: r.kmh }), 15, '#FFFFFF', { backgroundColor: '#8E2A2D', padding: { x: 8, y: 4 } }));
+    }
+    draw();
+    r.res();
+  }
   function finish() {
     const r = run; if (!r) return;
     run = null;
