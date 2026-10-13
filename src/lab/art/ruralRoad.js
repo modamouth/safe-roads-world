@@ -101,7 +101,8 @@ export default function create(scene, parent, p, a, ctx) {
   const swerveMode = p.mode === 'swerve';
   const oncoming = swerveMode ? add(scene.textures.exists('img_truck') ? 'img_truck' : vanTexture(scene), 9999, 3.5, 2.1, 'w') : null;
   if (oncoming) oncoming.fixed = true;
-  if (swerveMode && animal) { animal.xm = -5.2; animal.wz = 42 + Z_R + CAR_LEN; oncoming.wz = 200 + Z_R + CAR_LEN; }
+  // The kudu starts close enough to read clearly at phone size; it is larger than cattle.
+  if (swerveMode && animal) { animal.xm = -4.6; animal.sizeM = 2.8; animal.wz = 30 + Z_R + CAR_LEN; oncoming.wz = 170 + Z_R + CAR_LEN; }
   const eyes = scene.add.graphics(); c.add(eyes);
   const carKey = scene.textures.exists('img_suv') && scene.registry.get('REAL') ? 'img_suv' : 'carRear';
   const car = scene.add.image(VPX, CAR_Y, carKey).setOrigin(0.5, 1);
@@ -143,7 +144,9 @@ export default function create(scene, parent, p, a, ctx) {
         x0 = clamp(x0, a.x - 4, a.x + a.w + 4); x1 = clamp(x1, a.x - 4, a.x + a.w + 4);
         if (x1 > x0) { g.fillStyle(shade(col0), 1); g.fillRect(x0, y, x1 - x0, 4); }
       };
-      g.fillStyle(shade(Math.floor(wz / 14) & 1 ? 0xD6A04A : 0xCB9542), 1); g.fillRect(a.x, y, a.w, 4);
+      // At night only the road is lit by the headlights; the verges stay dark.
+      const verge = shade(Math.floor(wz / 14) & 1 ? 0xD6A04A : 0xCB9542);
+      g.fillStyle(look.time === 'night' ? lerpColor(verge, 0x05070C, 0.72) : verge, 1); g.fillRect(a.x, y, a.w, 4);
       if (gravel) {
         seg(EDGE_L - 1.2, EDGE_R + 1.2, Math.floor(wz / 5) & 1 ? 0xC8A98C : 0xBF9F82);
         if (look.weather === 'dust' || p.mode === 'scene') seg(-0.6, 0.6, 0xB5937A);   // wheel ruts
@@ -170,7 +173,9 @@ export default function create(scene, parent, p, a, ctx) {
       const sc = o.by === 'w' ? o.sizeM * kk / o.width : o.sizeM * kk / o.height;
       const v = vis(ahead(z));
       o.setVisible(true).setPosition(x, y).setScale(sc).setDepth(-z);
-      o.setTint(lerpColor(o.baseTint, dark(), 1 - v)).setAlpha(clamp(1.2 - z / 520, 0.25, 1));
+      // Trees and bush off the road sit outside the beam at night; marker posts and animals are lit.
+      const offRoad = look.time === 'night' && o !== animal && o !== oncoming && Math.abs(o.xm) > 6;
+      o.setTint(lerpColor(o.baseTint, dark(), offRoad ? Math.max(0.7, 1 - v) : 1 - v)).setAlpha(clamp(1.2 - z / 520, 0.25, 1));
       // At night, an animal beyond the lights shows only as eyeshine.
       if (o === animal && look.time === 'night' && v < 0.5) {
         o.setAlpha(0.15);
@@ -261,7 +266,7 @@ export default function create(scene, parent, p, a, ctx) {
         r.t += dt;
         // the kudu leaps out from the verge and across the road
         const k = clamp((r.t - 0.15) / 1.5, 0, 1);
-        animal.xm = -5.2 + 13.5 * k; animal.hop = k > 0 && k < 1 ? Math.abs(Math.sin(k * Math.PI * 3)) * 0.6 : 0;
+        animal.xm = -4.6 + 12.9 * k; animal.hop = k > 0 && k < 1 ? Math.abs(Math.sin(k * Math.PI * 3)) * 0.6 : 0;
         if (r.choice === 'brake') {
           if (r.t > 0.6) {
             if (!r.braking) { r.braking = true; brakeGlow.fillStyle(0xFF2A2A, 0.9); brakeGlow.fillCircle(car.x - car.displayWidth * 0.33, car.y - car.displayHeight * 0.5, 5); brakeGlow.fillCircle(car.x + car.displayWidth * 0.33, car.y - car.displayHeight * 0.5, 5); }

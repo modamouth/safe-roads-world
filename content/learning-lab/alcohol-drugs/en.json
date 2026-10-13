@@ -52,15 +52,16 @@
             "Home is only ten minutes away."
           ],
           "art": {
-            "kind": "card",
+            "kind": "rural-road",
             "params": {
-              "icon": "alcohol",
-              "tint": "#E8743B",
-              "extras": [
-                "info"
-              ]
+              "time": "night",
+              "surface": "tar",
+              "hazard": "none",
+              "kmh": 60,
+              "mode": "scene",
+              "seeM": 45
             },
-            "alt": "A bottle and a car key."
+            "alt": "A road at night, lit only by dipped headlights."
           }
         },
         {

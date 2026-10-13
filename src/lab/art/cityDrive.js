@@ -23,8 +23,9 @@ export default function create(scene, parent, p, a) {
   const st = { pos: 0, wet: false, t: 0 };
 
   const skyKey = artKey(scene, 'city_backdrop');
-  const sky = scene.add.image(a.x, a.y, skyKey).setOrigin(0).setDisplaySize(a.w, HY - a.y + 6); c.add(sky);
-  const road = scene.add.graphics(); c.add(road);
+  // Scenery sprites use depth -z, so the sky and road must sort behind all of them.
+  const sky = scene.add.image(a.x, a.y, skyKey).setOrigin(0).setDisplaySize(a.w, HY - a.y + 6).setDepth(-1e6); c.add(sky);
+  const road = scene.add.graphics().setDepth(-1e6 + 1); c.add(road);
   const scn = [];
   const add = (tex, wz, xm, sizeM, by) => {
     if (!scene.textures.exists(tex)) return null;

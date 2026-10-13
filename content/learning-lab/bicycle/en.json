@@ -186,15 +186,13 @@
             "You brake, but you go over the handlebars."
           ],
           "art": {
-            "kind": "card",
+            "kind": "passing",
             "params": {
-              "icon": "bicycle",
-              "tint": "#3DBE7A",
-              "extras": [
-                "badge"
-              ]
+              "safeM": "$claim:int.uk.cyclist-gap",
+              "kmh": 50,
+              "scene": "town"
             },
-            "alt": "A bicycle, with a helmet symbol."
+            "alt": "Top-down view of a cyclist riding along a town street beside parked cars."
           }
         },
         {

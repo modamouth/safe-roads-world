@@ -15,7 +15,7 @@ export default async function choice(ctx, sc) {
   const row = sc.layout === 'row';
   const { list } = optionList(scene, ui, sc.options.map(o => ({
     label: ctx.text(o.label), selected: () => sel === o.id, onTap: () => { sel = o.id; list.forEach(x => x.redraw()); confirm.setEnabled(true); }
-  })), prompt.y + prompt.height + 24, { cols: row ? sc.options.length : 1, h: row ? 72 : 62, size: row ? 24 : TYPE.body });
+  })), prompt.y + prompt.height + 24, { cols: row ? sc.options.length : 1, h: row ? 72 : 62, size: row ? (sc.options.length > 2 ? 20 : 24) : TYPE.body });
   ctx.describe(ctx.text(sc.prompt), [art && art.alt]);
 
   const confirm = ctx.primary(t('lab.confirm'), () => decide());

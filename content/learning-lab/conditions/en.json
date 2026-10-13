@@ -307,7 +307,20 @@
           "lines": [
             "You're driving to Swakopmund. Near the coast, fog rolls in off the sea.",
             "On the way back inland, a dust storm blows across the road."
-          ]
+          ],
+          "art": {
+            "kind": "rural-road",
+            "params": {
+              "time": "day",
+              "surface": "tar",
+              "weather": "fog",
+              "hazard": "none",
+              "kmh": 80,
+              "mode": "scene",
+              "seeM": 60
+            },
+            "alt": "A tarred road disappearing into coastal fog."
+          }
         },
         {
           "id": "see",

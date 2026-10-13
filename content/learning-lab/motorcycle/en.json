@@ -48,15 +48,11 @@
             "There's one helmet, and your friend is wearing it."
           ],
           "art": {
-            "kind": "card",
+            "kind": "rider-gear",
             "params": {
-              "icon": "motorcycle",
-              "tint": "#1FA3B5",
-              "extras": [
-                "badge"
-              ]
+              "gear": "everyday"
             },
-            "alt": "A motorbike, with a helmet symbol beside it."
+            "alt": "A rider pictogram in everyday clothes, with no helmet."
           }
         },
         {
@@ -201,15 +197,11 @@
             "Then a car pulls out without seeing you, and you go down."
           ],
           "art": {
-            "kind": "card",
+            "kind": "rider-gear",
             "params": {
-              "icon": "motorcycle",
-              "tint": "#E8743B",
-              "extras": [
-                "info"
-              ]
+              "gear": "everyday"
             },
-            "alt": "A motorbike sliding, with a road-surface pattern."
+            "alt": "A rider pictogram in shorts, a T-shirt and slops."
           }
         },
         {

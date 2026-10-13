@@ -48,15 +48,11 @@
             "It moves when you push it, and the straps are a bit loose."
           ],
           "art": {
-            "kind": "card",
+            "kind": "child-seat",
             "params": {
-              "icon": "child_seat",
-              "tint": "#1FA3B5",
-              "extras": [
-                "check"
-              ]
+              "view": "install"
             },
-            "alt": "A child car seat in the back of a car."
+            "alt": "Side view of a child seat on the back seat of a car."
           }
         },
         {
@@ -166,15 +162,11 @@
             "Your nephew says he's too big for a booster seat now. He wants to sit on the back seat like an adult."
           ],
           "art": {
-            "kind": "card",
+            "kind": "child-seat",
             "params": {
-              "icon": "child_seat",
-              "tint": "#E8743B",
-              "extras": [
-                "info"
-              ]
+              "view": "belt"
             },
-            "alt": "A child on a rear seat with an adult seatbelt."
+            "alt": "Side view of a child on the back seat wearing an adult seatbelt."
           }
         },
         {

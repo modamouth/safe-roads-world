@@ -46,15 +46,12 @@
             "Let's look at five road features and what they do."
           ],
           "art": {
-            "kind": "card",
+            "kind": "road-treatment",
             "params": {
-              "icon": "treatment",
-              "tint": "#1FA3B5",
-              "extras": [
-                "check"
-              ]
+              "treatment": "rumble",
+              "on": true
             },
-            "alt": "A road with safety markings."
+            "alt": "Top-down view of a road with rumble strips along the centre line."
           }
         },
         {

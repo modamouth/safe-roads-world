@@ -60,17 +60,14 @@
           "id": "setting",
           "type": "story",
           "art": {
-            "kind": "card",
+            "kind": "city-drive",
             "params": {
-              "icon": "steering",
-              "tint": "#1FA3B5",
-              "extras": [
-                "pedestrian",
-                "taxi",
-                "walker"
-              ]
+              "hazardM": 30,
+              "reactionS": "$claim:int.reaction.surprise",
+              "decelDry": "$claim:int.brake.dry",
+              "decelWet": "$claim:int.brake.wet"
             },
-            "alt": "A steering wheel surrounded by symbols for people walking and a minibus taxi."
+            "alt": "A busy Windhoek street at the end of the day: parked minibus taxis and cars, palm trees, and people on both pavements."
           },
           "lines": [
             "It's the end of the working day in Windhoek. You're driving along a busy street lined with shops.",

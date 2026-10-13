@@ -62,6 +62,14 @@
                   "label": "Whoever is bigger"
                 }
               ],
+              "art": {
+                "kind": "road-treatment",
+                "params": {
+                  "treatment": "roundabout",
+                  "on": true
+                },
+                "alt": "Top-down view of a traffic circle."
+              },
               "reason": "At a traffic circle, yield to all traffic approaching from your right within the junction, unless a sign or officer says otherwise."
             },
             {
@@ -80,6 +88,17 @@
                   "label": "Speed up to make it"
                 }
               ],
+              "art": {
+                "kind": "card",
+                "params": {
+                  "icon": "rules",
+                  "tint": "#FFCB2B",
+                  "extras": [
+                    "info"
+                  ]
+                },
+                "alt": "A traffic light showing yellow."
+              },
               "reason": "A steady yellow means stop behind the line. Only carry on if you're so close that you can't stop safely."
             },
             {
@@ -102,6 +121,17 @@
                   "label": "Drive through carefully"
                 }
               ],
+              "art": {
+                "kind": "card",
+                "params": {
+                  "icon": "rules",
+                  "tint": "#7F8FA3",
+                  "extras": [
+                    "info"
+                  ]
+                },
+                "alt": "A dark traffic light at a junction."
+              },
               "reason": "When no light is working, every driver must act as at a three-way or four-way stop."
             },
             {
@@ -120,6 +150,14 @@
                   "correct": true
                 }
               ],
+              "art": {
+                "kind": "road-treatment",
+                "params": {
+                  "treatment": "shoulder",
+                  "on": true
+                },
+                "alt": "Top-down view of a road with a wide shoulder."
+              },
               "reason": "You may not drive on the shoulder of a public road."
             }
           ],
@@ -205,6 +243,17 @@
                   "label": "Holding it on speaker"
                 }
               ],
+              "art": {
+                "kind": "card",
+                "params": {
+                  "icon": "steering",
+                  "tint": "#E8743B",
+                  "extras": [
+                    "info"
+                  ]
+                },
+                "alt": "A steering wheel with a phone symbol."
+              },
               "reason": "You may not drive while holding a phone. You may only use it hands-free, fixed to the car or through a headset."
             },
             {
@@ -227,6 +276,17 @@
                   "label": "Any distance, if you're alert"
                 }
               ],
+              "art": {
+                "kind": "rural-road",
+                "params": {
+                  "time": "day",
+                  "surface": "tar",
+                  "hazard": "none",
+                  "kmh": 100,
+                  "mode": "scene"
+                },
+                "alt": "A tarred highway in daylight."
+              },
               "reason": "The law says no closer than is reasonable and prudent. As a guide, keep at least a {claim:int.uk.gap} gap, and double it on wet roads."
             },
             {
@@ -245,6 +305,14 @@
                   "label": "Hoot and keep going"
                 }
               ],
+              "art": {
+                "kind": "road-treatment",
+                "params": {
+                  "treatment": "refuge",
+                  "on": true
+                },
+                "alt": "Top-down view of a pedestrian crossing with a refuge island."
+              },
               "reason": "Drivers must yield to a pedestrian on a crossing who is on their half of the road, or close to it."
             },
             {
@@ -263,6 +331,17 @@
                   "label": "Quickly, before it pulls off"
                 }
               ],
+              "art": {
+                "kind": "card",
+                "params": {
+                  "icon": "pedestrian",
+                  "tint": "#1FA3B5",
+                  "extras": [
+                    "taxi"
+                  ]
+                },
+                "alt": "People getting off a stopped bus."
+              },
               "reason": "When passing a stationary bus, take care for people getting on or off, or walking to or from it."
             }
           ],

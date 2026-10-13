@@ -46,16 +46,11 @@
             "One is newer and has stability control and airbags. The other is older, with neither."
           ],
           "art": {
-            "kind": "card",
+            "kind": "car-features",
             "params": {
-              "icon": "car_shield",
-              "tint": "#1FA3B5",
-              "extras": [
-                "star",
-                "check"
-              ]
+              "view": "side"
             },
-            "alt": "A car with a safety shield symbol."
+            "alt": "Side view of a car."
           }
         },
         {
@@ -196,15 +191,11 @@
             "Nobody in the back is wearing a belt. It's only a few minutes."
           ],
           "art": {
-            "kind": "card",
+            "kind": "car-features",
             "params": {
-              "icon": "car_shield",
-              "tint": "#E8743B",
-              "extras": [
-                "check"
-              ]
+              "view": "belt"
             },
-            "alt": "A car with a seatbelt symbol."
+            "alt": "Side view of a crash-test dummy sitting in a car seat."
           }
         },
         {
