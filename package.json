@@ -1,18 +1,37 @@
 {
-  "name": "safe-roads-speed-mission",
+  "name": "safe-roads-world",
   "version": "0.1.0",
   "private": true,
-  "description": "Safe Roads World — Speed mission prototype (PromoPlays). Phaser 3 + Vite.",
+  "description": "Safe Roads World (PromoPlays): Mission Map, City Safety Run and the Road Safety Learning Lab. Phaser 3 + Vite.",
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
+    "build": "node scripts/check-content.mjs --quiet && vite build",
+    "build:release": "node scripts/check-content.mjs --release && vite build --mode release",
+    "preview": "vite preview",
+    "check:content": "node scripts/check-content.mjs",
+    "check:release": "node scripts/check-content.mjs --release",
+    "content:sync": "node scripts/sync-sources.mjs",
+    "content:status": "node scripts/content-status.mjs",
+    "test": "vitest run",
+    "test:e2e": "playwright test",
+    "lint": "eslint .",
+    "typecheck": "tsc -p jsconfig.json",
+    "ci": "npm run lint && npm run typecheck && npm test && npm run build && npm run test:e2e"
   },
   "dependencies": {
     "phaser": "^3.80.1"
   },
   "devDependencies": {
-    "vite": "^5.4.21"
+    "@axe-core/playwright": "^4.10.1",
+    "@eslint/js": "^9.17.0",
+    "@playwright/test": "^1.49.1",
+    "eslint": "^9.17.0",
+    "globals": "^15.14.0",
+    "terser": "^5.37.0",
+    "typescript": "^5.7.2",
+    "vite": "^5.4.21",
+    "vitest": "^2.1.9",
+    "zod": "^3.23.8"
   }
 }
