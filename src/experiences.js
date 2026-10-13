@@ -1,143 +1,26 @@
 // ---------------------------------------------------------------------------
-// Learning Lab registry. One entry per experience shown in LabMenu and in the
-// Mission Map's Lab card.
-//   status  'playable' (opens `scene`)
-//           'preview'  (opens the ExperienceIntro screen built from `intro`; its
-//                      perspectives can each be playable or locked)
-//           'locked'   (placeholder: shows "Coming soon")
-//   reset() clears that experience's session state so it can be started fresh.
-// Only mark an experience playable once its scenes exist.
+// Learning Lab registry for menus (LabMenu and the Mission Map's Lab card),
+// built from the content files in content/learning-lab/. The Lab is one
+// Mission holding these experiences; each runs in the LabRunner engine.
+//   status  'playable' (opens in LabRunner) | 'locked' (shows "Coming soon";
+//           release builds lock every experience that isn't approved)
 // ---------------------------------------------------------------------------
-import { state } from './config.js';
+import { allExperiences, isOpen } from './lab/content.js';
+import { progress } from './lab/analytics.js';
 
-const soon = (id, label, icon) => ({ id, label, title: label, icon, status: 'locked' });
-
-export const EXPERIENCES = [
-  {
-    id: 'speed', label: 'Speed', title: 'Speed check', icon: 'car_speed', status: 'playable', scene: 'Predict', minutes: 3,
-    blurb: 'See what a few km/h does in a head-on crash.',
-    reset() { state.guess = null; state.firstSpeed = null; state.tried = { 60: false, 80: false, 90: false }; }
-  },
-  {
-    id: 'pedestrian', label: 'Pedestrian', title: 'Pedestrian safety', icon: 'pedestrian', status: 'preview',
-    intro: {
-      tagline: 'Protecting our most vulnerable',
-      body: "Learn how to protect pedestrians when you're driving and how to stay safe when you're walking.",
-      prompt: 'Pick a perspective to test',
-      options: [
-        {
-          id: 'driving', label: 'Driving', icon: 'steering', status: 'playable', scene: 'StopDistance',
-          predict: {
-            question: 'How many metres does a car need to fully stop when travelling at 50 km/h in dry conditions?',
-            options: [10, 19, 24, 31, 37, 50], unit: 'm',
-            answer: null,   // TODO: set from a cited source (reaction time + braking, dry road) before launch
-            sourceRef: null,
-            note: "We'll reveal the right answer at the end."
-          },
-          // Driving scenario: pick a speed, a pedestrian steps out `hazardM` ahead, the car brakes.
-          scenario: {
-            speeds: [40, 50, 60],   // Namibia's general urban limit is 60 km/h
-            hazardM: 30,           // with the placeholder physics: 40 stops in time, 50 and 60 don't
-            reactionS: 1.5,   // PLACEHOLDER: driver reaction time (s). Validate with a road-safety partner.
-            decel: 7.0,       // PLACEHOLDER: dry-road braking deceleration (m/s^2). Validate before launch.
-            revealKmh: 50     // speed the prediction question asks about
-          }
-        },
-        {
-          id: 'walking', label: 'Walking', icon: 'walker', status: 'playable', scene: 'WalkCross',
-          predict: {
-            question: 'How much more likely is a pedestrian to die when a car travelling at 50 km/h hits them compared to 40 km/h?',
-            options: [1.5, 2, 4], unit: 'x',
-            answer: 2,
-            explain: 'A pedestrian is more than twice as likely to die if a car hits them at 50 km/h than at 40 km/h.',
-            sourceRef: null,  // TODO: cite the source for the answer and the chart figures below
-            note: "We'll reveal the right answer at the end."
-          },
-          // Crossing scenario: pick where to stand, a car approaches in the near lane at `carKmh`.
-          // shopBrand: 'woermann-brock' shows Woermann Brock store branding on the shop across the road.
-          // Needs Woermann Brock's permission before public use; set to null for a generic shop.
-          scenario: { carKmh: 50, decideAtM: 28, shopBrand: 'woermann-brock' },
-          // Screens after the scenario (WalkReveal): answer, chart + tip, then "Always remember".
-          reveal: {
-            heading: 'Be aware, cross with care',
-            sub: 'Stop, look, listen and think every time before you step out.',
-            chart: { title: 'Chance of death %', unit: 'km/h', bars: [[40, 40], [50, 90]] },  // PLACEHOLDER until sourced
-            tip: 'At night or in low light, wear bright, light-coloured or reflective clothing so drivers can see you.',
-            remember: [
-              'Choose the safest place to cross and use a pedestrian crossing if there is one.',
-              'Keep looking both ways as you cross, making sure that drivers can see you.',
-              'Never assume an approaching driver can see you or will stop for you. Drivers also need more time to stop in bad weather.'
-            ]
-          }
-        }
-      ]
-    }
-  },
-  soon('motorcycle', 'Motorcycle', 'motorcycle'),
-  soon('bicycle', 'Bicycle', 'bicycle'),
-  {
-    id: 'heavy', label: 'Heavy vehicle', title: 'Heavy vehicle safety', icon: 'heavy', status: 'preview',
-    intro: {
-      tagline: 'Be truck aware',
-      body: 'Heavy vehicles have bigger blind spots and take longer to stop.\n\nLearn how to stay safe when sharing the road with trucks and buses.',
-      prompt: 'Pick a topic to learn more',
-      options: [
-        {
-          id: 'blind-spots', label: 'Blind spots', icon: 'blind_spot', status: 'playable', scene: 'TruckBlindSpots',
-          // Namibian figures (verify with the MVA Fund before launch):
-          //  - ~6% of registered vehicles are heavy trucks or buses: 19,899 trucks + 5,405 buses of
-          //    401,476 vehicles (2021). WHO Global status report on road safety 2023, Namibia profile:
-          //    https://www.who.int/publications/m/item/road-safety-nam-2023-country-profile
-          //  - 48 deaths, 211 injuries in 112 heavy-vehicle crashes, 1 Jan to 16 Sep 2026, MVA Fund as
-          //    reported by Economist Namibia (22 Sep 2026):
-          //    https://economist.com.na/rising-truck-crashes-trigger-urgent-road-safety-warning-in-erongo-and-otjozondjupa/
-          // The original NSW question asked for the share of road deaths. That needs the MVA Fund's
-          // national death total for the same period, which isn't published yet.
-          predict: {
-            question: 'Heavy trucks and buses make up about 6% of vehicles registered in Namibia. In 2026, up to mid-September, how many people died in crashes involving heavy vehicles?',
-            options: [15, 48, 95], unit: '',
-            answer: 48,
-            explain: '48 people died and 211 were injured in 112 crashes involving heavy vehicles between 1 January and 16 September 2026.',
-            sourceRef: 'MVA Fund via Economist Namibia, 22 Sep 2026; WHO Global status report on road safety 2023 (2021 vehicle data)',
-            note: "We'll reveal the right answer at the end."
-          }
-        },
-        {
-          id: 'braking', label: 'Braking distance', icon: 'truck_brake', status: 'playable', scene: 'TruckBraking',
-          // PLACEHOLDER figures from the Australian (NSW) reference: 84 m at 60 km/h, 131 m at 80 km/h,
-          // 47 m at 40 km/h. One loaded-truck model fits all three: about 2.5 s before the brakes bite
-          // (reaction + air-brake lag) then 3.25 m/s^2. Validate with a Namibian source before launch.
-          predict: {
-            question: 'How many metres does a heavily loaded truck need to fully stop when travelling at 60 km/h?',
-            options: [30, 45, 52, 61, 70, 84], unit: 'm',
-            answer: 84,
-            explain: 'At 60 km/h a heavily loaded truck needs about 84 m to stop. A car needs about 45 m.',
-            sourceRef: null,
-            note: "We'll reveal the right answer at the end."
-          },
-          scenario: {
-            speedKmh: 80, compareSpeeds: [40, 60, 80],
-            truckReactS: 2.47, truckDecel: 3.25,   // PLACEHOLDER (see above)
-            carReactS: 1.5, carDecel: 7.0          // same placeholder car model as Pedestrian Driving
-          },
-          reveal: {
-            remember: [
-              'Never cut in front of a truck, especially when you\u2019re slowing for lights or about to turn.',
-              'Only move in front of a truck when you can see its whole front in your rear-view mirror, and don\u2019t brake suddenly.',
-              'A loaded truck needs far more distance to stop than a car. Give trucks plenty of room.'
-            ]
-          }
-        }
-      ]
-    }
-  },
-  soon('vehicle-safety', 'Vehicle safety', 'car_shield'),
-  soon('conditions', 'Drive to conditions', 'conditions'),
-  soon('child-seats', 'Child car seats', 'child_seat'),
-  soon('road-rules', 'Road rules', 'rules'),
-  soon('road-treatments', 'Road signs & markings', 'treatment'),
-  soon('alcohol-drugs', 'Alcohol & drugs', 'alcohol'),
-  soon('fatigue', 'Fatigue', 'fatigue')
-];
+export const EXPERIENCES = allExperiences().map(e => ({
+  id: e.slug, label: e.label, title: e.title, icon: e.icon, minutes: e.minutes,
+  status: isOpen(e) ? 'playable' : 'locked',
+  topics: e.topics.map(tp => tp.id)
+}));
 
 export const experienceById = id => EXPERIENCES.find(e => e.id === id);
+
+/** Topics finished / total for one experience. */
+export function experienceProgress(e) {
+  const done = e.topics.filter(tp => progress.topicDone(e.id, tp)).length;
+  return { done, of: e.topics.length, complete: done === e.topics.length };
+}
+
+/** Experiences fully finished, for the Lab mission's progress. */
+export const labProgress = () => ({ done: EXPERIENCES.filter(e => experienceProgress(e).complete).length, of: EXPERIENCES.length });

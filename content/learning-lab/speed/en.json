@@ -1,0 +1,353 @@
+{
+  "slug": "speed",
+  "version": 2,
+  "status": "draft",
+  "locale": "en",
+  "order": 1,
+  "label": "Speed",
+  "title": "Speed",
+  "headline": "Can you stop within what you can see?",
+  "intro": "Night falls fast on Namibia's open roads, and cattle, donkeys and kudu don't stay off them. See how your speed decides whether you can stop in time.",
+  "icon": "car_speed",
+  "minutes": 4,
+  "contentNotice": {
+    "text": "This experience talks about the risk of being killed or seriously injured in a crash. It uses diagrams and charts, not crash images."
+  },
+  "sources": [
+    "int.brake.dry",
+    "int.reaction.surprise",
+    "int.speed.power-exponent",
+    "int.who.speed-1pct",
+    "na.law.dip",
+    "na.law.dippedbeam",
+    "na.law.mainbeam",
+    "na.law.speed-tar",
+    "na.stat.animal-collisions",
+    "na.support.lifeline"
+  ],
+  "topics": [
+    {
+      "id": "night-road",
+      "title": "Night on the open road",
+      "icon": "car_speed",
+      "scenes": [
+        {
+          "id": "predict",
+          "type": "prediction",
+          "question": "Cattle, donkeys and dogs often wander onto Namibian roads. How many collisions with domestic animals were recorded from {n:2020} to {n:2025}?",
+          "format": "numeric",
+          "options": [
+            1250,
+            3100,
+            5529
+          ],
+          "answerClaim": "na.stat.animal-collisions"
+        },
+        {
+          "id": "setting",
+          "type": "story",
+          "art": {
+            "kind": "rural-road",
+            "params": {
+              "time": "dusk",
+              "surface": "tar",
+              "hazard": "none",
+              "kmh": 100,
+              "mode": "scene"
+            },
+            "alt": "A tarred two-lane road through dry bushveld at dusk, with farm fences on both sides."
+          },
+          "lines": [
+            "Friday evening. You're driving home to Otjiwarongo on a quiet tarred road.",
+            "The sun has gone down. You switch your headlights on.",
+            "Farm fences line the road, but there are gaps. Cattle sometimes get through."
+          ],
+          "button": "Drive on"
+        },
+        {
+          "id": "pick-speed",
+          "type": "choice",
+          "prompt": "The limit on this road is {claim:na.law.speed-tar}. What speed will you drive at?",
+          "layout": "row",
+          "record": "speed",
+          "options": [
+            {
+              "id": "s80",
+              "label": "{n:80} km/h",
+              "value": 80
+            },
+            {
+              "id": "s100",
+              "label": "{n:100} km/h",
+              "value": 100
+            },
+            {
+              "id": "s120",
+              "label": "{n:120} km/h",
+              "value": 120
+            }
+          ]
+        },
+        {
+          "id": "headlights",
+          "type": "toggle-lab",
+          "prompt": "Dipped headlights only have to light up {claim:na.law.dippedbeam} of road. A cow is standing in your lane, just where the light ends. Can you stop in time?",
+          "art": {
+            "kind": "rural-road",
+            "params": {
+              "time": "night",
+              "surface": "tar",
+              "hazard": "cattle",
+              "mode": "stop",
+              "seeM": "$claim:na.law.dippedbeam",
+              "reactionS": "$claim:int.reaction.surprise",
+              "decel": "$claim:int.brake.dry"
+            },
+            "alt": "Night on the same road. Dipped headlights light a short stretch ahead. A cow is standing in your lane at the edge of the light."
+          },
+          "initial": "$var:speed",
+          "requireAll": true,
+          "states": [
+            {
+              "id": "60",
+              "label": "{n:60}",
+              "params": {
+                "kmh": 60
+              },
+              "caption": "At {var:kmh} km/h you need about {var:stopM} m to stop. The cow was {var:seeM} m ahead when you first saw it."
+            },
+            {
+              "id": "80",
+              "label": "{n:80}",
+              "params": {
+                "kmh": 80
+              },
+              "caption": "At {var:kmh} km/h you need about {var:stopM} m to stop. The cow was {var:seeM} m ahead when you first saw it."
+            },
+            {
+              "id": "100",
+              "label": "{n:100}",
+              "params": {
+                "kmh": 100
+              },
+              "caption": "At {var:kmh} km/h you need about {var:stopM} m to stop. The cow was {var:seeM} m ahead when you first saw it."
+            },
+            {
+              "id": "120",
+              "label": "{n:120}",
+              "params": {
+                "kmh": 120
+              },
+              "caption": "At {var:kmh} km/h you need about {var:stopM} m to stop. The cow was {var:seeM} m ahead when you first saw it."
+            }
+          ]
+        },
+        {
+          "id": "main-beam",
+          "type": "toggle-lab",
+          "prompt": "Main beam must light at least {claim:na.law.mainbeam} ahead. Compare the two at the same speed.",
+          "art": {
+            "kind": "rural-road",
+            "params": {
+              "time": "night",
+              "surface": "tar",
+              "hazard": "cattle",
+              "mode": "stop",
+              "seeM": "$claim:na.law.dippedbeam",
+              "reactionS": "$claim:int.reaction.surprise",
+              "decel": "$claim:int.brake.dry"
+            },
+            "alt": "Night on the road, comparing dipped and main beam. The cow is at the edge of whatever the lights reach."
+          },
+          "requireAll": true,
+          "states": [
+            {
+              "id": "dipped",
+              "label": "Dipped",
+              "params": {
+                "kmh": 100,
+                "seeM": "$claim:na.law.dippedbeam"
+              },
+              "caption": "Dipped beam at {var:kmh} km/h: you see the cow at {var:seeM} m but need {var:stopM} m to stop."
+            },
+            {
+              "id": "main",
+              "label": "Main beam",
+              "params": {
+                "kmh": 100,
+                "seeM": "$claim:na.law.mainbeam"
+              },
+              "caption": "Main beam at {var:kmh} km/h: you see the cow at {var:seeM} m and need {var:stopM} m to stop. Dip it when another car comes."
+            }
+          ]
+        },
+        {
+          "id": "stopping-chart",
+          "type": "chart",
+          "title": "How far you travel before you stop (dry tar)",
+          "kind": "stacked",
+          "x": {
+            "label": "Speed",
+            "unit": "km/h"
+          },
+          "y": {
+            "label": "Distance",
+            "unit": "m"
+          },
+          "derive": {
+            "fn": "stopping",
+            "params": {
+              "speeds": [
+                60,
+                80,
+                100,
+                120
+              ],
+              "reactionS": "$claim:int.reaction.surprise",
+              "decel": "$claim:int.brake.dry"
+            },
+            "claims": [
+              "int.reaction.surprise",
+              "int.brake.dry"
+            ]
+          },
+          "parts": [
+            "While you react",
+            "While you brake"
+          ],
+          "caption": "Dipped beams must light at least {claim:na.law.dippedbeam}, main beams at least {claim:na.law.mainbeam}. At night on dipped beams, only the slowest of these speeds stops within the light."
+        },
+        {
+          "id": "risk-chart",
+          "type": "chart",
+          "title": "Risk of a fatal crash compared with driving at {n:80} km/h",
+          "kind": "line",
+          "x": {
+            "label": "Average speed",
+            "unit": "km/h"
+          },
+          "y": {
+            "label": "Times the risk",
+            "unit": "x"
+          },
+          "derive": {
+            "fn": "power",
+            "params": {
+              "speeds": [
+                80,
+                90,
+                100,
+                110,
+                120
+              ],
+              "base": 80,
+              "exponent": "$claim:int.speed.power-exponent"
+            },
+            "claims": [
+              "int.speed.power-exponent",
+              "int.who.speed-1pct"
+            ]
+          },
+          "caption": "Small increases add up fast. The WHO says each {n:1%} rise in average speed brings about a {claim:int.who.speed-1pct} rise in the risk of a fatal crash."
+        },
+        {
+          "id": "answer",
+          "type": "reveal",
+          "of": "predict",
+          "explain": "{claim:na.stat.animal-collisions} collisions with domestic animals were recorded from {n:2020} to {n:2025}, mostly with cattle, donkeys and dogs. Wild animals like kudu add to the risk at dusk and at night."
+        },
+        {
+          "id": "animals",
+          "type": "stepper",
+          "title": "If an animal is on the road",
+          "steps": [
+            {
+              "title": "Slow down early",
+              "body": "When you see animals near the road, or warning signs, slow down before you reach them. Where there's one, there are often more."
+            },
+            {
+              "title": "Brake firmly, in a straight line",
+              "body": "Keep the car straight while you brake. A sudden swerve at speed can roll a vehicle or send it into oncoming traffic."
+            },
+            {
+              "title": "Look for eyeshine",
+              "body": "At night, animals' eyes reflect your lights before you can make out their shape. Treat any pair of bright dots as an animal."
+            },
+            {
+              "title": "Use main beam, and dip it in time",
+              "body": "On empty roads, main beam shows you more. The law says you must dip it if it could dazzle an oncoming driver. Switch back once they've passed.",
+              "highlight": "lights"
+            }
+          ],
+          "claims": [
+            "na.law.dip"
+          ]
+        },
+        {
+          "id": "remember",
+          "type": "always-remember",
+          "lines": [
+            "Drive at a speed that lets you stop within the distance you can see.",
+            "At night on dipped beams, that distance is short. Slow down.",
+            "If an animal is in the road, brake hard in a straight line. Don't swerve."
+          ]
+        },
+        {
+          "id": "story",
+          "type": "stories",
+          "sensitive": true,
+          "title": "The last stretch home",
+          "fictional": true,
+          "label": "A made-up story, based on common situations",
+          "warning": "This story mentions a crash and an injury. It doesn't describe the injury in detail.",
+          "paragraphs": [
+            "Tomas had driven the road to his uncle's farm a hundred times. He knew every bend, so he drove it fast, even after dark.",
+            "One night a donkey was standing in the road, just beyond his lights. He braked, but there wasn't enough road left. The bakkie hit the donkey and left the road.",
+            "Tomas spent weeks in hospital and months learning to walk without pain. 'I knew the road,' he says now. 'I didn't know what was on it that night.'",
+            "These days he drives the farm road slower after dark, and he waits for the morning when he can."
+          ],
+          "signpost": {
+            "text": "If a crash has affected you or someone close to you, you don't have to deal with it alone. LifeLine/ChildLine Namibia offers free counselling: call {claim:na.support.lifeline}.",
+            "links": [
+              {
+                "name": "LifeLine/ChildLine Namibia",
+                "url": "https://www.lifelinechildline.org.na/"
+              },
+              {
+                "name": "MVA Fund: support after a crash",
+                "url": "https://www.mvafund.com.na/"
+              }
+            ]
+          }
+        },
+        {
+          "id": "resources",
+          "type": "resources",
+          "intro": "Official sources for Namibian roads and road safety.",
+          "items": [
+            {
+              "name": "Roads Authority of Namibia",
+              "desc": "The national road network, road conditions and NaTIS.",
+              "url": "https://www.ra.org.na/"
+            },
+            {
+              "name": "MVA Fund",
+              "desc": "Support after a crash, road safety campaigns and crash figures.",
+              "url": "https://www.mvafund.com.na/"
+            },
+            {
+              "name": "National Road Safety Council",
+              "desc": "Namibia's road safety campaigns.",
+              "url": "https://www.nrsc.org.na/"
+            },
+            {
+              "name": "WHO: Road safety",
+              "desc": "Global evidence on speed and road safety.",
+              "url": "https://www.who.int/health-topics/road-safety"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,81 +1,67 @@
 import Phaser from 'phaser';
-import { W, H, COLORS as C, DATA, state, track } from '../config.js';
+import { W, H, COLORS as C, track } from '../config.js';
 import { setupCam, duskBg, T, button, brand, soundToggle } from '../ui.js';
-import { experienceById } from '../experiences.js';
+import { drawIcon } from '../icons.js';
+import { describe } from '../a11y.js';
+import { EXPERIENCES, experienceProgress, labProgress } from '../experiences.js';
+import { t } from '../lab/content.js';
 import { Sfx } from '../sfx.js';
 
+// Passport: one stamp per Learning Lab experience (a partial ring while some
+// of its topics are done). Progress is saved on the device by the Lab engine.
 export default class Passport extends Phaser.Scene {
   constructor() { super('Passport'); }
 
   create() {
     setupCam(this);
     Sfx.init(this);
-    // Arriving here with every speed tried means the Speed experience was just finished.
-    if (DATA.speeds.every(v => state.tried[v])) state.completed.speed = true;
-    const done = !!state.completed.speed;
-    track('passport_view', { done });
+    this.leaving = false; // scene instances are reused between visits
+    const lp = labProgress();
+    track('passport_view', { stamps: lp.done });
     this.cameras.main.fadeIn(250, 8, 17, 30);
     duskBg(this);
     brand(this); soundToggle(this);
 
-    T(this, W / 2, 112, done ? 'Speed check complete' : 'Your Passport', 38, '#FFFFFF');
+    T(this, W / 2, 104, t('passport.title'), 36, '#FFFFFF');
+    T(this, W / 2, 146, lp.done ? t('passport.stamps', { n: lp.done, of: lp.of }) : t('passport.empty'), 18, lp.done ? '#FFCB2B' : '#E6EDF5',
+      { fontStyle: lp.done ? 'bold' : 'normal', wordWrap: { width: 440 }, align: 'center' });
 
-    const badge = this.add.container(W / 2, 258);
-    const g = this.add.graphics();
-    const shield = (s, col, a) => {
-      g.fillStyle(col, a == null ? 1 : a);
-      g.fillPoints([{ x: -70 * s, y: -80 * s }, { x: 70 * s, y: -80 * s }, { x: 70 * s, y: 10 * s }, { x: 0, y: 92 * s }, { x: -70 * s, y: 10 * s }], true);
-    };
-    if (done) {
-      shield(1, C.yellow); shield(0.84, C.navy);
-      g.lineStyle(8, C.yellow, 1); g.beginPath(); g.arc(0, 12, 38, Math.PI, Math.PI * 2); g.strokePath();
-      g.lineStyle(6, 0xFFFFFF, 1); g.lineBetween(0, 12, 24, -14);
-      g.fillStyle(0xFFFFFF, 1); g.fillCircle(0, 12, 7);
-      g.lineStyle(4, C.red, 1); g.lineBetween(30, -2, 36, -8);
-      badge.add(g); badge.setScale(0.2).setAlpha(0);
-      this.tweens.add({ targets: badge, scale: 1, alpha: 1, duration: 600, ease: 'Back.easeOut', delay: 200, onStart: () => Sfx.chime(true) });
-    } else {
-      shield(1, 0xFFFFFF, 0.12); shield(0.84, C.navy, 1);
-      badge.add([g, T(this, 0, 0, '?', 56, '#7F8FA3')]);
-    }
-
-    T(this, W / 2, 378, done ? 'You earned a badge for your Passport.' : 'Finish a Learning Lab experience to earn your first badge.', 22, '#E6EDF5',
-      { fontStyle: 'normal', wordWrap: { width: 440 }, align: 'center' });
-
-    const speed = experienceById('speed');
-    const tiles = [
-      { n: 'Learning Lab', s: done ? '✓ ' + speed.title : speed.title + ': not yet', st: done ? 'done' : 'next', x: 160 },
-      { n: 'Windhoek City', s: 'Coming soon', st: 'lock', x: 380 }
-    ];
-    tiles.forEach(t => {
-      const y = 476, tg = this.add.graphics();
-      tg.fillStyle(0xFFFFFF, t.st === 'lock' ? 0.05 : 0.1); tg.fillRoundedRect(t.x - 100, y - 40, 200, 80, 16);
-      if (t.st === 'done') { tg.lineStyle(2, C.yellow, 1); tg.strokeRoundedRect(t.x - 100, y - 40, 200, 80, 16); }
-      if (t.st === 'next') { tg.lineStyle(2, C.teal, 1); tg.strokeRoundedRect(t.x - 100, y - 40, 200, 80, 16); }
-      T(this, t.x, y - 10, t.n, 20, t.st === 'lock' ? '#7F8FA3' : '#FFFFFF');
-      T(this, t.x, y + 16, t.s, 15, t.st === 'done' ? '#FFCB2B' : t.st === 'next' ? '#5FD0E0' : '#7F8FA3', { fontStyle: 'normal' });
+    // 4 x 3 grid of stamps
+    const cols = 4, cell = 118, x0 = W / 2 - (cols * cell) / 2 + cell / 2, y0 = 238;
+    const lines = [];
+    EXPERIENCES.forEach((e, i) => {
+      const x = x0 + (i % cols) * cell, y = y0 + Math.floor(i / cols) * 132, pr = experienceProgress(e);
+      const g = this.add.graphics();
+      if (pr.complete) {
+        g.lineStyle(4, C.yellow, 1); g.strokeCircle(x, y, 44); g.lineStyle(1.5, C.yellow, 1); g.strokeCircle(x, y, 37);
+        g.fillStyle(C.navy2, 1); g.fillCircle(x, y, 35); drawIcon(g, e.icon, x, y, 40, C.yellow);
+      } else {
+        g.lineStyle(2, 0xFFFFFF, 0.25); g.strokeCircle(x, y, 44);
+        if (pr.done) { g.lineStyle(4, C.yellow, 1); g.beginPath(); g.arc(x, y, 44, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * pr.done / pr.of); g.strokePath(); }
+        drawIcon(g, e.icon, x, y, 36, 0xFFFFFF, 0.35);
+      }
+      T(this, x, y + 60, e.label, 13, pr.complete ? '#FFFFFF' : '#9AA6B5', { fontStyle: pr.complete ? 'bold' : 'normal', wordWrap: { width: cell - 6 }, align: 'center' });
+      lines.push(e.label + ': ' + (pr.complete ? t('menu.done').replace('✓ ', '') : t('menu.progress', { n: pr.done, of: pr.of })));
     });
+    describe(t('passport.title'), [lp.done ? t('passport.stamps', { n: lp.done, of: lp.of }) : t('passport.empty')].concat(lines));
 
-    this.toast = T(this, W / 2, 572, '', 16, '#B9C6D6', { fontStyle: 'normal', wordWrap: { width: 440 }, align: 'center' }).setAlpha(0);
-    const primary = { size: 22, fill: C.yellow, fillA: 1, color: '#0B1B2E' };
-    const outline = { size: 22, stroke: 0xFFFFFF, hitH: 66 };
-    if (done) {
-      button(this, W / 2, 650, 380, 68, 'Save my Passport on WhatsApp', () => {
+    this.toast = T(this, W / 2, 680, '', 16, '#B9C6D6', { fontStyle: 'normal', wordWrap: { width: 440 }, align: 'center' }).setAlpha(0);
+    if (lp.done) {
+      button(this, W / 2, 740, 380, 64, t('passport.save'), () => {
         track('save_click');
-        this.toast.setText('Prototype only. In the pilot this opens the WhatsApp save flow.');
+        this.toast.setText(t('passport.saveStub'));
         this.tweens.add({ targets: this.toast, alpha: 1, duration: 200 });
-      }, primary);
-      button(this, W / 2, 734, 380, 64, 'Play again', () => {
-        track('replay');
-        speed.reset();
-        this.scene.start(speed.scene);
-      }, outline);
-    } else {
-      button(this, W / 2, 650, 380, 68, 'Go to the Learning Lab', () => this.scene.start('LabMenu'), primary);
+      }, { size: 21, fill: C.yellow, fillA: 1, color: '#0B1B2E' });
     }
-    button(this, 150, 822, 230, 64, 'Back to Lab', () => this.scene.start('LabMenu'), { size: 20, stroke: 0xFFFFFF, hitH: 66 });
-    button(this, 390, 822, 230, 64, 'Mission Map', () => { track('map_nav', { from: 'passport', to: 'map' }); this.scene.start('Map'); },
-      { size: 20, stroke: 0xFFFFFF, hitH: 66 });
-    T(this, W / 2, 922, 'Prototype. Progress is not saved yet.', 14, '#7F8FA3', { fontStyle: 'normal' });
+    button(this, 150, 828, 230, 60, t('passport.toLab'), () => this.go('LabMenu'), { size: 20, stroke: 0xFFFFFF, hitH: 64 });
+    button(this, 390, 828, 230, 60, t('passport.map'), () => { track('map_nav', { from: 'passport', to: 'map' }); this.go('Map'); },
+      { size: 20, stroke: 0xFFFFFF, hitH: 64 });
+    T(this, W / 2, 912, t('passport.saved'), 14, '#9AA6B5', { fontStyle: 'normal' });
+  }
+
+  go(key) {
+    if (this.leaving) return; this.leaving = true;
+    this.cameras.main.fadeOut(220, 8, 17, 30);
+    this.cameras.main.once('camerafadeoutcomplete', () => this.scene.start(key));
   }
 }

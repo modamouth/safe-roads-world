@@ -1,43 +1,11 @@
 // ---------------------------------------------------------------------------
-// Mission content & tuning. Edit this file to change copy, figures, severity.
+// Game-wide constants, colours and session state. Learning Lab copy and
+// figures live in /content (see docs/learning-lab/ENGINE.md), not here.
 // ---------------------------------------------------------------------------
-
-// PLACEHOLDER figures. Replace with sourced local data (and credit the
-// source on the Reveal screen) before this goes in front of real players.
-export const DATA = {
-  question: "What's the chance of a life-threatening injury in a head-on crash at 90 km/h?",
-  options: [15, 30, 55, 75, 90, 96],
-  answer: 90,
-  risk: { 60: 9, 80: 37, 90: 90 },
-  speeds: [60, 80, 90]
-};
-
-// How hard each speed hits. crush is 0-1 of max body deformation (drawn-car fallback only).
-export const SEV = {
-  60: { k: 0.30, crush: 0.30, stop: 90, shake: 0.006, debris: 14, crushMs: 340 },
-  80: { k: 0.65, crush: 0.62, stop: 140, shake: 0.013, debris: 34, crushMs: 380 },
-  90: { k: 1.00, crush: 1.00, stop: 220, shake: 0.024, debris: 64, crushMs: 430 }
-};
-
-export const OUTCOME = {
-  60: 'At 60, most people survive a crash like this. Some are still badly hurt.',
-  80: 'At 80, serious injuries become likely. Survivors may need care for years.',
-  90: 'At 90, you may not survive. Who would be waiting for you at home?'
-};
 
 // Design-space canvas. Rendered at Z zoom so it scales cleanly to any screen.
 export const W = 540, H = 960, Z = 1.5;
 export const GW = W * Z, GH = H * Z;
-
-export const HY = 330;              // horizon line (design px)
-export const ROAD_HW = 250;         // half road width at the bottom row
-export const PXM = ROAD_HW / 3.5;   // px per metre at the bottom row
-export const VF = 2.2;              // visual speed multiplier (keeps 60/80/90 readable on a short road)
-export const VO = 80 / 3.6 * VF;    // oncoming vehicle visual speed (m/s)
-export const SPAN = 900;            // scenery recycle distance (m)
-export const IMPACT_Z = 15;         // distance (m) at which the oncoming vehicle meets you
-
-export const EDGE_COLOR = 0xFFCB2B; // road edge-line colour. Yellow, as far as I know, on SA/Namibian roads. Use 0xFFFFFF for white.
 
 export const FONT = '"Avenir Next","Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
 
@@ -48,26 +16,14 @@ export const COLORS = {
   grassA: 0xD6A04A, grassB: 0xCB9542, haze: 0xF5B06C
 };
 
-// Crash-lab photo layout (design px). Tune if you swap in differently cropped images.
-export const LAB = { floor: 560, barrierX: 396, carLen: 300, top: 300 };
-// contact = barrier face in design px: bgX + 660 (face column in labbg.webp at ground level) * bgW / 800.
-// front = each car photo's front edge (source px of the 760 px-wide labcar images, measured at bumper
-// height). The crushed photos are shorter at the front, so stopping by the real front keeps the car
-// pressed against the wall instead of appearing to bounce off it.
-export const LABG = {
-  bgX: -100, bgY: 100, bgW: 680, bgH: 659, ground: 583, contact: 460, carW: 400,
-  front: { 0: 755, 60: 754, 80: 746, 90: 733 }
-};
-
 export const REDUCE_MOTION = typeof window !== 'undefined'
   && !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
 
 // Shared mutable session state + a hook for pilot analytics.
-// points: session points shown on the Mission Map (nothing awards them yet).
-// completed: experience ids finished this session, e.g. { speed: true }.
-// runs: speeds tried per scenario, keyed 'experience.perspective', e.g. { 'pedestrian.driving': { 30: true } }.
-// predictions: answers from prediction gates, keyed 'experience.perspective', e.g. { 'pedestrian.driving': 31 }.
-export const state = { guess: null, tried: { 60: false, 80: false, 90: false }, firstSpeed: null, events: [], points: 0, completed: {}, predictions: {}, runs: {} };
+// points: points shown on the Mission Map (10 per Learning Lab topic stamp; see lab/analytics.js).
+// completed: Learning Lab experience ids fully finished, e.g. { speed: true }.
+// Lab progress itself is saved on the device by src/lab/core/progress.js.
+export const state = { events: [], points: 0, completed: {} };
 
 export function track(name, data) {
   // Pilot hook: wire this to Supabase / n8n / your event endpoint.
