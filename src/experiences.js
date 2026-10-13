@@ -102,7 +102,32 @@ export const EXPERIENCES = [
             note: "We'll reveal the right answer at the end."
           }
         },
-        { id: 'braking', label: 'Braking distance', icon: 'truck_brake', status: 'locked' }
+        {
+          id: 'braking', label: 'Braking distance', icon: 'truck_brake', status: 'playable', scene: 'TruckBraking',
+          // PLACEHOLDER figures from the Australian (NSW) reference: 84 m at 60 km/h, 131 m at 80 km/h,
+          // 47 m at 40 km/h. One loaded-truck model fits all three: about 2.5 s before the brakes bite
+          // (reaction + air-brake lag) then 3.25 m/s^2. Validate with a Namibian source before launch.
+          predict: {
+            question: 'How many metres does a heavily loaded truck need to fully stop when travelling at 60 km/h?',
+            options: [30, 45, 52, 61, 70, 84], unit: 'm',
+            answer: 84,
+            explain: 'At 60 km/h a heavily loaded truck needs about 84 m to stop. A car needs about 45 m.',
+            sourceRef: null,
+            note: "We'll reveal the right answer at the end."
+          },
+          scenario: {
+            speedKmh: 80, compareSpeeds: [40, 60, 80],
+            truckReactS: 2.47, truckDecel: 3.25,   // PLACEHOLDER (see above)
+            carReactS: 1.5, carDecel: 7.0          // same placeholder car model as Pedestrian Driving
+          },
+          reveal: {
+            remember: [
+              'Never cut in front of a truck, especially when you\u2019re slowing for lights or about to turn.',
+              'Only move in front of a truck when you can see its whole front in your rear-view mirror, and don\u2019t brake suddenly.',
+              'A loaded truck needs far more distance to stop than a car. Give trucks plenty of room.'
+            ]
+          }
+        }
       ]
     }
   },
