@@ -1,0 +1,1921 @@
+{
+  "version": 1,
+  "items": [
+    {
+      "id": "na.law.speed-urban",
+      "text": "General speed limit on a public road inside an urban area, unless a sign shows a lower limit.",
+      "value": 60,
+      "unit": "km/h",
+      "source": {
+        "publisher": "Government of Namibia (annotated by the Legal Assistance Centre)",
+        "title": "Road Traffic and Transport Regulations, 2001 (GN 53 of 2001), as amended",
+        "url": "https://www.lac.org.na/laws/annoREG/Road%20Traffic%20and%20Transport%20Act%2022%20of%201999-Regulations%202001-053.pdf",
+        "date": "2001, annotated text accessed 2026-10-13",
+        "locator": "reg 323(1)(a)"
+      },
+      "jurisdiction": "Namibia",
+      "reviewer": null,
+      "approved_on": null,
+      "status": "verified"
+    },
+    {
+      "id": "na.law.speed-gravel",
+      "text": "General speed limit outside an urban area on a road that is not tarred.",
+      "value": 100,
+      "unit": "km/h",
+      "source": {
+        "publisher": "Government of Namibia (annotated by the Legal Assistance Centre)",
+        "title": "Road Traffic and Transport Regulations, 2001 (GN 53 of 2001), as amended",
+        "url": "https://www.lac.org.na/laws/annoREG/Road%20Traffic%20and%20Transport%20Act%2022%20of%201999-Regulations%202001-053.pdf",
+        "date": "2001, annotated text accessed 2026-10-13",
+        "locator": "reg 323(1)(b)(i)"
+      },
+      "jurisdiction": "Namibia",
+      "reviewer": null,
+      "approved_on": null,
+      "status": "verified"
+    },
+    {
+      "id": "na.law.speed-tar",
+      "text": "General speed limit outside an urban area on a tarred road, and on freeways.",
+      "value": 120,
+      "unit": "km/h",
+      "source": {
+        "publisher": "Government of Namibia (annotated by the Legal Assistance Centre)",
+        "title": "Road Traffic and Transport Regulations, 2001 (GN 53 of 2001), as amended",
+        "url": "https://www.lac.org.na/laws/annoREG/Road%20Traffic%20and%20Transport%20Act%2022%20of%201999-Regulations%202001-053.pdf",
+        "date": "2001, annotated text accessed 2026-10-13",
+        "locator": "reg 323(1)(b)(ii) and 323(2)"
+      },
+      "jurisdiction": "Namibia",
+      "reviewer": null,
+      "approved_on": null,
+      "status": "verified"
+    },
+    {
+      "id": "na.law.speed-heavy",
+      "text": "Speed limit for goods vehicles (and combinations) with a gross vehicle mass over 9 000 kg.",
+      "value": 80,
+      "unit": "km/h",
+      "source": {
+        "publisher": "Government of Namibia (annotated by the Legal Assistance Centre)",
+        "title": "Road Traffic and Transport Regulations, 2001 (GN 53 of 2001), as amended",
+        "url": "https://www.lac.org.na/laws/annoREG/Road%20Traffic%20and%20Transport%20Act%2022%20of%201999-Regulations%202001-053.pdf",
+        "date": "2001, annotated text accessed 2026-10-13",
+        "locator": "reg 324(1)(a)"
+      },
+      "jurisdiction": "Namibia",
+      "reviewer": null,
+      "approved_on": null,
+      "status": "verified"
+    },
+    {
+      "id": "na.law.keep-left",
+      "text": "Drive on the left side of the roadway.",
+      "value": "left",
+      "source": {
+        "publisher": "Government of Namibia (annotated by the Legal Assistance Centre)",
+        "title": "Road Traffic and Transport Regulations, 2001 (GN 53 of 2001), as amended",
+        "url": "https://www.lac.org.na/laws/annoREG/Road%20Traffic%20and%20Transport%20Act%2022%20of%201999-Regulations%202001-053.pdf",
+        "date": "2001, annotated text accessed 2026-10-13",
+        "locator": "reg 327(1)"
+      },
+      "jurisdiction": "Namibia",
+      "reviewer": null,
+      "approved_on": null,
+      "status": "verified"
+    },
+    {
+      "id": "na.law.shoulder",
+      "text": "You may not drive a motor vehicle on the shoulder of a public road.",
+      "value": "not allowed",
+      "source": {
+        "publisher": "Government of Namibia (annotated by the Legal Assistance Centre)",
+        "title": "Road Traffic and Transport Regulations, 2001 (GN 53 of 2001), as amended",
+        "url": "https://www.lac.org.na/laws/annoREG/Road%20Traffic%20and%20Transport%20Act%2022%20of%201999-Regulations%202001-053.pdf",
+        "date": "2001, annotated text accessed 2026-10-13",
+        "locator": "reg 330"
+      },
+      "jurisdiction": "Namibia",
+      "reviewer": null,
+      "approved_on": null,
+      "status": "verified"
+    },
+    {
+      "id": "na.law.pass-bus",
+      "text": "When passing a stationary bus, take due care for people getting on or off or walking to or from it.",
+      "value": "due care",
+      "source": {
+        "publisher": "Government of Namibia (annotated by the Legal Assistance Centre)",
+        "title": "Road Traffic and Transport Regulations, 2001 (GN 53 of 2001), as amended",
+        "url": "https://www.lac.org.na/laws/annoREG/Road%20Traffic%20and%20Transport%20Act%2022%20of%201999-Regulations%202001-053.pdf",
+        "date": "2001, annotated text accessed 2026-10-13",
+        "locator": "reg 329(5)"
+      },
+      "jurisdiction": "Namibia",
+      "reviewer": null,
+      "approved_on": null,
+      "status": "verified"
+    },
+    {
+      "id": "na.law.roundabout",
+      "text": "Entering a junction where traffic moves around a traffic island (a traffic circle), yield to all traffic approaching from your right within the junction, unless a sign or officer directs otherwise.",
+      "value": "yield to the right",
+      "source": {
+        "publisher": "Government of Namibia (annotated by the Legal Assistance Centre)",
+        "title": "Road Traffic and Transport Regulations, 2001 (GN 53 of 2001), as amended",
+        "url": "https://www.lac.org.na/laws/annoREG/Road%20Traffic%20and%20Transport%20Act%2022%20of%201999-Regulations%202001-053.pdf",
+        "date": "2001, annotated text accessed 2026-10-13",
+        "locator": "reg 333"
+      },
+      "jurisdiction": "Namibia",
+      "reviewer": null,
+      "approved_on": null,
+      "status": "verified"
+    },
+    {
+      "id": "na.law.amber",
+      "text": "A steady yellow light means stop behind the stop line, unless you are so close that you cannot stop safely; then you may proceed with caution.",
+      "value": "stop if you safely can",
+      "source": {
+        "publisher": "Government of Namibia (annotated by the Legal Assistance Centre)",
+        "title": "Road Traffic and Transport Regulations, 2001 (GN 53 of 2001), as amended",
+        "url": "https://www.lac.org.na/laws/annoREG/Road%20Traffic%20and%20Transport%20Act%2022%20of%201999-Regulations%202001-053.pdf",
+        "date": "2001, annotated text accessed 2026-10-13",
+        "locator": "Schedule 2, light signals (gg)"
+      },
+      "jurisdiction": "Namibia",
+      "reviewer": null,
+      "approved_on": null,
+      "status": "verified"
+    },
+    {
+      "id": "na.law.signals-out",
+      "text": "When no light signal is working at a junction, drivers must act as for a 3-way or 4-way stop.",
+      "value": "4-way stop",
+      "source": {
+        "publisher": "Government of Namibia (annotated by the Legal Assistance Centre)",
+        "title": "Road Traffic and Transport Regulations, 2001 (GN 53 of 2001), as amended",
+        "url": "https://www.lac.org.na/laws/annoREG/Road%20Traffic%20and%20Transport%20Act%2022%20of%201999-Regulations%202001-053.pdf",
+        "date": "2001, annotated text accessed 2026-10-13",
+        "locator": "Schedule 2, light signals"
+      },
+      "jurisdiction": "Namibia",
+      "reviewer": null,
+      "approved_on": null,
+      "status": "verified"
+    },
+    {
+      "id": "na.law.phone",
+      "text": "You may not drive while holding a cellphone or other communication device; it may only be used hands-free (fixed to the car or as a headset).",
+      "value": "hands-free only",
+      "source": {
+        "publisher": "Government of Namibia (annotated by the Legal Assistance Centre)",
+        "title": "Road Traffic and Transport Regulations, 2001 (GN 53 of 2001), as amended",
+        "url": "https://www.lac.org.na/laws/annoREG/Road%20Traffic%20and%20Transport%20Act%2022%20of%201999-Regulations%202001-053.pdf",
+        "date": "2001, annotated text accessed 2026-10-13",
+        "locator": "reg 342"
+      },
+      "jurisdiction": "Namibia",
+      "reviewer": null,
+      "approved_on": null,
+      "status": "verified"
+    },
+    {
+      "id": "na.law.following",
+      "text": "You may not follow another vehicle more closely than is reasonable and prudent for the speed, traffic and road condition.",
+      "value": "reasonable and prudent",
+      "source": {
+        "publisher": "Government of Namibia (annotated by the Legal Assistance Centre)",
+        "title": "Road Traffic and Transport Regulations, 2001 (GN 53 of 2001), as amended",
+        "url": "https://www.lac.org.na/laws/annoREG/Road%20Traffic%20and%20Transport%20Act%2022%20of%201999-Regulations%202001-053.pdf",
+        "date": "2001, annotated text accessed 2026-10-13",
+        "locator": "reg 341(1)(b)"
+      },
+      "jurisdiction": "Namibia",
+      "reviewer": null,
+      "approved_on": null,
+      "status": "verified"
+    },
+    {
+      "id": "na.law.lights-150",
+      "text": "Headlamps must be on from sunset to sunrise, and whenever people and vehicles are not clearly visible at this distance.",
+      "value": 150,
+      "unit": "m",
+      "source": {
+        "publisher": "Government of Namibia (annotated by the Legal Assistance Centre)",
+        "title": "Road Traffic and Transport Regulations, 2001 (GN 53 of 2001), as amended",
+        "url": "https://www.lac.org.na/laws/annoREG/Road%20Traffic%20and%20Transport%20Act%2022%20of%201999-Regulations%202001-053.pdf",
+        "date": "2001, annotated text accessed 2026-10-13",
+        "locator": "reg 173(1)(b)"
+      },
+      "jurisdiction": "Namibia",
+      "reviewer": null,
+      "approved_on": null,
+      "status": "verified"
+    },
+    {
+      "id": "na.law.dip",
+      "text": "Dip your main beam if it could cause dangerous glare to oncoming traffic.",
+      "value": "dip",
+      "source": {
+        "publisher": "Government of Namibia (annotated by the Legal Assistance Centre)",
+        "title": "Road Traffic and Transport Regulations, 2001 (GN 53 of 2001), as amended",
+        "url": "https://www.lac.org.na/laws/annoREG/Road%20Traffic%20and%20Transport%20Act%2022%20of%201999-Regulations%202001-053.pdf",
+        "date": "2001, annotated text accessed 2026-10-13",
+        "locator": "reg 173(3)"
+      },
+      "jurisdiction": "Namibia",
+      "reviewer": null,
+      "approved_on": null,
+      "status": "verified"
+    },
+    {
+      "id": "na.law.mainbeam",
+      "text": "A main (high) beam must let the driver see a person, vehicle or object at least this far ahead.",
+      "value": 100,
+      "unit": "m",
+      "source": {
+        "publisher": "Government of Namibia (annotated by the Legal Assistance Centre)",
+        "title": "Road Traffic and Transport Regulations, 2001 (GN 53 of 2001), as amended",
+        "url": "https://www.lac.org.na/laws/annoREG/Road%20Traffic%20and%20Transport%20Act%2022%20of%201999-Regulations%202001-053.pdf",
+        "date": "2001, annotated text accessed 2026-10-13",
+        "locator": "reg 176(a)"
+      },
+      "jurisdiction": "Namibia",
+      "reviewer": null,
+      "approved_on": null,
+      "status": "verified"
+    },
+    {
+      "id": "na.law.dippedbeam",
+      "text": "A dipped (low) beam must let the driver see a person, vehicle or object at least this far ahead.",
+      "value": 45,
+      "unit": "m",
+      "source": {
+        "publisher": "Government of Namibia (annotated by the Legal Assistance Centre)",
+        "title": "Road Traffic and Transport Regulations, 2001 (GN 53 of 2001), as amended",
+        "url": "https://www.lac.org.na/laws/annoREG/Road%20Traffic%20and%20Transport%20Act%2022%20of%201999-Regulations%202001-053.pdf",
+        "date": "2001, annotated text accessed 2026-10-13",
+        "locator": "reg 177(4)(a)"
+      },
+      "jurisdiction": "Namibia",
+      "reviewer": null,
+      "approved_on": null,
+      "status": "verified"
+    },
+    {
+      "id": "na.law.fog",
+      "text": "Fog lamps may only be lit in poor visibility caused by snow, fog, mist, dust or smoke.",
+      "value": "poor visibility only",
+      "source": {
+        "publisher": "Government of Namibia (annotated by the Legal Assistance Centre)",
+        "title": "Road Traffic and Transport Regulations, 2001 (GN 53 of 2001), as amended",
+        "url": "https://www.lac.org.na/laws/annoREG/Road%20Traffic%20and%20Transport%20Act%2022%20of%201999-Regulations%202001-053.pdf",
+        "date": "2001, annotated text accessed 2026-10-13",
+        "locator": "reg 180(6)"
+      },
+      "jurisdiction": "Namibia",
+      "reviewer": null,
+      "approved_on": null,
+      "status": "verified"
+    },
+    {
+      "id": "na.law.moto-lights",
+      "text": "A motorcycle’s headlamp must be on at all times.",
+      "value": "always on",
+      "source": {
+        "publisher": "Government of Namibia (annotated by the Legal Assistance Centre)",
+        "title": "Road Traffic and Transport Regulations, 2001 (GN 53 of 2001), as amended",
+        "url": "https://www.lac.org.na/laws/annoREG/Road%20Traffic%20and%20Transport%20Act%2022%20of%201999-Regulations%202001-053.pdf",
+        "date": "2001, annotated text accessed 2026-10-13",
+        "locator": "reg 173(2)"
+      },
+      "jurisdiction": "Namibia",
+      "reviewer": null,
+      "approved_on": null,
+      "status": "verified"
+    },
+    {
+      "id": "na.law.helmet",
+      "text": "Motorcycle riders and passengers must wear a protective helmet made for motorcycles, that fits properly, with the chin strap fastened.",
+      "value": "required",
+      "source": {
+        "publisher": "Government of Namibia (annotated by the Legal Assistance Centre)",
+        "title": "Road Traffic and Transport Regulations, 2001 (GN 53 of 2001), as amended",
+        "url": "https://www.lac.org.na/laws/annoREG/Road%20Traffic%20and%20Transport%20Act%2022%20of%201999-Regulations%202001-053.pdf",
+        "date": "2001, annotated text accessed 2026-10-13",
+        "locator": "reg 226(1)"
+      },
+      "jurisdiction": "Namibia",
+      "reviewer": null,
+      "approved_on": null,
+      "status": "verified"
+    },
+    {
+      "id": "na.law.helmet-child",
+      "text": "A motorcycle rider must make sure any passenger younger than this wears a helmet properly.",
+      "value": 14,
+      "unit": "years",
+      "source": {
+        "publisher": "Government of Namibia (annotated by the Legal Assistance Centre)",
+        "title": "Road Traffic and Transport Regulations, 2001 (GN 53 of 2001), as amended",
+        "url": "https://www.lac.org.na/laws/annoREG/Road%20Traffic%20and%20Transport%20Act%2022%20of%201999-Regulations%202001-053.pdf",
+        "date": "2001, annotated text accessed 2026-10-13",
+        "locator": "reg 226(2)"
+      },
+      "jurisdiction": "Namibia",
+      "reviewer": null,
+      "approved_on": null,
+      "status": "verified"
+    },
+    {
+      "id": "na.law.bike-helmet",
+      "text": "The regulations let the Minister make bicycle helmets compulsory from a date set in the Gazette. Whether that date has been set needs checking.",
+      "value": null,
+      "source": {
+        "publisher": "Government of Namibia (annotated by the Legal Assistance Centre)",
+        "title": "Road Traffic and Transport Regulations, 2001 (GN 53 of 2001), as amended",
+        "url": "https://www.lac.org.na/laws/annoREG/Road%20Traffic%20and%20Transport%20Act%2022%20of%201999-Regulations%202001-053.pdf",
+        "date": "2001, annotated text accessed 2026-10-13",
+        "locator": "reg 226(3)"
+      },
+      "jurisdiction": "Namibia",
+      "reviewer": null,
+      "approved_on": null,
+      "status": "NEEDS_SOURCE",
+      "notes": "Find whether a commencement notice for reg 226(3) has been published."
+    },
+    {
+      "id": "na.law.moto-pillion",
+      "text": "No more than two people may ride on a motorcycle (not counting a side-car).",
+      "value": 2,
+      "unit": "people",
+      "source": {
+        "publisher": "Government of Namibia (annotated by the Legal Assistance Centre)",
+        "title": "Road Traffic and Transport Regulations, 2001 (GN 53 of 2001), as amended",
+        "url": "https://www.lac.org.na/laws/annoREG/Road%20Traffic%20and%20Transport%20Act%2022%20of%201999-Regulations%202001-053.pdf",
+        "date": "2001, annotated text accessed 2026-10-13",
+        "locator": "reg 343(3)"
+      },
+      "jurisdiction": "Namibia",
+      "reviewer": null,
+      "approved_on": null,
+      "status": "verified"
+    },
+    {
+      "id": "na.law.bike-single-file",
+      "text": "Cyclists must ride in single file, except when overtaking another cyclist.",
+      "value": "single file",
+      "source": {
+        "publisher": "Government of Namibia (annotated by the Legal Assistance Centre)",
+        "title": "Road Traffic and Transport Regulations, 2001 (GN 53 of 2001), as amended",
+        "url": "https://www.lac.org.na/laws/annoREG/Road%20Traffic%20and%20Transport%20Act%2022%20of%201999-Regulations%202001-053.pdf",
+        "date": "2001, annotated text accessed 2026-10-13",
+        "locator": "reg 346(2)"
+      },
+      "jurisdiction": "Namibia",
+      "reviewer": null,
+      "approved_on": null,
+      "status": "verified"
+    },
+    {
+      "id": "na.law.seatbelt",
+      "text": "Every adult must wear a seatbelt in a seat that has one (except while reversing or parking). This applies to front and rear seats.",
+      "value": "required",
+      "source": {
+        "publisher": "Government of Namibia (annotated by the Legal Assistance Centre)",
+        "title": "Road Traffic and Transport Regulations, 2001 (GN 53 of 2001), as amended",
+        "url": "https://www.lac.org.na/laws/annoREG/Road%20Traffic%20and%20Transport%20Act%2022%20of%201999-Regulations%202001-053.pdf",
+        "date": "2001, annotated text accessed 2026-10-13",
+        "locator": "reg 232(4)"
+      },
+      "jurisdiction": "Namibia",
+      "reviewer": null,
+      "approved_on": null,
+      "status": "verified"
+    },
+    {
+      "id": "na.law.adult-age",
+      "text": "For seatbelt rules, an adult is a person over this age (or taller than 1.5 m).",
+      "value": 14,
+      "unit": "years",
+      "source": {
+        "publisher": "Government of Namibia (annotated by the Legal Assistance Centre)",
+        "title": "Road Traffic and Transport Regulations, 2001 (GN 53 of 2001), as amended",
+        "url": "https://www.lac.org.na/laws/annoREG/Road%20Traffic%20and%20Transport%20Act%2022%20of%201999-Regulations%202001-053.pdf",
+        "date": "2001, annotated text accessed 2026-10-13",
+        "locator": "reg 232(1)"
+      },
+      "jurisdiction": "Namibia",
+      "reviewer": null,
+      "approved_on": null,
+      "status": "verified"
+    },
+    {
+      "id": "na.law.adult-height",
+      "text": "For seatbelt rules, a person taller than this counts as an adult.",
+      "value": 1.5,
+      "unit": "m",
+      "source": {
+        "publisher": "Government of Namibia (annotated by the Legal Assistance Centre)",
+        "title": "Road Traffic and Transport Regulations, 2001 (GN 53 of 2001), as amended",
+        "url": "https://www.lac.org.na/laws/annoREG/Road%20Traffic%20and%20Transport%20Act%2022%20of%201999-Regulations%202001-053.pdf",
+        "date": "2001, annotated text accessed 2026-10-13",
+        "locator": "reg 232(1)"
+      },
+      "jurisdiction": "Namibia",
+      "reviewer": null,
+      "approved_on": null,
+      "status": "verified"
+    },
+    {
+      "id": "na.law.child-restraint",
+      "text": "The driver must make sure every child uses an appropriate child restraint if one is available in the vehicle; if not, a seatbelt if a free belted seat is available.",
+      "value": "if available",
+      "source": {
+        "publisher": "Government of Namibia (annotated by the Legal Assistance Centre)",
+        "title": "Road Traffic and Transport Regulations, 2001 (GN 53 of 2001), as amended",
+        "url": "https://www.lac.org.na/laws/annoREG/Road%20Traffic%20and%20Transport%20Act%2022%20of%201999-Regulations%202001-053.pdf",
+        "date": "2001, annotated text accessed 2026-10-13",
+        "locator": "reg 232(6)(b)"
+      },
+      "jurisdiction": "Namibia",
+      "reviewer": null,
+      "approved_on": null,
+      "status": "verified"
+    },
+    {
+      "id": "na.law.child-rear",
+      "text": "If no seat with a seatbelt is free, the driver must make sure a child sits on the rear seat, if the vehicle has one.",
+      "value": "rear seat",
+      "source": {
+        "publisher": "Government of Namibia (annotated by the Legal Assistance Centre)",
+        "title": "Road Traffic and Transport Regulations, 2001 (GN 53 of 2001), as amended",
+        "url": "https://www.lac.org.na/laws/annoREG/Road%20Traffic%20and%20Transport%20Act%2022%20of%201999-Regulations%202001-053.pdf",
+        "date": "2001, annotated text accessed 2026-10-13",
+        "locator": "reg 232(7)"
+      },
+      "jurisdiction": "Namibia",
+      "reviewer": null,
+      "approved_on": null,
+      "status": "verified"
+    },
+    {
+      "id": "na.law.goods-compartment",
+      "text": "Nobody may carry people for reward (payment) in the goods compartment of a vehicle, such as a bakkie’s load bin.",
+      "value": "not allowed",
+      "source": {
+        "publisher": "Government of Namibia (annotated by the Legal Assistance Centre)",
+        "title": "Road Traffic and Transport Regulations, 2001 (GN 53 of 2001), as amended",
+        "url": "https://www.lac.org.na/laws/annoREG/Road%20Traffic%20and%20Transport%20Act%2022%20of%201999-Regulations%202001-053.pdf",
+        "date": "2001, annotated text accessed 2026-10-13",
+        "locator": "reg 269"
+      },
+      "jurisdiction": "Namibia",
+      "reviewer": null,
+      "approved_on": null,
+      "status": "verified"
+    },
+    {
+      "id": "na.law.roof",
+      "text": "Nobody may ride on the roof, a step or running board, or anywhere on top of a moving vehicle.",
+      "value": "not allowed",
+      "source": {
+        "publisher": "Government of Namibia (annotated by the Legal Assistance Centre)",
+        "title": "Road Traffic and Transport Regulations, 2001 (GN 53 of 2001), as amended",
+        "url": "https://www.lac.org.na/laws/annoREG/Road%20Traffic%20and%20Transport%20Act%2022%20of%201999-Regulations%202001-053.pdf",
+        "date": "2001, annotated text accessed 2026-10-13",
+        "locator": "reg 341(1)(j)"
+      },
+      "jurisdiction": "Namibia",
+      "reviewer": null,
+      "approved_on": null,
+      "status": "verified"
+    },
+    {
+      "id": "na.law.ped-yield",
+      "text": "Drivers must yield to a pedestrian in a pedestrian crossing who is on their half of the road, or close to it from the other half.",
+      "value": "yield",
+      "source": {
+        "publisher": "Government of Namibia (annotated by the Legal Assistance Centre)",
+        "title": "Road Traffic and Transport Regulations, 2001 (GN 53 of 2001), as amended",
+        "url": "https://www.lac.org.na/laws/annoREG/Road%20Traffic%20and%20Transport%20Act%2022%20of%201999-Regulations%202001-053.pdf",
+        "date": "2001, annotated text accessed 2026-10-13",
+        "locator": "reg 350(2)"
+      },
+      "jurisdiction": "Namibia",
+      "reviewer": null,
+      "approved_on": null,
+      "status": "verified"
+    },
+    {
+      "id": "na.law.ped-50m",
+      "text": "Pedestrians may cross only at a pedestrian crossing or an intersection, or further than this distance from one.",
+      "value": 50,
+      "unit": "m",
+      "source": {
+        "publisher": "Government of Namibia (annotated by the Legal Assistance Centre)",
+        "title": "Road Traffic and Transport Regulations, 2001 (GN 53 of 2001), as amended",
+        "url": "https://www.lac.org.na/laws/annoREG/Road%20Traffic%20and%20Transport%20Act%2022%20of%201999-Regulations%202001-053.pdf",
+        "date": "2001, annotated text accessed 2026-10-13",
+        "locator": "reg 351(6)"
+      },
+      "jurisdiction": "Namibia",
+      "reviewer": null,
+      "approved_on": null,
+      "status": "verified"
+    },
+    {
+      "id": "na.law.ped-face",
+      "text": "Where there is no sidewalk, pedestrians must walk as near as practicable to the edge of the road on their right, facing oncoming traffic.",
+      "value": "face traffic",
+      "source": {
+        "publisher": "Government of Namibia (annotated by the Legal Assistance Centre)",
+        "title": "Road Traffic and Transport Regulations, 2001 (GN 53 of 2001), as amended",
+        "url": "https://www.lac.org.na/laws/annoREG/Road%20Traffic%20and%20Transport%20Act%2022%20of%201999-Regulations%202001-053.pdf",
+        "date": "2001, annotated text accessed 2026-10-13",
+        "locator": "reg 351(2)"
+      },
+      "jurisdiction": "Namibia",
+      "reviewer": null,
+      "approved_on": null,
+      "status": "verified"
+    },
+    {
+      "id": "na.law.ped-check",
+      "text": "Pedestrians must make sure the road is clear enough to cross safely, and must not linger.",
+      "value": "check first",
+      "source": {
+        "publisher": "Government of Namibia (annotated by the Legal Assistance Centre)",
+        "title": "Road Traffic and Transport Regulations, 2001 (GN 53 of 2001), as amended",
+        "url": "https://www.lac.org.na/laws/annoREG/Road%20Traffic%20and%20Transport%20Act%2022%20of%201999-Regulations%202001-053.pdf",
+        "date": "2001, annotated text accessed 2026-10-13",
+        "locator": "reg 351(3) and (4)"
+      },
+      "jurisdiction": "Namibia",
+      "reviewer": null,
+      "approved_on": null,
+      "status": "verified"
+    },
+    {
+      "id": "na.law.livestock",
+      "text": "Owners may not leave cattle, horses, donkeys, sheep, goats, pigs or ostriches on a fenced section of public road, or where they can stray onto it.",
+      "value": "not allowed",
+      "source": {
+        "publisher": "Government of Namibia (annotated by the Legal Assistance Centre)",
+        "title": "Road Traffic and Transport Regulations, 2001 (GN 53 of 2001), as amended",
+        "url": "https://www.lac.org.na/laws/annoREG/Road%20Traffic%20and%20Transport%20Act%2022%20of%201999-Regulations%202001-053.pdf",
+        "date": "2001, annotated text accessed 2026-10-13",
+        "locator": "reg 348(1)"
+      },
+      "jurisdiction": "Namibia",
+      "reviewer": null,
+      "approved_on": null,
+      "status": "verified"
+    },
+    {
+      "id": "na.law.tread",
+      "text": "Tyres must show a visible tread pattern across the whole tread, at least this deep.",
+      "value": 1,
+      "unit": "mm",
+      "source": {
+        "publisher": "Government of Namibia (annotated by the Legal Assistance Centre)",
+        "title": "Road Traffic and Transport Regulations, 2001 (GN 53 of 2001), as amended",
+        "url": "https://www.lac.org.na/laws/annoREG/Road%20Traffic%20and%20Transport%20Act%2022%20of%201999-Regulations%202001-053.pdf",
+        "date": "2001, annotated text accessed 2026-10-13",
+        "locator": "Chapter 5, condition of tyres, para (j)"
+      },
+      "jurisdiction": "Namibia",
+      "reviewer": null,
+      "approved_on": null,
+      "status": "verified"
+    },
+    {
+      "id": "na.law.bac-blood",
+      "text": "You may not drive (or sit in the driver’s seat with the engine running) if the alcohol in your blood is more than this.",
+      "value": 0.079,
+      "unit": "g per 100 ml",
+      "source": {
+        "publisher": "Government of Namibia (annotated by the Legal Assistance Centre)",
+        "title": "Road Traffic and Transport Act 22 of 1999, as amended by Act 6 of 2008",
+        "url": "https://www.lac.org.na/laws/annoSTAT/Road%20Traffic%20and%20Transport%20Act%2022%20of%201999.pdf",
+        "date": "1999, annotated text accessed 2026-10-13",
+        "locator": "s 82(2)"
+      },
+      "jurisdiction": "Namibia",
+      "reviewer": null,
+      "approved_on": null,
+      "status": "verified",
+      "notes": "The WHO 2023 profile reports the same limit for young and novice drivers."
+    },
+    {
+      "id": "na.law.bac-breath",
+      "text": "The breath alcohol limit for driving.",
+      "value": 0.37,
+      "unit": "mg per 1 000 ml",
+      "source": {
+        "publisher": "Government of Namibia (annotated by the Legal Assistance Centre)",
+        "title": "Road Traffic and Transport Act 22 of 1999, as amended by Act 6 of 2008",
+        "url": "https://www.lac.org.na/laws/annoSTAT/Road%20Traffic%20and%20Transport%20Act%2022%20of%201999.pdf",
+        "date": "1999, annotated text accessed 2026-10-13",
+        "locator": "s 82(5)"
+      },
+      "jurisdiction": "Namibia",
+      "reviewer": null,
+      "approved_on": null,
+      "status": "verified"
+    },
+    {
+      "id": "na.law.dui",
+      "text": "Driving under the influence of alcohol or a drug with a narcotic effect is an offence, whatever the alcohol reading.",
+      "value": "offence",
+      "source": {
+        "publisher": "Government of Namibia (annotated by the Legal Assistance Centre)",
+        "title": "Road Traffic and Transport Act 22 of 1999, as amended by Act 6 of 2008",
+        "url": "https://www.lac.org.na/laws/annoSTAT/Road%20Traffic%20and%20Transport%20Act%2022%20of%201999.pdf",
+        "date": "1999, annotated text accessed 2026-10-13",
+        "locator": "s 82(1)"
+      },
+      "jurisdiction": "Namibia",
+      "reviewer": null,
+      "approved_on": null,
+      "status": "verified"
+    },
+    {
+      "id": "na.law.test-refuse",
+      "text": "Refusing a traffic officer’s request for a breath or blood sample, without a health reason, is an offence.",
+      "value": "offence",
+      "source": {
+        "publisher": "Government of Namibia (annotated by the Legal Assistance Centre)",
+        "title": "Road Traffic and Transport Act 22 of 1999, as amended by Act 6 of 2008",
+        "url": "https://www.lac.org.na/laws/annoSTAT/Road%20Traffic%20and%20Transport%20Act%2022%20of%201999.pdf",
+        "date": "1999, annotated text accessed 2026-10-13",
+        "locator": "s 82(9)"
+      },
+      "jurisdiction": "Namibia",
+      "reviewer": null,
+      "approved_on": null,
+      "status": "verified"
+    },
+    {
+      "id": "na.law.dui-fine",
+      "text": "Maximum fine for a drink- or drug-driving offence.",
+      "value": 20000,
+      "unit": "N$",
+      "source": {
+        "publisher": "Government of Namibia (annotated by the Legal Assistance Centre)",
+        "title": "Road Traffic and Transport Act 22 of 1999, as amended by Act 6 of 2008",
+        "url": "https://www.lac.org.na/laws/annoSTAT/Road%20Traffic%20and%20Transport%20Act%2022%20of%201999.pdf",
+        "date": "1999, annotated text accessed 2026-10-13",
+        "locator": "s 106(2)"
+      },
+      "jurisdiction": "Namibia",
+      "reviewer": null,
+      "approved_on": null,
+      "status": "verified"
+    },
+    {
+      "id": "na.law.dui-prison",
+      "text": "Maximum prison term for a drink- or drug-driving offence (a fine and prison can both be given).",
+      "value": 5,
+      "unit": "years",
+      "source": {
+        "publisher": "Government of Namibia (annotated by the Legal Assistance Centre)",
+        "title": "Road Traffic and Transport Act 22 of 1999, as amended by Act 6 of 2008",
+        "url": "https://www.lac.org.na/laws/annoSTAT/Road%20Traffic%20and%20Transport%20Act%2022%20of%201999.pdf",
+        "date": "1999, annotated text accessed 2026-10-13",
+        "locator": "s 106(2)"
+      },
+      "jurisdiction": "Namibia",
+      "reviewer": null,
+      "approved_on": null,
+      "status": "verified"
+    },
+    {
+      "id": "na.law.dui-suspend-1",
+      "text": "Minimum driving licence suspension after a first drink- or drug-driving conviction.",
+      "value": 3,
+      "unit": "months",
+      "source": {
+        "publisher": "Government of Namibia (annotated by the Legal Assistance Centre)",
+        "title": "Road Traffic and Transport Act 22 of 1999, as amended by Act 6 of 2008",
+        "url": "https://www.lac.org.na/laws/annoSTAT/Road%20Traffic%20and%20Transport%20Act%2022%20of%201999.pdf",
+        "date": "1999, annotated text accessed 2026-10-13",
+        "locator": "s 51(1)(c) and (2)(a)"
+      },
+      "jurisdiction": "Namibia",
+      "reviewer": null,
+      "approved_on": null,
+      "status": "verified"
+    },
+    {
+      "id": "na.law.dui-suspend-2",
+      "text": "Minimum driving licence suspension after a second conviction.",
+      "value": 1,
+      "unit": "year",
+      "source": {
+        "publisher": "Government of Namibia (annotated by the Legal Assistance Centre)",
+        "title": "Road Traffic and Transport Act 22 of 1999, as amended by Act 6 of 2008",
+        "url": "https://www.lac.org.na/laws/annoSTAT/Road%20Traffic%20and%20Transport%20Act%2022%20of%201999.pdf",
+        "date": "1999, annotated text accessed 2026-10-13",
+        "locator": "s 51(2)(b)"
+      },
+      "jurisdiction": "Namibia",
+      "reviewer": null,
+      "approved_on": null,
+      "status": "verified"
+    },
+    {
+      "id": "na.law.dui-suspend-3",
+      "text": "Minimum driving licence suspension after a third or later conviction.",
+      "value": 5,
+      "unit": "years",
+      "source": {
+        "publisher": "Government of Namibia (annotated by the Legal Assistance Centre)",
+        "title": "Road Traffic and Transport Act 22 of 1999, as amended by Act 6 of 2008",
+        "url": "https://www.lac.org.na/laws/annoSTAT/Road%20Traffic%20and%20Transport%20Act%2022%20of%201999.pdf",
+        "date": "1999, annotated text accessed 2026-10-13",
+        "locator": "s 51(2)(c)"
+      },
+      "jurisdiction": "Namibia",
+      "reviewer": null,
+      "approved_on": null,
+      "status": "verified"
+    },
+    {
+      "id": "na.law.driving-hours",
+      "text": "Planned rule for drivers of certain heavy and passenger vehicles: drive no more than this long without a break. The regulations mark this part as not yet in force.",
+      "value": 5,
+      "unit": "hours",
+      "source": {
+        "publisher": "Government of Namibia (annotated by the Legal Assistance Centre)",
+        "title": "Road Traffic and Transport Regulations, 2001 (GN 53 of 2001), as amended",
+        "url": "https://www.lac.org.na/laws/annoREG/Road%20Traffic%20and%20Transport%20Act%2022%20of%201999-Regulations%202001-053.pdf",
+        "date": "2001, annotated text accessed 2026-10-13",
+        "locator": "reg 293(1)(a), Chapter 6 Part 2 (not yet in force)"
+      },
+      "jurisdiction": "Namibia",
+      "reviewer": null,
+      "approved_on": null,
+      "status": "verified"
+    },
+    {
+      "id": "na.stat.deaths-2021",
+      "text": "Road deaths reported in Namibia in 2021.",
+      "value": 540,
+      "unit": "deaths",
+      "source": {
+        "publisher": "World Health Organization",
+        "title": "Global status report on road safety 2023: Namibia country profile",
+        "url": "https://www.who.int/publications/m/item/road-safety-nam-2023-country-profile",
+        "date": "2023"
+      },
+      "jurisdiction": "Namibia",
+      "reviewer": null,
+      "approved_on": null,
+      "status": "verified"
+    },
+    {
+      "id": "na.stat.ped-share",
+      "text": "Share of reported road deaths in Namibia (2021) who were pedestrians.",
+      "value": 33,
+      "unit": "%",
+      "source": {
+        "publisher": "World Health Organization",
+        "title": "Global status report on road safety 2023: Namibia country profile",
+        "url": "https://www.who.int/publications/m/item/road-safety-nam-2023-country-profile",
+        "date": "2023"
+      },
+      "jurisdiction": "Namibia",
+      "reviewer": null,
+      "approved_on": null,
+      "status": "verified"
+    },
+    {
+      "id": "na.stat.rate",
+      "text": "WHO estimated road death rate in Namibia (2021), per 100 000 people.",
+      "value": 22,
+      "unit": "per 100 000",
+      "source": {
+        "publisher": "World Health Organization",
+        "title": "Global status report on road safety 2023: Namibia country profile",
+        "url": "https://www.who.int/publications/m/item/road-safety-nam-2023-country-profile",
+        "date": "2023"
+      },
+      "jurisdiction": "Namibia",
+      "reviewer": null,
+      "approved_on": null,
+      "status": "verified"
+    },
+    {
+      "id": "na.stat.vehicles",
+      "text": "Registered vehicles in Namibia in 2021.",
+      "value": 401476,
+      "unit": "vehicles",
+      "source": {
+        "publisher": "World Health Organization",
+        "title": "Global status report on road safety 2023: Namibia country profile",
+        "url": "https://www.who.int/publications/m/item/road-safety-nam-2023-country-profile",
+        "date": "2023"
+      },
+      "jurisdiction": "Namibia",
+      "reviewer": null,
+      "approved_on": null,
+      "status": "verified"
+    },
+    {
+      "id": "na.stat.heavy-share",
+      "text": "Share of registered vehicles in Namibia that were heavy trucks or buses (19 899 trucks and 5 405 buses of 401 476 vehicles, 2021).",
+      "value": 6,
+      "unit": "%",
+      "source": {
+        "publisher": "World Health Organization",
+        "title": "Global status report on road safety 2023: Namibia country profile",
+        "url": "https://www.who.int/publications/m/item/road-safety-nam-2023-country-profile",
+        "date": "2023"
+      },
+      "jurisdiction": "Namibia",
+      "reviewer": null,
+      "approved_on": null,
+      "status": "verified",
+      "notes": "Calculated: (19 899 + 5 405) / 401 476 = 6.3%, shown as about 6%."
+    },
+    {
+      "id": "na.stat.child-law",
+      "text": "WHO’s legal review found no national law requiring child restraint use in Namibia (the regulations require one only if available).",
+      "value": "no",
+      "source": {
+        "publisher": "World Health Organization",
+        "title": "Global status report on road safety 2023: Namibia country profile",
+        "url": "https://www.who.int/publications/m/item/road-safety-nam-2023-country-profile",
+        "date": "2023"
+      },
+      "jurisdiction": "Namibia",
+      "reviewer": null,
+      "approved_on": null,
+      "status": "verified"
+    },
+    {
+      "id": "na.stat.esc-law",
+      "text": "Namibia has no national law requiring electronic stability control on vehicles (WHO 2023).",
+      "value": "no",
+      "source": {
+        "publisher": "World Health Organization",
+        "title": "Global status report on road safety 2023: Namibia country profile",
+        "url": "https://www.who.int/publications/m/item/road-safety-nam-2023-country-profile",
+        "date": "2023"
+      },
+      "jurisdiction": "Namibia",
+      "reviewer": null,
+      "approved_on": null,
+      "status": "verified"
+    },
+    {
+      "id": "na.stat.heavy-deaths-2026",
+      "text": "People killed in crashes involving heavy vehicles in Namibia, 1 January to 16 September 2026.",
+      "value": 48,
+      "unit": "deaths",
+      "source": {
+        "publisher": "Namibia Economist (reporting MVA Fund figures)",
+        "title": "Rising truck crashes trigger urgent road safety warning in Erongo and Otjozondjupa",
+        "url": "https://economist.com.na/rising-truck-crashes-trigger-urgent-road-safety-warning-in-erongo-and-otjozondjupa/",
+        "date": "2026-09-22"
+      },
+      "jurisdiction": "Namibia",
+      "reviewer": null,
+      "approved_on": null,
+      "status": "verified"
+    },
+    {
+      "id": "na.stat.heavy-injured-2026",
+      "text": "People injured in crashes involving heavy vehicles in Namibia, 1 January to 16 September 2026.",
+      "value": 211,
+      "unit": "people",
+      "source": {
+        "publisher": "Namibia Economist (reporting MVA Fund figures)",
+        "title": "Rising truck crashes trigger urgent road safety warning in Erongo and Otjozondjupa",
+        "url": "https://economist.com.na/rising-truck-crashes-trigger-urgent-road-safety-warning-in-erongo-and-otjozondjupa/",
+        "date": "2026-09-22"
+      },
+      "jurisdiction": "Namibia",
+      "reviewer": null,
+      "approved_on": null,
+      "status": "verified"
+    },
+    {
+      "id": "na.stat.heavy-crashes-2026",
+      "text": "Crashes involving heavy vehicles in Namibia, 1 January to 16 September 2026.",
+      "value": 112,
+      "unit": "crashes",
+      "source": {
+        "publisher": "Namibia Economist (reporting MVA Fund figures)",
+        "title": "Rising truck crashes trigger urgent road safety warning in Erongo and Otjozondjupa",
+        "url": "https://economist.com.na/rising-truck-crashes-trigger-urgent-road-safety-warning-in-erongo-and-otjozondjupa/",
+        "date": "2026-09-22"
+      },
+      "jurisdiction": "Namibia",
+      "reviewer": null,
+      "approved_on": null,
+      "status": "verified"
+    },
+    {
+      "id": "na.stat.ped-deaths-2025",
+      "text": "Pedestrians killed on Namibian roads between 1 January and 7 May 2025.",
+      "value": 66,
+      "unit": "pedestrians",
+      "source": {
+        "publisher": "Motor Vehicle Accident (MVA) Fund of Namibia",
+        "title": "MVA Fund observes an alarming increase in pedestrian crashes",
+        "url": "https://www.mvafund.com.na/mva-fund-observes-an-alarming-increase-in-pedestrian-crashes/",
+        "date": "2025-05-08"
+      },
+      "jurisdiction": "Namibia",
+      "reviewer": null,
+      "approved_on": null,
+      "status": "verified"
+    },
+    {
+      "id": "na.stat.ped-rise-2025",
+      "text": "Rise in pedestrian deaths, 1 January to 7 May 2025 compared with the same period in 2024.",
+      "value": 29,
+      "unit": "%",
+      "source": {
+        "publisher": "Motor Vehicle Accident (MVA) Fund of Namibia",
+        "title": "MVA Fund observes an alarming increase in pedestrian crashes",
+        "url": "https://www.mvafund.com.na/mva-fund-observes-an-alarming-increase-in-pedestrian-crashes/",
+        "date": "2025-05-08"
+      },
+      "jurisdiction": "Namibia",
+      "reviewer": null,
+      "approved_on": null,
+      "status": "verified"
+    },
+    {
+      "id": "na.stat.animal-collisions",
+      "text": "Collisions with domestic animals (mostly cattle, donkeys and dogs) recorded on Namibian roads from 2020 to 2025.",
+      "value": 5529,
+      "unit": "collisions",
+      "source": {
+        "publisher": "Namibian Broadcasting Corporation (NBC News)",
+        "title": "Animals visibility pilot launched in Omusati",
+        "url": "https://nbcnews.na/node/114253",
+        "date": "early 2026"
+      },
+      "jurisdiction": "Namibia",
+      "reviewer": null,
+      "approved_on": null,
+      "status": "verified"
+    },
+    {
+      "id": "na.stat.gravel-share",
+      "text": "Share of Namibia’s national road network that is gravel (25 710 km of 48 875 km, 2017).",
+      "value": 53,
+      "unit": "%",
+      "source": {
+        "publisher": "Namibia Roads Authority (as cited in Wikipedia, Transport in Namibia)",
+        "title": "Get to know Namibia’s National Road Network",
+        "url": "https://en.wikipedia.org/wiki/Transport_in_Namibia",
+        "date": "figures for 2017"
+      },
+      "jurisdiction": "Namibia",
+      "reviewer": null,
+      "approved_on": null,
+      "status": "verified",
+      "notes": "Calculated from the Roads Authority figures quoted. A more recent Roads Authority figure would be better."
+    },
+    {
+      "id": "na.stat.b1-distance",
+      "text": "Driving distance from Windhoek to Oshakati on the B1.",
+      "value": 710,
+      "unit": "km",
+      "source": null,
+      "jurisdiction": "Namibia",
+      "reviewer": null,
+      "approved_on": null,
+      "status": "NEEDS_SOURCE",
+      "notes": "Placeholder. Confirm with the Roads Authority distance chart."
+    },
+    {
+      "id": "int.who.speed-1pct",
+      "text": "Every 1% increase in mean speed brings about a 4% increase in fatal crash risk.",
+      "value": 4,
+      "unit": "%",
+      "source": {
+        "publisher": "World Health Organization",
+        "title": "Road traffic injuries (fact sheet)",
+        "url": "https://www.who.int/news-room/fact-sheets/detail/road-traffic-injuries",
+        "date": "updated 2026-07-20"
+      },
+      "jurisdiction": "International",
+      "reviewer": null,
+      "approved_on": null,
+      "status": "verified"
+    },
+    {
+      "id": "int.speed.power-exponent",
+      "text": "Nilsson’s Power Model: on rural roads and highways, fatal crashes change with roughly the 4th power of the change in mean speed.",
+      "value": 4,
+      "source": {
+        "publisher": "Accident Analysis & Prevention 42(6)",
+        "title": "Nilsson’s Power Model connecting speed and road trauma: applicability by road type and alternative models for urban roads (Cameron & Elvik)",
+        "url": "https://pubmed.ncbi.nlm.nih.gov/20728642/",
+        "date": "2010"
+      },
+      "jurisdiction": "International",
+      "reviewer": null,
+      "approved_on": null,
+      "status": "verified",
+      "notes": "Checked through a web search summary on 2026-10-13; a reviewer should open the source to confirm."
+    },
+    {
+      "id": "int.who.ped-50-65",
+      "text": "A pedestrian’s risk of death rises about 4.5 times when the car’s speed goes from 50 to 65 km/h.",
+      "value": 4.5,
+      "unit": "x",
+      "source": {
+        "publisher": "World Health Organization",
+        "title": "Road traffic injuries (fact sheet)",
+        "url": "https://www.who.int/news-room/fact-sheets/detail/road-traffic-injuries",
+        "date": "updated 2026-07-20"
+      },
+      "jurisdiction": "International",
+      "reviewer": null,
+      "approved_on": null,
+      "status": "verified"
+    },
+    {
+      "id": "int.who.seatbelt",
+      "text": "Wearing a seatbelt can reduce the risk of death among vehicle occupants by up to this much.",
+      "value": 50,
+      "unit": "%",
+      "source": {
+        "publisher": "World Health Organization",
+        "title": "Road traffic injuries (fact sheet)",
+        "url": "https://www.who.int/news-room/fact-sheets/detail/road-traffic-injuries",
+        "date": "updated 2026-07-20"
+      },
+      "jurisdiction": "International",
+      "reviewer": null,
+      "approved_on": null,
+      "status": "verified"
+    },
+    {
+      "id": "int.who.helmet-death",
+      "text": "Correct helmet use can reduce a motorcyclist’s risk of death in a crash by more than this many times.",
+      "value": 6,
+      "unit": "x",
+      "source": {
+        "publisher": "World Health Organization",
+        "title": "Road traffic injuries (fact sheet)",
+        "url": "https://www.who.int/news-room/fact-sheets/detail/road-traffic-injuries",
+        "date": "updated 2026-07-20"
+      },
+      "jurisdiction": "International",
+      "reviewer": null,
+      "approved_on": null,
+      "status": "verified"
+    },
+    {
+      "id": "int.who.helmet-brain",
+      "text": "Correct helmet use can reduce a motorcyclist’s risk of brain injury by up to this much.",
+      "value": 74,
+      "unit": "%",
+      "source": {
+        "publisher": "World Health Organization",
+        "title": "Road traffic injuries (fact sheet)",
+        "url": "https://www.who.int/news-room/fact-sheets/detail/road-traffic-injuries",
+        "date": "updated 2026-07-20"
+      },
+      "jurisdiction": "International",
+      "reviewer": null,
+      "approved_on": null,
+      "status": "verified"
+    },
+    {
+      "id": "int.who.child-infant",
+      "text": "Using child restraints can reduce deaths among infants by this much.",
+      "value": 71,
+      "unit": "%",
+      "source": {
+        "publisher": "World Health Organization",
+        "title": "Road traffic injuries (fact sheet)",
+        "url": "https://www.who.int/news-room/fact-sheets/detail/road-traffic-injuries",
+        "date": "updated 2026-07-20"
+      },
+      "jurisdiction": "International",
+      "reviewer": null,
+      "approved_on": null,
+      "status": "verified"
+    },
+    {
+      "id": "int.who.phone",
+      "text": "Drivers using mobile phones are about this many times more likely to be in a crash.",
+      "value": 4,
+      "unit": "x",
+      "source": {
+        "publisher": "World Health Organization",
+        "title": "Road traffic injuries (fact sheet)",
+        "url": "https://www.who.int/news-room/fact-sheets/detail/road-traffic-injuries",
+        "date": "updated 2026-07-20"
+      },
+      "jurisdiction": "International",
+      "reviewer": null,
+      "approved_on": null,
+      "status": "verified"
+    },
+    {
+      "id": "int.who.bac-risk",
+      "text": "Crash risk starts at low blood alcohol levels and rises significantly from this level.",
+      "value": 0.04,
+      "unit": "g/dl",
+      "source": {
+        "publisher": "World Health Organization",
+        "title": "Road traffic injuries (fact sheet)",
+        "url": "https://www.who.int/news-room/fact-sheets/detail/road-traffic-injuries",
+        "date": "updated 2026-07-20"
+      },
+      "jurisdiction": "International",
+      "reviewer": null,
+      "approved_on": null,
+      "status": "verified"
+    },
+    {
+      "id": "int.who.amphetamine",
+      "text": "The risk of a fatal crash among people who have used amphetamines is about this many times higher.",
+      "value": 5,
+      "unit": "x",
+      "source": {
+        "publisher": "World Health Organization",
+        "title": "Road traffic injuries (fact sheet)",
+        "url": "https://www.who.int/news-room/fact-sheets/detail/road-traffic-injuries",
+        "date": "updated 2026-07-20"
+      },
+      "jurisdiction": "International",
+      "reviewer": null,
+      "approved_on": null,
+      "status": "verified"
+    },
+    {
+      "id": "int.tefft.37",
+      "text": "Average risk of death for a pedestrian hit by a car at about 37 km/h (23 mph).",
+      "value": 10,
+      "unit": "%",
+      "source": {
+        "publisher": "AAA Foundation for Traffic Safety",
+        "title": "Impact Speed and a Pedestrian’s Risk of Severe Injury or Death (Tefft)",
+        "url": "https://aaafoundation.org/impact-speed-pedestrians-risk-severe-injury-death/",
+        "date": "2011"
+      },
+      "jurisdiction": "International",
+      "reviewer": null,
+      "approved_on": null,
+      "status": "verified",
+      "notes": "US crash data, 1994–1998. km/h converted from mph and rounded. Checked through a web search summary on 2026-10-13; a reviewer should open the source to confirm."
+    },
+    {
+      "id": "int.tefft.51",
+      "text": "Average risk of death for a pedestrian hit by a car at about 51 km/h (32 mph).",
+      "value": 25,
+      "unit": "%",
+      "source": {
+        "publisher": "AAA Foundation for Traffic Safety",
+        "title": "Impact Speed and a Pedestrian’s Risk of Severe Injury or Death (Tefft)",
+        "url": "https://aaafoundation.org/impact-speed-pedestrians-risk-severe-injury-death/",
+        "date": "2011"
+      },
+      "jurisdiction": "International",
+      "reviewer": null,
+      "approved_on": null,
+      "status": "verified",
+      "notes": "US crash data, 1994–1998. km/h converted from mph and rounded. Checked through a web search summary on 2026-10-13; a reviewer should open the source to confirm."
+    },
+    {
+      "id": "int.tefft.68",
+      "text": "Average risk of death for a pedestrian hit by a car at about 68 km/h (42 mph).",
+      "value": 50,
+      "unit": "%",
+      "source": {
+        "publisher": "AAA Foundation for Traffic Safety",
+        "title": "Impact Speed and a Pedestrian’s Risk of Severe Injury or Death (Tefft)",
+        "url": "https://aaafoundation.org/impact-speed-pedestrians-risk-severe-injury-death/",
+        "date": "2011"
+      },
+      "jurisdiction": "International",
+      "reviewer": null,
+      "approved_on": null,
+      "status": "verified",
+      "notes": "US crash data, 1994–1998. km/h converted from mph and rounded. Checked through a web search summary on 2026-10-13; a reviewer should open the source to confirm."
+    },
+    {
+      "id": "int.tefft.80",
+      "text": "Average risk of death for a pedestrian hit by a car at about 80 km/h (50 mph).",
+      "value": 75,
+      "unit": "%",
+      "source": {
+        "publisher": "AAA Foundation for Traffic Safety",
+        "title": "Impact Speed and a Pedestrian’s Risk of Severe Injury or Death (Tefft)",
+        "url": "https://aaafoundation.org/impact-speed-pedestrians-risk-severe-injury-death/",
+        "date": "2011"
+      },
+      "jurisdiction": "International",
+      "reviewer": null,
+      "approved_on": null,
+      "status": "verified",
+      "notes": "US crash data, 1994–1998. km/h converted from mph and rounded. Checked through a web search summary on 2026-10-13; a reviewer should open the source to confirm."
+    },
+    {
+      "id": "int.tefft.93",
+      "text": "Average risk of death for a pedestrian hit by a car at about 93 km/h (58 mph).",
+      "value": 90,
+      "unit": "%",
+      "source": {
+        "publisher": "AAA Foundation for Traffic Safety",
+        "title": "Impact Speed and a Pedestrian’s Risk of Severe Injury or Death (Tefft)",
+        "url": "https://aaafoundation.org/impact-speed-pedestrians-risk-severe-injury-death/",
+        "date": "2011"
+      },
+      "jurisdiction": "International",
+      "reviewer": null,
+      "approved_on": null,
+      "status": "verified",
+      "notes": "US crash data, 1994–1998. km/h converted from mph and rounded. Checked through a web search summary on 2026-10-13; a reviewer should open the source to confirm."
+    },
+    {
+      "id": "int.bac.rr-005",
+      "text": "Relative crash risk for a driver at a blood alcohol level of 0.05 g/dl, compared with a sober driver (1.0).",
+      "value": 1.38,
+      "unit": "x",
+      "source": {
+        "publisher": "US National Highway Traffic Safety Administration",
+        "title": "Overview of Impaired Driving (Compton), reporting the Long Beach / Fort Lauderdale relative risk study (Blomberg et al.)",
+        "url": "https://www.oryarok.org.il/_files/ugd/b29dff_2b443f83a6d34af5b040bb2e9b706120.pdf",
+        "date": "c. 2006",
+        "locator": "table: Relative Risk Models, final adjusted estimate"
+      },
+      "jurisdiction": "International",
+      "reviewer": null,
+      "approved_on": null,
+      "status": "verified",
+      "notes": "Final adjusted estimate from the Long Beach (California) and Fort Lauderdale (Florida) case-control study."
+    },
+    {
+      "id": "int.bac.rr-008",
+      "text": "Relative crash risk for a driver at a blood alcohol level of 0.08 g/dl, compared with a sober driver (1.0).",
+      "value": 2.69,
+      "unit": "x",
+      "source": {
+        "publisher": "US National Highway Traffic Safety Administration",
+        "title": "Overview of Impaired Driving (Compton), reporting the Long Beach / Fort Lauderdale relative risk study (Blomberg et al.)",
+        "url": "https://www.oryarok.org.il/_files/ugd/b29dff_2b443f83a6d34af5b040bb2e9b706120.pdf",
+        "date": "c. 2006",
+        "locator": "table: Relative Risk Models, final adjusted estimate"
+      },
+      "jurisdiction": "International",
+      "reviewer": null,
+      "approved_on": null,
+      "status": "verified",
+      "notes": "Final adjusted estimate from the Long Beach (California) and Fort Lauderdale (Florida) case-control study.",
+      "denylistOverride": "International study (Blomberg et al.), cited to its own source; NSW also used it."
+    },
+    {
+      "id": "int.bac.rr-010",
+      "text": "Relative crash risk for a driver at a blood alcohol level of 0.10 g/dl, compared with a sober driver (1.0).",
+      "value": 4.79,
+      "unit": "x",
+      "source": {
+        "publisher": "US National Highway Traffic Safety Administration",
+        "title": "Overview of Impaired Driving (Compton), reporting the Long Beach / Fort Lauderdale relative risk study (Blomberg et al.)",
+        "url": "https://www.oryarok.org.il/_files/ugd/b29dff_2b443f83a6d34af5b040bb2e9b706120.pdf",
+        "date": "c. 2006",
+        "locator": "table: Relative Risk Models, final adjusted estimate"
+      },
+      "jurisdiction": "International",
+      "reviewer": null,
+      "approved_on": null,
+      "status": "verified",
+      "notes": "Final adjusted estimate from the Long Beach (California) and Fort Lauderdale (Florida) case-control study."
+    },
+    {
+      "id": "int.bac.rr-015",
+      "text": "Relative crash risk for a driver at a blood alcohol level of 0.15 g/dl, compared with a sober driver (1.0).",
+      "value": 22.1,
+      "unit": "x",
+      "source": {
+        "publisher": "US National Highway Traffic Safety Administration",
+        "title": "Overview of Impaired Driving (Compton), reporting the Long Beach / Fort Lauderdale relative risk study (Blomberg et al.)",
+        "url": "https://www.oryarok.org.il/_files/ugd/b29dff_2b443f83a6d34af5b040bb2e9b706120.pdf",
+        "date": "c. 2006",
+        "locator": "table: Relative Risk Models, final adjusted estimate"
+      },
+      "jurisdiction": "International",
+      "reviewer": null,
+      "approved_on": null,
+      "status": "verified",
+      "notes": "Final adjusted estimate from the Long Beach (California) and Fort Lauderdale (Florida) case-control study."
+    },
+    {
+      "id": "int.bac.rr-020",
+      "text": "Relative crash risk for a driver at a blood alcohol level of 0.20 g/dl, compared with a sober driver (1.0).",
+      "value": 81.79,
+      "unit": "x",
+      "source": {
+        "publisher": "US National Highway Traffic Safety Administration",
+        "title": "Overview of Impaired Driving (Compton), reporting the Long Beach / Fort Lauderdale relative risk study (Blomberg et al.)",
+        "url": "https://www.oryarok.org.il/_files/ugd/b29dff_2b443f83a6d34af5b040bb2e9b706120.pdf",
+        "date": "c. 2006",
+        "locator": "table: Relative Risk Models, final adjusted estimate"
+      },
+      "jurisdiction": "International",
+      "reviewer": null,
+      "approved_on": null,
+      "status": "verified",
+      "notes": "Final adjusted estimate from the Long Beach (California) and Fort Lauderdale (Florida) case-control study."
+    },
+    {
+      "id": "int.reaction.surprise",
+      "text": "Typical perception-brake reaction time when something suddenly moves into the driver’s path (a surprise event).",
+      "value": 1.5,
+      "unit": "s",
+      "source": {
+        "publisher": "Transportation Human Factors 2(3)",
+        "title": "How long does it take to stop? Methodological analysis of driver perception-brake times (Green)",
+        "url": "https://doi.org/10.1207/STHF0203_1",
+        "date": "2000"
+      },
+      "jurisdiction": "International",
+      "reviewer": null,
+      "approved_on": null,
+      "status": "verified",
+      "notes": "Checked through a web search summary on 2026-10-13; a reviewer should open the source to confirm."
+    },
+    {
+      "id": "int.brake.dry",
+      "text": "Braking deceleration of an average family car on a dry road, implied by the Queensland stopping-distance table (56 m of braking from 100 km/h).",
+      "value": 6.9,
+      "unit": "m/s²",
+      "source": {
+        "publisher": "Queensland Government (Australia)",
+        "title": "Stopping distances on wet and dry roads",
+        "url": "https://www.qld.gov.au/transport/safety/road-safety/driving-safely/stopping-distances/graph",
+        "date": "accessed 2026-10-13"
+      },
+      "jurisdiction": "International",
+      "reviewer": null,
+      "approved_on": null,
+      "status": "verified",
+      "notes": "Calculated: speed squared / (2 x braking distance) at 100 km/h. The table’s reaction distances match a 1.5 s reaction time."
+    },
+    {
+      "id": "int.brake.wet",
+      "text": "Braking deceleration of an average family car on a wet road, implied by the Queensland stopping-distance table (80 m of braking from 100 km/h).",
+      "value": 4.8,
+      "unit": "m/s²",
+      "source": {
+        "publisher": "Queensland Government (Australia)",
+        "title": "Stopping distances on wet and dry roads",
+        "url": "https://www.qld.gov.au/transport/safety/road-safety/driving-safely/stopping-distances/graph",
+        "date": "accessed 2026-10-13"
+      },
+      "jurisdiction": "International",
+      "reviewer": null,
+      "approved_on": null,
+      "status": "verified",
+      "notes": "Calculated as for int.brake.dry."
+    },
+    {
+      "id": "int.brake.gravel",
+      "text": "Braking deceleration of a car on loose gravel.",
+      "value": 4.0,
+      "unit": "m/s²",
+      "source": null,
+      "jurisdiction": "International",
+      "reviewer": null,
+      "approved_on": null,
+      "status": "NEEDS_SOURCE",
+      "notes": "Placeholder. Find a published friction coefficient for unsealed gravel roads."
+    },
+    {
+      "id": "int.stop.car60",
+      "text": "Total stopping distance of an average family car from 60 km/h on a dry road.",
+      "value": 45,
+      "unit": "m",
+      "source": {
+        "publisher": "Queensland Government (Australia)",
+        "title": "Stopping distances on wet and dry roads",
+        "url": "https://www.qld.gov.au/transport/safety/road-safety/driving-safely/stopping-distances/graph",
+        "date": "accessed 2026-10-13"
+      },
+      "jurisdiction": "International",
+      "reviewer": null,
+      "approved_on": null,
+      "status": "verified"
+    },
+    {
+      "id": "int.stop.car60wet",
+      "text": "Total stopping distance of an average family car from 60 km/h on a wet road.",
+      "value": 54,
+      "unit": "m",
+      "source": {
+        "publisher": "Queensland Government (Australia)",
+        "title": "Stopping distances on wet and dry roads",
+        "url": "https://www.qld.gov.au/transport/safety/road-safety/driving-safely/stopping-distances/graph",
+        "date": "accessed 2026-10-13"
+      },
+      "jurisdiction": "International",
+      "reviewer": null,
+      "approved_on": null,
+      "status": "verified"
+    },
+    {
+      "id": "int.truck.brake-lag",
+      "text": "Extra delay before air brakes on a heavy vehicle start to work.",
+      "value": 0.5,
+      "unit": "s",
+      "source": null,
+      "jurisdiction": "International",
+      "reviewer": null,
+      "approved_on": null,
+      "status": "NEEDS_SOURCE",
+      "notes": "US commercial driver licence manuals give about half a second. Confirm against a primary manual (e.g. the AAMVA model CDL manual, section 2.6)."
+    },
+    {
+      "id": "int.truck.brake",
+      "text": "Braking deceleration of a loaded heavy truck with good brakes on a dry road.",
+      "value": 4.6,
+      "unit": "m/s²",
+      "source": null,
+      "jurisdiction": "International",
+      "reviewer": null,
+      "approved_on": null,
+      "status": "NEEDS_SOURCE",
+      "notes": "Placeholder from the CDL-manual figure of 216 ft of braking from 55 mph. Confirm with a primary source and Namibian truck types."
+    },
+    {
+      "id": "int.truck.react",
+      "text": "Time from seeing a hazard to the truck’s brakes starting to work: a 1.5 s reaction plus about 0.5 s of air-brake lag.",
+      "value": 2.0,
+      "unit": "s",
+      "source": null,
+      "jurisdiction": "International",
+      "reviewer": null,
+      "approved_on": null,
+      "status": "NEEDS_SOURCE",
+      "notes": "Derived from int.reaction.surprise and int.truck.brake-lag; inherits the brake-lag status."
+    },
+    {
+      "id": "int.truck.stop80",
+      "text": "Total stopping distance of a loaded heavy truck from 80 km/h on a dry road (2.0 s before the brakes work, then 4.6 m/s² braking).",
+      "value": 98,
+      "unit": "m",
+      "source": null,
+      "jurisdiction": "International",
+      "reviewer": null,
+      "approved_on": null,
+      "status": "NEEDS_SOURCE",
+      "notes": "Derived from int.truck.react and int.truck.brake; inherits their status."
+    },
+    {
+      "id": "int.uk.gap",
+      "text": "Recommended minimum time gap to the vehicle in front on high-speed roads (UK Highway Code).",
+      "value": 2,
+      "unit": "s",
+      "source": {
+        "publisher": "UK Department for Transport",
+        "title": "The Highway Code, rule 126",
+        "url": "https://www.gov.uk/guidance/the-highway-code/general-rules-techniques-and-advice-for-all-drivers-and-riders-103-to-158",
+        "date": "accessed 2026-10-13"
+      },
+      "jurisdiction": "International",
+      "reviewer": null,
+      "approved_on": null,
+      "status": "verified"
+    },
+    {
+      "id": "int.uk.gap-wet",
+      "text": "On wet roads the gap should be at least this many times longer (UK Highway Code).",
+      "value": 2,
+      "unit": "x",
+      "source": {
+        "publisher": "UK Department for Transport",
+        "title": "The Highway Code, rule 126",
+        "url": "https://www.gov.uk/guidance/the-highway-code/general-rules-techniques-and-advice-for-all-drivers-and-riders-103-to-158",
+        "date": "accessed 2026-10-13"
+      },
+      "jurisdiction": "International",
+      "reviewer": null,
+      "approved_on": null,
+      "status": "verified"
+    },
+    {
+      "id": "int.uk.break",
+      "text": "Recommended break after every two hours of driving (UK Highway Code).",
+      "value": 15,
+      "unit": "min",
+      "source": {
+        "publisher": "UK Department for Transport",
+        "title": "The Highway Code, rule 91",
+        "url": "https://www.gov.uk/guidance/the-highway-code/rules-for-drivers-and-motorcyclists-89-to-102",
+        "date": "accessed 2026-10-13"
+      },
+      "jurisdiction": "International",
+      "reviewer": null,
+      "approved_on": null,
+      "status": "verified"
+    },
+    {
+      "id": "int.uk.break-every",
+      "text": "Take a break at least this often on long trips (UK Highway Code).",
+      "value": 2,
+      "unit": "hours",
+      "source": {
+        "publisher": "UK Department for Transport",
+        "title": "The Highway Code, rule 91",
+        "url": "https://www.gov.uk/guidance/the-highway-code/rules-for-drivers-and-motorcyclists-89-to-102",
+        "date": "accessed 2026-10-13"
+      },
+      "jurisdiction": "International",
+      "reviewer": null,
+      "approved_on": null,
+      "status": "verified"
+    },
+    {
+      "id": "int.uk.cyclist-gap",
+      "text": "Leave at least this much space when overtaking a cyclist at speeds up to 30 mph (about 50 km/h), and more at higher speeds (UK Highway Code).",
+      "value": 1.5,
+      "unit": "m",
+      "source": {
+        "publisher": "UK Department for Transport",
+        "title": "The Highway Code, rule 163",
+        "url": "https://www.gov.uk/guidance/the-highway-code/using-the-road-159-to-203",
+        "date": "accessed 2026-10-13"
+      },
+      "jurisdiction": "International",
+      "reviewer": null,
+      "approved_on": null,
+      "status": "verified"
+    },
+    {
+      "id": "int.uk.ped-gap",
+      "text": "Leave at least this much space when passing a pedestrian walking in the road (UK Highway Code).",
+      "value": 2,
+      "unit": "m",
+      "source": {
+        "publisher": "UK Department for Transport",
+        "title": "The Highway Code, rule 163",
+        "url": "https://www.gov.uk/guidance/the-highway-code/using-the-road-159-to-203",
+        "date": "accessed 2026-10-13"
+      },
+      "jurisdiction": "International",
+      "reviewer": null,
+      "approved_on": null,
+      "status": "verified"
+    },
+    {
+      "id": "int.nws.water-person",
+      "text": "Fast-moving flood water this deep (6 inches) can knock over an adult.",
+      "value": 15,
+      "unit": "cm",
+      "source": {
+        "publisher": "US National Weather Service",
+        "title": "Turn Around Don’t Drown",
+        "url": "https://www.weather.gov/safety/flood-turn-around-dont-drown",
+        "date": "accessed 2026-10-13"
+      },
+      "jurisdiction": "International",
+      "reviewer": null,
+      "approved_on": null,
+      "status": "verified",
+      "notes": "Converted from inches and rounded."
+    },
+    {
+      "id": "int.nws.water-car",
+      "text": "Rushing water this deep (12 inches) can carry away most cars.",
+      "value": 30,
+      "unit": "cm",
+      "source": {
+        "publisher": "US National Weather Service",
+        "title": "Turn Around Don’t Drown",
+        "url": "https://www.weather.gov/safety/flood-turn-around-dont-drown",
+        "date": "accessed 2026-10-13"
+      },
+      "jurisdiction": "International",
+      "reviewer": null,
+      "approved_on": null,
+      "status": "verified",
+      "notes": "Converted from inches and rounded."
+    },
+    {
+      "id": "int.nws.water-suv",
+      "text": "Rushing water this deep (2 feet) can carry away SUVs and trucks.",
+      "value": 60,
+      "unit": "cm",
+      "source": {
+        "publisher": "US National Weather Service",
+        "title": "Turn Around Don’t Drown",
+        "url": "https://www.weather.gov/safety/flood-turn-around-dont-drown",
+        "date": "accessed 2026-10-13"
+      },
+      "jurisdiction": "International",
+      "reviewer": null,
+      "approved_on": null,
+      "status": "verified",
+      "notes": "Converted from feet and rounded."
+    },
+    {
+      "id": "int.iihs.roundabout-injury",
+      "text": "Converting US intersections to roundabouts cut injury crashes by this much in studies.",
+      "value": "72–80",
+      "unit": "%",
+      "source": {
+        "publisher": "Insurance Institute for Highway Safety",
+        "title": "Roundabouts",
+        "url": "https://www.iihs.org/topics/roundabouts",
+        "date": "accessed 2026-10-13"
+      },
+      "jurisdiction": "International",
+      "reviewer": null,
+      "approved_on": null,
+      "status": "verified"
+    },
+    {
+      "id": "int.iihs.roundabout-ped",
+      "text": "Converting conventional intersections to roundabouts in Europe reduced pedestrian crashes by about this much.",
+      "value": 75,
+      "unit": "%",
+      "source": {
+        "publisher": "Insurance Institute for Highway Safety",
+        "title": "Roundabouts",
+        "url": "https://www.iihs.org/topics/roundabouts",
+        "date": "accessed 2026-10-13"
+      },
+      "jurisdiction": "International",
+      "reviewer": null,
+      "approved_on": null,
+      "status": "verified"
+    },
+    {
+      "id": "int.iihs.esc-single",
+      "text": "Electronic stability control (ESC) reduces the risk of a fatal single-vehicle crash by about this much for cars and SUVs.",
+      "value": 50,
+      "unit": "%",
+      "source": {
+        "publisher": "Insurance Institute for Highway Safety",
+        "title": "Life-saving benefits of ESC continue to accrue",
+        "url": "https://www.iihs.org/news/detail/life-saving-benefits-of-esc-continue-to-accrue",
+        "date": "2016-09-01"
+      },
+      "jurisdiction": "International",
+      "reviewer": null,
+      "approved_on": null,
+      "status": "verified",
+      "notes": "IIHS says \"about half\"."
+    },
+    {
+      "id": "int.iihs.esc-rollover",
+      "text": "ESC reduces the risk of a fatal single-vehicle rollover in a car by this much.",
+      "value": 72,
+      "unit": "%",
+      "source": {
+        "publisher": "Insurance Institute for Highway Safety",
+        "title": "Life-saving benefits of ESC continue to accrue",
+        "url": "https://www.iihs.org/news/detail/life-saving-benefits-of-esc-continue-to-accrue",
+        "date": "2016-09-01"
+      },
+      "jurisdiction": "International",
+      "reviewer": null,
+      "approved_on": null,
+      "status": "verified"
+    },
+    {
+      "id": "int.helmet-bike.head",
+      "text": "Wearing a bicycle helmet was linked to this much lower odds of head injury.",
+      "value": 51,
+      "unit": "%",
+      "source": {
+        "publisher": "International Journal of Epidemiology 46(1)",
+        "title": "Bicycle injuries and helmet use: a systematic review and meta-analysis (Olivier & Creighton)",
+        "url": "https://npesu.unsw.edu.au/publication/bicycle-injuries-and-helmet-use-systematic-review-and-meta-analysis",
+        "date": "2017"
+      },
+      "jurisdiction": "International",
+      "reviewer": null,
+      "approved_on": null,
+      "status": "verified",
+      "notes": "Checked through a web search summary on 2026-10-13; a reviewer should open the source to confirm."
+    },
+    {
+      "id": "int.helmet-bike.serious",
+      "text": "Wearing a bicycle helmet was linked to this much lower odds of serious head injury.",
+      "value": 69,
+      "unit": "%",
+      "source": {
+        "publisher": "International Journal of Epidemiology 46(1)",
+        "title": "Bicycle injuries and helmet use: a systematic review and meta-analysis (Olivier & Creighton)",
+        "url": "https://npesu.unsw.edu.au/publication/bicycle-injuries-and-helmet-use-systematic-review-and-meta-analysis",
+        "date": "2017"
+      },
+      "jurisdiction": "International",
+      "reviewer": null,
+      "approved_on": null,
+      "status": "verified",
+      "notes": "Checked through a web search summary on 2026-10-13; a reviewer should open the source to confirm."
+    },
+    {
+      "id": "int.helmet-bike.fatal",
+      "text": "Wearing a bicycle helmet was linked to this much lower odds of fatal head injury.",
+      "value": 65,
+      "unit": "%",
+      "source": {
+        "publisher": "International Journal of Epidemiology 46(1)",
+        "title": "Bicycle injuries and helmet use: a systematic review and meta-analysis (Olivier & Creighton)",
+        "url": "https://npesu.unsw.edu.au/publication/bicycle-injuries-and-helmet-use-systematic-review-and-meta-analysis",
+        "date": "2017"
+      },
+      "jurisdiction": "International",
+      "reviewer": null,
+      "approved_on": null,
+      "status": "verified",
+      "notes": "Checked through a web search summary on 2026-10-13; a reviewer should open the source to confirm."
+    },
+    {
+      "id": "int.fatigue.awake",
+      "text": "After this many hours without sleep, performance on some tests was as poor as or worse than at a blood alcohol level of 0.05%.",
+      "value": "17–19",
+      "unit": "hours",
+      "source": {
+        "publisher": "Occupational and Environmental Medicine 57(10)",
+        "title": "Moderate sleep deprivation produces impairments in cognitive and motor performance equivalent to legally prescribed levels of alcohol intoxication (Williamson & Feyer)",
+        "url": "https://oem.bmj.com/content/57/10/649",
+        "date": "2000"
+      },
+      "jurisdiction": "International",
+      "reviewer": null,
+      "approved_on": null,
+      "status": "verified",
+      "notes": "Checked through a web search summary on 2026-10-13; a reviewer should open the source to confirm."
+    },
+    {
+      "id": "int.fatigue.microsleep",
+      "text": "A microsleep is a brief episode of sleep, usually lasting up to this long, when the brain stops taking in what is happening.",
+      "value": 15,
+      "unit": "s",
+      "source": {
+        "publisher": "Sleep Foundation",
+        "title": "Microsleep",
+        "url": "https://www.sleepfoundation.org/sleep-deprivation/microsleep",
+        "date": "accessed 2026-10-13"
+      },
+      "jurisdiction": "International",
+      "reviewer": null,
+      "approved_on": null,
+      "status": "verified",
+      "notes": "Checked through a web search summary on 2026-10-13; a reviewer should open the source to confirm."
+    },
+    {
+      "id": "int.gncap.africa",
+      "text": "Global NCAP crash tests of cars sold in Africa (#SaferCarsForAfrica) have given some models zero stars for occupant protection.",
+      "value": 0,
+      "unit": "stars",
+      "source": {
+        "publisher": "Global NCAP",
+        "title": "#SaferCarsForAfrica results",
+        "url": "https://www.globalncap.org/",
+        "date": "accessed 2026-10-13"
+      },
+      "jurisdiction": "International",
+      "reviewer": null,
+      "approved_on": null,
+      "status": "verified"
+    },
+    {
+      "id": "int.fhwa.refuge",
+      "text": "Pedestrian refuge islands and medians reduce pedestrian crashes by about this much.",
+      "value": 56,
+      "unit": "%",
+      "source": null,
+      "jurisdiction": "International",
+      "reviewer": null,
+      "approved_on": null,
+      "status": "NEEDS_SOURCE",
+      "notes": "Placeholder from FHWA Proven Safety Countermeasures; the FHWA site blocked automated checking. Confirm at https://highways.dot.gov/safety/proven-safety-countermeasures."
+    },
+    {
+      "id": "int.fhwa.rumble-centre",
+      "text": "Centreline rumble strips reduce head-on and opposite-direction sideswipe crashes by about this much.",
+      "value": 44,
+      "unit": "%",
+      "source": null,
+      "jurisdiction": "International",
+      "reviewer": null,
+      "approved_on": null,
+      "status": "NEEDS_SOURCE",
+      "notes": "Placeholder from FHWA Proven Safety Countermeasures (low end of the published range). Confirm at the FHWA site."
+    },
+    {
+      "id": "int.fhwa.lighting",
+      "text": "Street lighting reduces night-time pedestrian injury crashes by about this much.",
+      "value": 42,
+      "unit": "%",
+      "source": null,
+      "jurisdiction": "International",
+      "reviewer": null,
+      "approved_on": null,
+      "status": "NEEDS_SOURCE",
+      "notes": "Placeholder from FHWA Proven Safety Countermeasures. Confirm."
+    },
+    {
+      "id": "int.fencing.wildlife",
+      "text": "Wildlife fencing along roads (with crossings) reduces large-animal collisions by this much.",
+      "value": 80,
+      "unit": "%",
+      "source": null,
+      "jurisdiction": "International",
+      "reviewer": null,
+      "approved_on": null,
+      "status": "NEEDS_SOURCE",
+      "notes": "Placeholder (Huijser et al. 2009 reported reductions of 80% or more). Confirm, and check where Namibia fences roads."
+    },
+    {
+      "id": "int.taxi-length",
+      "text": "Length of a typical 14-seat minibus taxi (Toyota Quantum / HiAce class).",
+      "value": 5.4,
+      "unit": "m",
+      "source": null,
+      "jurisdiction": "International",
+      "reviewer": null,
+      "approved_on": null,
+      "status": "NEEDS_SOURCE",
+      "notes": "Placeholder. Confirm from the manufacturer’s specification sheet."
+    },
+    {
+      "id": "na.law.pass-safe",
+      "text": "When passing another vehicle (including a bicycle), pass on its right at a safe distance. The regulations do not set a number of metres.",
+      "value": "safe distance",
+      "source": {
+        "publisher": "Government of Namibia (annotated by the Legal Assistance Centre)",
+        "title": "Road Traffic and Transport Regulations, 2001 (GN 53 of 2001), as amended",
+        "url": "https://www.lac.org.na/laws/annoREG/Road%20Traffic%20and%20Transport%20Act%2022%20of%201999-Regulations%202001-053.pdf",
+        "date": "2001, annotated text accessed 2026-10-13",
+        "locator": "reg 329(1)"
+      },
+      "jurisdiction": "Namibia",
+      "reviewer": null,
+      "approved_on": null,
+      "status": "verified"
+    },
+    {
+      "id": "na.law.sidewalk",
+      "text": "Nobody may drive, pull or push a vehicle (including a bicycle) on a sidewalk; prams, wheelchairs and children’s toys are excepted.",
+      "value": "not allowed",
+      "source": {
+        "publisher": "Government of Namibia (annotated by the Legal Assistance Centre)",
+        "title": "Road Traffic and Transport Regulations, 2001 (GN 53 of 2001), as amended",
+        "url": "https://www.lac.org.na/laws/annoREG/Road%20Traffic%20and%20Transport%20Act%2022%20of%201999-Regulations%202001-053.pdf",
+        "date": "2001, annotated text accessed 2026-10-13",
+        "locator": "reg 341(5)"
+      },
+      "jurisdiction": "Namibia",
+      "reviewer": null,
+      "approved_on": null,
+      "status": "verified"
+    },
+    {
+      "id": "na.support.lifeline",
+      "text": "LifeLine/ChildLine Namibia toll-free helpline numbers for counselling.",
+      "value": "116 or 106",
+      "source": {
+        "publisher": "LifeLine/ChildLine Namibia",
+        "title": "Home page",
+        "url": "https://www.lifelinechildline.org.na/",
+        "date": "accessed 2026-10-13"
+      },
+      "jurisdiction": "Namibia",
+      "reviewer": null,
+      "approved_on": null,
+      "status": "verified"
+    },
+    {
+      "id": "int.drug.cannabis",
+      "text": "Cannabis (dagga) affects attention, reaction time and the ability to judge distance and speed.",
+      "value": null,
+      "source": null,
+      "jurisdiction": "International",
+      "reviewer": null,
+      "approved_on": null,
+      "status": "NEEDS_SOURCE",
+      "notes": "Find a citable source (e.g. WHO, UNODC or a systematic review on cannabis and driving)."
+    },
+    {
+      "id": "int.medicine.driving",
+      "text": "Many medicines, including some for allergies, sleep, pain, anxiety and depression, can cause drowsiness or slow reactions.",
+      "value": null,
+      "source": null,
+      "jurisdiction": "International",
+      "reviewer": null,
+      "approved_on": null,
+      "status": "NEEDS_SOURCE",
+      "notes": "Find a citable source (e.g. a national medicines regulator or WHO guidance on medicines and driving)."
+    }
+  ]
+}
