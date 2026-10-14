@@ -49,7 +49,59 @@ export default function create(scene, parent, p, a) {
     [vx - len * 0.3, vx + len * 0.3].forEach(wx => { g.fillStyle(0x1C1C1E, 1); g.fillCircle(wx, roadY - wr, wr); g.fillStyle(0x8B97A6, 1); g.fillCircle(wx, roadY - wr, wr * 0.42); });
   };
 
+  // Illustrated crossing (scn_crossing) when loaded. DIP is the road surface through the dip,
+  // as [x, y] fractions of the image, measured from the art; water fills it up to the level.
+  const DIP = [[0.12, 0.51], [0.2, 0.535], [0.3, 0.6], [0.4, 0.675], [0.5, 0.72], [0.6, 0.715], [0.7, 0.675], [0.8, 0.6], [0.88, 0.54], [0.95, 0.515]];
+  const pic = scene.textures.exists('scn_crossing') ? scene.add.image(a.x + a.w / 2, a.y + a.h / 2, 'scn_crossing') : null;
+  let PX = null;
+  if (pic) {
+    pic.setScale(Math.max(a.w / pic.width, a.h / pic.height) * 1.02);
+    const ix = a.x + a.w / 2 - pic.displayWidth / 2, iy = a.y + a.h / 2 - pic.displayHeight / 2;
+    PX = DIP.map(([fx, fy]) => ({ x: ix + fx * pic.displayWidth, y: iy + fy * pic.displayHeight }));
+    // The dip is drawn about 1.1 m deep so the water levels are easy to compare (depths exaggerated for clarity).
+    const rim = Math.min(PX[0].y, PX[PX.length - 1].y);
+    PX.cm = (Math.max(...PX.map(q => q.y)) - rim) / 110;
+    c.addAt([scene.add.rectangle(a.x, a.y, a.w, a.h, 0xB4BECA).setOrigin(0), pic], 0); g.setVisible(false);   // overcast sky behind the cloud edge
+    const bottom = Math.max(...PX.map(q => q.y));
+    const postX = PX[4].x + 30;
+    const post = scene.add.graphics(); c.add(post);
+    post.fillStyle(0xFFFFFF, 1); post.fillRect(postX - 4, bottom - 90 * PX.cm - 8, 8, 90 * PX.cm + 8);
+    tags.removeAll(true);
+    (p.marks || []).forEach(mk => {
+      const y = bottom - mk.cm * PX.cm;
+      post.fillStyle(C.red, 1); post.fillRect(postX - 8, y - 2, 16, 4);
+      const left = (p.marks || []).indexOf(mk) % 2 === 1;   // alternate sides so labels don't overlap
+      tags.add(label(scene, postX + (left ? -14 : 14), y, mk.label, 12, '#0B1B2E', { backgroundColor: '#FFFFFFDD', padding: { x: 4, y: 2 } }).setOrigin(left ? 1 : 0, 0.5));
+    });
+    c.bringToTop(tags);
+    PX.bottom = bottom;
+  }
+  const drawWaterPic = () => {
+    w.clear();
+    if (st.depth <= 0) return;
+    const top = PX.bottom - st.depth * PX.cm;
+    // walk the dip profile and keep the stretch below the water surface
+    const pts = [];
+    for (let i = 0; i < PX.length - 1; i++) {
+      const p0 = PX[i], p1 = PX[i + 1];
+      const in0 = p0.y >= top, in1 = p1.y >= top;
+      if (in0) pts.push(p0);
+      if (in0 !== in1) { const k = (top - p0.y) / (p1.y - p0.y); pts.push({ x: p0.x + (p1.x - p0.x) * k, y: top }); }
+    }
+    if (PX[PX.length - 1].y >= top) pts.push(PX[PX.length - 1]);
+    if (pts.length < 2) return;
+    const surf = [{ x: pts[0].x, y: top }, { x: pts[pts.length - 1].x, y: top }];
+    w.fillStyle(0x6E5434, 0.85);
+    w.fillPoints(surf.concat(pts.slice().reverse().map(q => ({ x: q.x, y: q.y + 6 }))), true);
+    if (st.flowing) {
+      w.lineStyle(2, 0xE6D7BE, 0.8);
+      const xl = surf[0].x, xr = surf[1].x;
+      for (let i = 0; i < 6; i++) { const x = xl + ((i * 47 + st.t * 60) % Math.max(1, xr - xl - 18)); w.lineBetween(x, top + 3, x + 16, top + 3); }
+    }
+  };
+
   const drawWater = () => {
+    if (PX) { drawWaterPic(); return; }
     w.clear();
     if (st.depth <= 0) return;
     const top = bedY - st.depth / 100 * pxm;
@@ -75,7 +127,7 @@ export default function create(scene, parent, p, a) {
     update(t, dt) { st.t += dt; drawWater(); },
     destroy() {}
   };
-  drawStatic(); drawWater();
+  if (!PX) drawStatic(); drawWater();
   const m = clipTo(scene, c, a);
   inst.destroy = () => { c.destroy(); m.destroy(); };
   return inst;

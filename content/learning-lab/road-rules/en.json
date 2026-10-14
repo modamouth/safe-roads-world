@@ -93,9 +93,7 @@
                 "params": {
                   "icon": "rules",
                   "tint": "#FFCB2B",
-                  "extras": [
-                    "info"
-                  ]
+                  "image": "tl_yellow"
                 },
                 "alt": "A traffic light showing yellow."
               },
@@ -126,11 +124,9 @@
                 "params": {
                   "icon": "rules",
                   "tint": "#7F8FA3",
-                  "extras": [
-                    "info"
-                  ]
+                  "image": "tl_off"
                 },
-                "alt": "A dark traffic light at a junction."
+                "alt": "A traffic light with all its lamps off."
               },
               "reason": "When no light is working, every driver must act as at a three-way or four-way stop."
             },
@@ -248,11 +244,9 @@
                 "params": {
                   "icon": "steering",
                   "tint": "#E8743B",
-                  "extras": [
-                    "info"
-                  ]
+                  "image": "spot_phone"
                 },
-                "alt": "A steering wheel with a phone symbol."
+                "alt": "A phone held in a dashboard holder."
               },
               "reason": "You may not drive while holding a phone. You may only use it hands-free, fixed to the car or through a headset."
             },

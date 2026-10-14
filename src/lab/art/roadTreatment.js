@@ -74,6 +74,29 @@ export default function create(scene, parent, p, a) {
     tags.add(label(scene, a.x + a.w / 2, a.y + 20, t(st.on ? 'art.treatment.with' : 'art.treatment.without'), 13, '#FFFFFF', { backgroundColor: '#05080DCC', padding: { x: 6, y: 3 } }));
   };
 
+  // Illustrated top-down roads (without / with) when loaded; drawn diagrams otherwise.
+  const ART = { rumble: ['td_road', 'td_rumble'], lighting: ['td_road', 'td_lighting'], fence: ['td_road', 'td_fence'],
+    refuge: ['td_road', 'td_refuge'], roundabout: ['td_crossroads', 'td_roundabout'] }[p.treatment];
+  if (ART && ART.every(k => scene.textures.exists(k))) {
+    const bg = scene.add.rectangle(a.x, a.y, a.w, a.h, 0x8C6A45).setOrigin(0);
+    const pics = ART.map(k => {
+      const im = scene.add.image(a.x + a.w / 2, a.y + a.h / 2, k);
+      im.setScale(Math.max(a.w / im.width, a.h / im.height) * (p.treatment === 'roundabout' ? 1 : 1.05));
+      return im;
+    });
+    c.addAt([bg, ...pics], 0);
+    g.setVisible(false);
+    const draw2 = () => {
+      pics[0].setVisible(!st.on); pics[1].setVisible(st.on);
+      tags.removeAll(true);
+      tags.add(label(scene, a.x + a.w / 2, a.y + 20, t(st.on ? 'art.treatment.with' : 'art.treatment.without'), 13, '#FFFFFF', { backgroundColor: '#05080DCC', padding: { x: 6, y: 3 } }));
+    };
+    const inst2 = { setState(s) { if (s.on !== undefined) st.on = !!s.on; draw2(); }, destroy() {} };
+    draw2();
+    const m2 = clipTo(scene, c, a);
+    inst2.destroy = () => { c.destroy(); m2.destroy(); };
+    return inst2;
+  }
   const inst = { setState(s) { if (s.on !== undefined) st.on = !!s.on; draw(); }, destroy() {} };
   draw();
   const m = clipTo(scene, c, a);

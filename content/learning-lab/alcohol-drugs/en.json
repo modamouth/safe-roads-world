@@ -65,6 +65,22 @@
           }
         },
         {
+          "id": "keys",
+          "type": "story",
+          "lines": [
+            "Your car keys are in your pocket. Nobody would stop you."
+          ],
+          "art": {
+            "kind": "card",
+            "params": {
+              "icon": "alcohol",
+              "tint": "#E8743B",
+              "image": "spot_beer"
+            },
+            "alt": "A beer bottle beside a car key."
+          }
+        },
+        {
           "id": "risk",
           "type": "chart",
           "title": "Crash risk and blood alcohol",
@@ -169,6 +185,15 @@
             {
               "id": "plan",
               "kind": "choice",
+              "art": {
+                "kind": "card",
+                "params": {
+                  "icon": "alcohol",
+                  "tint": "#E8743B",
+                  "image": "spot_beer"
+                },
+                "alt": "A beer bottle beside a car key."
+              },
               "line": "You're the designated driver, but your friends keep offering you drinks.",
               "prompt": "What's the safest plan?",
               "options": [
@@ -251,11 +276,9 @@
             "params": {
               "icon": "alcohol",
               "tint": "#1FA3B5",
-              "extras": [
-                "info"
-              ]
+              "image": "spot_meds"
             },
-            "alt": "A medicine packet beside a car key."
+            "alt": "A blister pack of tablets beside a car key."
           }
         },
         {

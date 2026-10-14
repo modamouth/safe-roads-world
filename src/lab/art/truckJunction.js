@@ -17,6 +17,9 @@ export default function create(scene, parent, p, a) {
   const S = Math.min(12, a.w / 34), X0 = a.x + a.w / 2 - 3.5 * S, CAM0 = a.y + a.h * 0.62;
   const v = p.speedKmh / 3.6;
   const st = { phase: 'cruise', light: 'green', camY: 0, tc: 0, dim: false };
+  // Illustrated traffic light in the corner, showing the current state (when the art is loaded).
+  const tlImg = scene.textures.exists('tl_green') ? scene.add.image(a.x + a.w - 14, a.y + 14, 'tl_green').setOrigin(1, 0) : null;
+  if (tlImg) tlImg.setScale(110 / tlImg.height);
   const truck = { y: 0, v, x: L_LANE, brake: false };
   const car = { y: 6, v, x: R_LANE, brake: false };
   const queue = [{ y: 66, v: 50 / 3.6, stopAt: LINE - 1 }, { y: 57, v: 50 / 3.6, stopAt: LINE - 7.5 }];
@@ -116,6 +119,7 @@ export default function create(scene, parent, p, a) {
     },
     destroy() {}
   };
+  if (tlImg) { c.add(tlImg); const upd = inst.update; inst.update = (t2, dt) => { upd(t2, dt); tlImg.setTexture('tl_' + st.light); c.bringToTop(tlImg); }; }
   function finish(kmh) { const d = done; done = null; if (d) d(kmh); }
   draw();
   const m = clipTo(scene, c, a);
