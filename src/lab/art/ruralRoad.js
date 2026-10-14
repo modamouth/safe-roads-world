@@ -109,7 +109,9 @@ export default function create(scene, parent, p, a, ctx) {
   const oncoming = swerveMode ? add(scene.textures.exists('img_truck') ? 'img_truck' : vanTexture(scene), 9999, 3.5, 2.1, 'w') : null;
   if (oncoming) oncoming.fixed = true;
   // The kudu starts close enough to read clearly at phone size; it is larger than cattle.
-  if (swerveMode && animal) { animal.xm = -4.6; animal.sizeM = 2.8; animal.wz = 30 + Z_R + CAR_LEN; oncoming.wz = 170 + Z_R + CAR_LEN; }
+  // Illustrated kudu is sized by height (horns included) so standing and leaping poses match.
+  if (animal && kuduKey === 'scn_kudu' && p.hazard === 'kudu') { animal.by = 'h'; animal.sizeM = 2.6; }
+  if (swerveMode && animal) { animal.xm = -4.6; if (kuduKey !== 'scn_kudu') animal.sizeM = 2.8; animal.wz = 30 + Z_R + CAR_LEN; oncoming.wz = 170 + Z_R + CAR_LEN; }
   const eyes = scene.add.graphics(); c.add(eyes);
   const carKey = scene.textures.exists('img_suv') && scene.registry.get('REAL') ? 'img_suv' : 'carRear';
   const car = scene.add.image(VPX, CAR_Y, carKey).setOrigin(0.5, 1);
