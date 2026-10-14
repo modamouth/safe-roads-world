@@ -26,7 +26,7 @@ export default class Boot extends Phaser.Scene {
     ['labbg', 'labcar0', 'labcar60', 'labcar80', 'labcar90', 'truck', 'post', 'childseat_firm', 'childseat_loose', 'childseat_slack']
       .forEach(k => this.load.image('img_' + k, 'assets/' + k + '.webp'));
     // Illustrated roadside scenery (optional: drawn versions are used if these are missing).
-    ['scn_acacia', 'scn_bush', 'scn_palm', 'scn_lamp', 'scn_kudu', 'scn_kudu_leap'].forEach(k => this.load.image(k, 'assets/' + k + '.webp'));
+    ['scn_acacia', 'scn_bush', 'scn_palm', 'scn_lamp', 'scn_kudu', 'scn_kudu_leap', 'scn_donkey'].forEach(k => this.load.image(k, 'assets/' + k + '.webp'));
     // If any image 404s or fails, don't block the boot — REAL just stays false
     // and the game runs on the drawn fallback art.
     this.load.on('loaderror', () => {});

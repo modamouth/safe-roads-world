@@ -102,7 +102,13 @@ export default function create(scene, parent, p, a, ctx) {
   for (let z = 10; z < SPAN; z += 12) { add(post, z, -4.2, 1.2); const r = add(post, z + 6, 7.4, 1.2); if (r && post === 'img_post') r.setFlipX(true); }
   // Kudu: illustrated artwork (scn_kudu, optional leaping pose scn_kudu_leap) when loaded, else the drawn one.
   const kuduKey = scene.textures.exists('scn_kudu') ? 'scn_kudu' : 'kudu';
-  const hazardKey = p.hazard && p.hazard !== 'none' ? (p.hazard === 'kudu' ? kuduKey : animalTexture(scene, p.hazard)) : null;
+  const donkeyKey = scene.textures.exists('scn_donkey') ? 'scn_donkey' : null;
+  const hazardKey = p.hazard && p.hazard !== 'none'
+    ? (p.hazard === 'kudu' ? kuduKey : p.hazard === 'donkey' && donkeyKey ? donkeyKey : animalTexture(scene, p.hazard)) : null;
+  // Donkeys grazing on the verges, in story and decision scenes only (not in the stopping or microsleep tests).
+  if (donkeyKey && (p.mode === 'scene' || p.mode === 'swerve') && (p.time || 'dusk') !== 'night') {
+    [[90, -9.5, false], [210, 11, true], [340, -10.5, false]].forEach(([z, x, flip]) => { const d = add(donkeyKey, z, x, 1.4, 'h'); if (d && flip) d.setFlipX(true); });
+  }
   const animal = hazardKey ? add(hazardKey, 9999, -0.3, p.hazard === 'kudu' ? 2.4 : 2.3, 'w') : null;
   if (animal) animal.fixed = true;
   const swerveMode = p.mode === 'swerve';
