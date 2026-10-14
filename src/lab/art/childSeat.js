@@ -80,7 +80,29 @@ export default function create(scene, parent, p, a) {
     tag(a.x + a.w / 2, a.y + 24, good ? 'art.child.beltGood' : 'art.child.beltBad', good);
   };
 
-  const draw = () => { g.clear(); tags.removeAll(true); (view === 'harness' ? harness : view === 'belt' ? beltFit : install)(); };
+  // Illustrated artwork for 'install' and 'harness' when loaded; the drawn version is the fallback.
+  // All three images share one frame: firm/snug (good), loose seat, slack straps.
+  const badKey = view === 'harness' ? 'img_childseat_slack' : 'img_childseat_loose';
+  const photo = view !== 'belt' && scene.textures.exists('img_childseat_firm') && scene.textures.exists(badKey);
+  let imgGood = null, imgBad = null;
+  if (photo) {
+    g.fillStyle(0x0E1622, 1); g.fillRoundedRect(a.x, a.y, a.w, a.h, 18);
+    imgGood = scene.add.image(a.x + a.w / 2, a.y + a.h - 6, 'img_childseat_firm').setOrigin(0.5, 1);
+    imgBad = scene.add.image(imgGood.x, imgGood.y, badKey).setOrigin(0.5, 1).setAlpha(0);
+    const sc = Math.min((a.w - 16) / imgGood.width, (a.h - 40) / imgGood.height);
+    imgGood.setScale(sc); imgBad.setScale(sc);
+    c.addAt([imgGood, imgBad], 1);
+  }
+  const drawPhoto = () => {
+    imgBad.setAlpha(st.ok ? 0 : Math.min(1, st.k * 1.6));
+    imgGood.setAlpha(st.ok ? 1 : 1 - Math.min(1, st.k * 1.6));
+    tags.removeAll(true);
+    if (st.k >= 1 || (st.ok && st.k === 0 && st.shown)) {
+      const key = view === 'harness' ? (st.ok ? 'art.child.snug' : 'art.child.slack') : (st.ok ? 'art.child.firm' : 'art.child.loose');
+      tag(a.x + a.w / 2, a.y + 22, key, st.ok);
+    }
+  };
+  const draw = () => { if (photo) { drawPhoto(); return; } g.clear(); tags.removeAll(true); (view === 'harness' ? harness : view === 'belt' ? beltFit : install)(); };
   const inst = {
     highlight(id) { st.hi = id; draw(); },
     async setState(s) {
@@ -88,7 +110,7 @@ export default function create(scene, parent, p, a) {
       const v = s.firm !== undefined ? s.firm : s.snug !== undefined ? s.snug : s.booster;
       if (v !== undefined) st.ok = !!v;
       if (view === 'belt') { draw(); return; }
-      st.k = 0; draw();
+      st.k = 0; st.shown = true; draw();
       await tweenTo(scene, st, { k: 1 }, REDUCE_MOTION ? 0 : 700, REDUCE_MOTION);
       draw();
     },
