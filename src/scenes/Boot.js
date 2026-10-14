@@ -4,6 +4,7 @@ import { OPTIONAL_ART, PARKED_VEHICLES, optKey, buildWorldTextures } from '../wo
 import { state } from '../config.js';
 import { labPoints } from '../lab/analytics.js';
 import { EXPERIENCES, experienceProgress } from '../experiences.js';
+import { resumeExperience } from '../lab/session.js';
 
 // Photo assets live in /public/assets and are loaded by URL (not embedded),
 // so swapping an image is just replacing the file — no rebuild step needed.
@@ -38,6 +39,7 @@ export default class Boot extends Phaser.Scene {
     // Progress saved on this device (Learning Lab stamps) feeds the Map's points and completion.
     state.points = labPoints();
     EXPERIENCES.forEach(e => { state.completed[e.id] = experienceProgress(e).complete; });
-    this.scene.start('Title');
+    const resume = resumeExperience();
+    this.scene.start(resume ? 'LabRunner' : 'Title', resume || undefined);
   }
 }

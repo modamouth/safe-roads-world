@@ -140,11 +140,11 @@
             },
             {
               "id": "car-far-left",
-              "label": "Purple car two lanes to the left",
+              "label": "Blue car two lanes to the left",
               "kind": "car",
               "x": -7,
               "y": -4,
-              "color": "#7B5CC9",
+              "color": "#3C7FC2",
               "correct": true
             },
             {
@@ -158,20 +158,20 @@
             },
             {
               "id": "car-left-back",
-              "label": "Yellow car on the left, level with the back of the tank",
+              "label": "Red car on the left, level with the back of the tank",
               "kind": "car",
               "x": -3.5,
               "y": -8,
-              "color": "#E5B93A",
+              "color": "#A93226",
               "correct": false
             },
             {
               "id": "car-left-ahead",
-              "label": "Orange car ahead on the left",
+              "label": "Red car ahead on the left",
               "kind": "car",
               "x": -3.5,
               "y": 3.6,
-              "color": "#D8642B",
+              "color": "#A93226",
               "correct": false
             },
             {
@@ -184,11 +184,11 @@
             },
             {
               "id": "car-right",
-              "label": "Teal car beside the cab, on the right",
+              "label": "Blue car beside the cab, on the right",
               "kind": "car",
               "x": 3.5,
               "y": -2.6,
-              "color": "#46B8B0",
+              "color": "#3C7FC2",
               "correct": true
             },
             {
@@ -238,11 +238,11 @@
             },
             {
               "id": "car-behind",
-              "label": "Grey car right behind the tanker",
+              "label": "Blue car right behind the tanker",
               "kind": "car",
               "x": 0,
               "y": -19,
-              "color": "#8A8F96",
+              "color": "#3C7FC2",
               "correct": true
             },
             {
@@ -255,11 +255,11 @@
             },
             {
               "id": "car-behind-right",
-              "label": "Purple car behind, on the right",
+              "label": "Blue car behind, on the right",
               "kind": "car",
               "x": 3.5,
               "y": -19.5,
-              "color": "#6A4FB5",
+              "color": "#3C7FC2",
               "correct": false
             },
             {
@@ -273,11 +273,11 @@
             },
             {
               "id": "car-behind-far-right",
-              "label": "Black car far behind on the right",
+              "label": "Blue car far behind on the right",
               "kind": "car",
               "x": 7,
               "y": -20,
-              "color": "#222831",
+              "color": "#3C7FC2",
               "correct": false
             }
           ],
@@ -387,13 +387,14 @@
             "kind": "card",
             "params": {
               "icon": "truck",
+              "image": "lab-freight-truck-side",
               "tint": "#E8743B",
               "extras": [
                 "highway",
                 "car_speed"
               ]
             },
-            "alt": "A truck with symbols for a highway and a car."
+            "alt": "Side view of a white Namibian road freight truck, with highway and car symbols above it."
           },
           "lines": [
             "You're driving into Windhoek on a dual carriageway. A loaded truck is in the left lane beside you.",

@@ -1,0 +1,330 @@
+[
+  {
+    "path": "public/assets/learning-lab/priority-3/animals/grey-donkey-clean.png",
+    "size": [
+      1536,
+      1024
+    ],
+    "alpha": [
+      0,
+      255
+    ],
+    "bounds": [
+      200,
+      6,
+      1430,
+      1010
+    ],
+    "sha256": "a09a8560f398dadf8f0e4c80a0f1d2219b81b14202460fadc83cf5d591ed9c0a"
+  },
+  {
+    "path": "public/assets/learning-lab/priority-3/animals/grey-donkey.png",
+    "size": [
+      1536,
+      1024
+    ],
+    "alpha": [
+      0,
+      254
+    ],
+    "bounds": [
+      200,
+      6,
+      1430,
+      1010
+    ],
+    "sha256": "c940feead00eee7cf4fd40ed3b6ed203f1967528e651f6c9b4f5fff60025e35d"
+  },
+  {
+    "path": "public/assets/learning-lab/priority-3/animals/kudu-leaping.png",
+    "size": [
+      1536,
+      1024
+    ],
+    "alpha": [
+      0,
+      255
+    ],
+    "bounds": [
+      22,
+      15,
+      1510,
+      995
+    ],
+    "sha256": "68bb6b254d242e87e1a540dbbf1671f187f9315f96b30c7666fa5c378aa9f975"
+  },
+  {
+    "path": "public/assets/learning-lab/priority-3/animals/kudu-standing.png",
+    "size": [
+      1312,
+      1199
+    ],
+    "alpha": [
+      0,
+      255
+    ],
+    "bounds": [
+      99,
+      14,
+      1297,
+      1174
+    ],
+    "sha256": "b49b4a532cfe311579ff8cfead98a60b9d9ae75487f44873e81f3ed25a9b04c1"
+  },
+  {
+    "path": "public/assets/learning-lab/priority-3/animals/nguni-cow.png",
+    "size": [
+      1536,
+      1024
+    ],
+    "alpha": [
+      0,
+      255
+    ],
+    "bounds": [
+      48,
+      18,
+      1505,
+      993
+    ],
+    "sha256": "c49e23a5332323489d714834170716d84f5b3f9c16868e1299428deefe18253e"
+  },
+  {
+    "path": "public/assets/learning-lab/priority-3/scenery/acacia-tree.png",
+    "size": [
+      1220,
+      1289
+    ],
+    "alpha": [
+      0,
+      255
+    ],
+    "bounds": [
+      19,
+      104,
+      1203,
+      1223
+    ],
+    "sha256": "7ea7e88cc3dcb9d45d86de87c50a9d41fe9e926560ffae4c0945f091ca3d9510"
+  },
+  {
+    "path": "public/assets/learning-lab/priority-3/scenery/palm-tree.png",
+    "size": [
+      1024,
+      1536
+    ],
+    "alpha": [
+      0,
+      255
+    ],
+    "bounds": [
+      74,
+      25,
+      957,
+      1521
+    ],
+    "sha256": "1f1f2d6dd5a2e374c7718314b4be695ff406a73eb8cfc91cdb79aa688b035ad5"
+  },
+  {
+    "path": "public/assets/learning-lab/priority-3/scenery/road-marker-post.png",
+    "error": "image file is truncated"
+  },
+  {
+    "path": "public/assets/learning-lab/priority-3/scenery/savanna-bush.png",
+    "size": [
+      1245,
+      1263
+    ],
+    "alpha": [
+      0,
+      255
+    ],
+    "bounds": [
+      19,
+      122,
+      1218,
+      1146
+    ],
+    "sha256": "a9275e4a7524ed3ca5855ef8a69447530c45691dd25b9c9bc8718e5d3524b255"
+  },
+  {
+    "path": "public/assets/learning-lab/priority-3/scenery/street-lamp.png",
+    "size": [
+      1024,
+      1536
+    ],
+    "alpha": [
+      0,
+      255
+    ],
+    "bounds": [
+      331,
+      19,
+      874,
+      1514
+    ],
+    "sha256": "e9d5ce4a50164d76401aaa6a02ea92f2fc5ceeda88e447ff96fa965724ba20a2"
+  },
+  {
+    "path": "public/assets/learning-lab/priority-3/top-down/blue-sedan.png",
+    "size": [
+      1024,
+      1536
+    ],
+    "alpha": [
+      0,
+      254
+    ],
+    "bounds": [
+      133,
+      51,
+      891,
+      1495
+    ],
+    "sha256": "d9c5ff3fa3b511e5ab7e9ea00768bdc04ce134f476b0562839e1943e2e28b7ed"
+  },
+  {
+    "path": "public/assets/learning-lab/priority-3/top-down/cyclist-car-safe-pass.png",
+    "size": [
+      1024,
+      1536
+    ],
+    "alpha": [
+      0,
+      255
+    ],
+    "bounds": [
+      40,
+      134,
+      1024,
+      1382
+    ],
+    "sha256": "8224e81b975a068bdbf72c4011f3afdb1c12119bab4be46e72ca46fb61497d1c"
+  },
+  {
+    "path": "public/assets/learning-lab/priority-3/top-down/cyclist.png",
+    "size": [
+      1024,
+      1536
+    ],
+    "alpha": [
+      0,
+      255
+    ],
+    "bounds": [
+      242,
+      27,
+      783,
+      1506
+    ],
+    "sha256": "b8d93cf3a40e4df56f31da96a1e3b42e5b0013ab2062f27ca39244602b0c95ba"
+  },
+  {
+    "path": "public/assets/learning-lab/priority-3/top-down/double-cab-bakkie.png",
+    "size": [
+      1024,
+      1536
+    ],
+    "alpha": [
+      0,
+      255
+    ],
+    "bounds": [
+      137,
+      18,
+      888,
+      1501
+    ],
+    "sha256": "47b3ac3b969f8aa814bec923e8ec0a65147a129875c356bf1245181f8b594e80"
+  },
+  {
+    "path": "public/assets/learning-lab/priority-3/top-down/fuel-tanker.png",
+    "size": [
+      1024,
+      1536
+    ],
+    "alpha": [
+      0,
+      255
+    ],
+    "bounds": [
+      332,
+      29,
+      692,
+      1506
+    ],
+    "sha256": "52fb0a0fb7cbf89ecd1314967a219fd1dd846e9c44b28de34cc3b5cef3721bdc"
+  },
+  {
+    "path": "public/assets/learning-lab/priority-3/top-down/minibus-taxi.png",
+    "size": [
+      1024,
+      1536
+    ],
+    "alpha": [
+      0,
+      255
+    ],
+    "bounds": [
+      180,
+      25,
+      844,
+      1503
+    ],
+    "sha256": "c398e98b1d05814e9b95c2ce96fa1d87a379abcc5423fb1d8d69fc9474408347"
+  },
+  {
+    "path": "public/assets/learning-lab/priority-3/top-down/motorcycle-rider.png",
+    "size": [
+      1024,
+      1536
+    ],
+    "alpha": [
+      0,
+      254
+    ],
+    "bounds": [
+      112,
+      18,
+      914,
+      1518
+    ],
+    "sha256": "c507cf4c9d8443ec54803019100ce972b6e76478cf7a8a237a5132c8f99bc256"
+  },
+  {
+    "path": "public/assets/learning-lab/priority-3/top-down/pedestrian.png",
+    "size": [
+      1024,
+      1536
+    ],
+    "alpha": [
+      0,
+      255
+    ],
+    "bounds": [
+      193,
+      22,
+      852,
+      1503
+    ],
+    "sha256": "6b314452ba13176912594e6b14bf0b5db10ecaae4566231c3980d1983a067eed"
+  },
+  {
+    "path": "public/assets/learning-lab/priority-3/top-down/red-sedan.png",
+    "size": [
+      1024,
+      1536
+    ],
+    "alpha": [
+      0,
+      255
+    ],
+    "bounds": [
+      123,
+      31,
+      901,
+      1511
+    ],
+    "sha256": "2015839d2b34df8da897c813b618dd409cc88830ed29c373afb3b864cfe6c66f"
+  }
+]

@@ -9,6 +9,8 @@ import { QUALITY } from '../../quality.js';
 import { artKey, PARKED_VEHICLES } from '../../worldArt.js';
 import { stopping, impactKmh } from '../core/derive.js';
 import { t } from '../content.js';
+import { LEARNING_LAB_ASSETS as A } from '../assets.js';
+import { pedestrianSet, setPedestrianPose } from './pedestrianArt.js';
 import { clipTo, label } from './common.js';
 
 const CAMH = 5.5, Z_R = 19, CAR_LEN = 4.5, CAR_W = 1.85, PED_H = 1.72;
@@ -42,8 +44,16 @@ export default function create(scene, parent, p, a) {
     if (vehicles.length) { const v = vehicles[i % vehicles.length]; add(v.key, z, -2.9, v.w, 'w'); }
   });
   let seed = 11; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
-  for (let z = 26; z < end; z += (9 + rnd() * 12) / dens) add('ped_stand' + Math.floor(rnd() * 4), z, rnd() < 0.5 ? -5.0 - rnd() * 1.6 : 6.4 + rnd() * 1.6, PED_H);
-  const ped = add('ped_walkA', ZP, -3.0, PED_H);
+  const characters = Object.keys(A.pedestrians).map(name => pedestrianSet(scene, name));
+  let person = 0;
+  for (let z = 26; z < end; z += (9 + rnd() * 12) / dens) {
+    const poses = characters[person++ % characters.length];
+    const im = add(poses ? poses[0].key : 'ped_stand' + Math.floor(rnd() * 4), z, rnd() < .5 ? -5 - rnd() * 1.6 : 6.4 + rnd() * 1.6, PED_H);
+    if (poses && im) { setPedestrianPose(im, poses[0]); im.poses = poses; im.walking = true; im.walkOffset = person * .7; im.startZ = z; }
+  }
+  const actorPoses = characters[1]; // Schoolgirl stepping out from parked vehicles.
+  const ped = add(actorPoses ? actorPoses[0].key : 'ped_walkA', ZP, -3.0, PED_H);
+  if (actorPoses) setPedestrianPose(ped, actorPoses[0]);
   const carKey = scene.textures.exists('img_suv') && scene.registry.get('REAL') ? 'img_suv' : 'carRear';
   const car = scene.add.image(VPX, CAR_Y, carKey).setOrigin(0.5, 1); car.setScale((CAR_W * F / Z_R) / car.width); c.add(car);
   const fx = scene.add.graphics(); c.add(fx);
@@ -117,9 +127,16 @@ export default function create(scene, parent, p, a) {
           else if (r.ok && r.tE >= p.reactionS + r.v / r.decel) { pedState.goal = KERB_R + 1.2; finish(); }
         }
       }
+      if (!REDUCE_MOTION) scn.forEach(o => {
+        if (!o.walking) return;
+        o.wz = o.startZ + (st.t * .8) % 14;
+        setPedestrianPose(o, o.poses[1 + Math.floor((st.t + o.walkOffset) / .45) % 2]);
+      });
       if (pedState.on) {
         const goal = pedState.goal != null ? pedState.goal : -0.5;
-        if (pedState.x < goal) { pedState.x = Math.min(goal, pedState.x + 1.4 * dt); pedState.walkT += dt; ped.setTexture(Math.floor(pedState.walkT / 0.28) % 2 ? 'ped_walkB' : 'ped_walkA'); }
+        if (pedState.x < goal) { pedState.x = Math.min(goal, pedState.x + 1.4 * dt); pedState.walkT += dt; if (actorPoses) setPedestrianPose(ped, actorPoses[REDUCE_MOTION ? 0 : 1 + Math.floor(pedState.walkT / .35) % 2]);
+          else ped.setTexture(Math.floor(pedState.walkT / .28) % 2 ? 'ped_walkB' : 'ped_walkA'); }
+        else if (actorPoses) setPedestrianPose(ped, actorPoses[0]);
       }
       draw();
     },

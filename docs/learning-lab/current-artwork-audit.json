@@ -1,0 +1,1892 @@
+{
+  "assets": [
+    {
+      "path": "public/assets/childseat_firm.webp",
+      "size": [
+        761,
+        720
+      ],
+      "mode": "RGBA",
+      "alpha": [
+        0,
+        255
+      ],
+      "bounds": [
+        0,
+        0,
+        713,
+        720
+      ],
+      "valid": true
+    },
+    {
+      "path": "public/assets/childseat_loose.webp",
+      "size": [
+        761,
+        720
+      ],
+      "mode": "RGBA",
+      "alpha": [
+        0,
+        255
+      ],
+      "bounds": [
+        0,
+        0,
+        761,
+        720
+      ],
+      "valid": true
+    },
+    {
+      "path": "public/assets/childseat_slack.webp",
+      "size": [
+        761,
+        720
+      ],
+      "mode": "RGBA",
+      "alpha": [
+        0,
+        255
+      ],
+      "bounds": [
+        0,
+        0,
+        761,
+        720
+      ],
+      "valid": true
+    },
+    {
+      "path": "public/assets/city_backdrop.webp",
+      "size": [
+        564,
+        352
+      ],
+      "mode": "RGB",
+      "alpha": null,
+      "bounds": null,
+      "valid": true
+    },
+    {
+      "path": "public/assets/hero_passport.webp",
+      "size": [
+        620,
+        1100
+      ],
+      "mode": "RGBA",
+      "alpha": [
+        0,
+        255
+      ],
+      "bounds": [
+        0,
+        0,
+        620,
+        1100
+      ],
+      "valid": true
+    },
+    {
+      "path": "public/assets/labbg.webp",
+      "size": [
+        800,
+        427
+      ],
+      "mode": "RGB",
+      "alpha": null,
+      "bounds": null,
+      "valid": true
+    },
+    {
+      "path": "public/assets/labcar0.webp",
+      "size": [
+        760,
+        335
+      ],
+      "mode": "RGBA",
+      "alpha": [
+        0,
+        255
+      ],
+      "bounds": [
+        0,
+        0,
+        760,
+        335
+      ],
+      "valid": true
+    },
+    {
+      "path": "public/assets/labcar60.webp",
+      "size": [
+        760,
+        335
+      ],
+      "mode": "RGBA",
+      "alpha": [
+        0,
+        255
+      ],
+      "bounds": [
+        0,
+        0,
+        760,
+        335
+      ],
+      "valid": true
+    },
+    {
+      "path": "public/assets/labcar80.webp",
+      "size": [
+        760,
+        335
+      ],
+      "mode": "RGBA",
+      "alpha": [
+        0,
+        255
+      ],
+      "bounds": [
+        0,
+        0,
+        760,
+        335
+      ],
+      "valid": true
+    },
+    {
+      "path": "public/assets/labcar90.webp",
+      "size": [
+        760,
+        335
+      ],
+      "mode": "RGBA",
+      "alpha": [
+        0,
+        255
+      ],
+      "bounds": [
+        0,
+        0,
+        755,
+        335
+      ],
+      "valid": true
+    },
+    {
+      "path": "public/assets/learning-lab/priority-1/adult-seatbelt/belted.png",
+      "size": [
+        1536,
+        1024
+      ],
+      "mode": "RGBA",
+      "alpha": [
+        0,
+        254
+      ],
+      "bounds": [
+        81,
+        30,
+        1518,
+        1006
+      ],
+      "valid": true
+    },
+    {
+      "path": "public/assets/learning-lab/priority-1/adult-seatbelt/unbelted-forward.png",
+      "size": [
+        1536,
+        1024
+      ],
+      "mode": "RGBA",
+      "alpha": [
+        0,
+        254
+      ],
+      "bounds": [
+        0,
+        31,
+        1516,
+        1002
+      ],
+      "valid": true
+    },
+    {
+      "path": "public/assets/learning-lab/priority-1/child-booster/correct-booster.png",
+      "size": [
+        1536,
+        1024
+      ],
+      "mode": "RGBA",
+      "alpha": [
+        0,
+        254
+      ],
+      "bounds": [
+        83,
+        0,
+        1500,
+        1024
+      ],
+      "valid": true
+    },
+    {
+      "path": "public/assets/learning-lab/priority-1/child-booster/no-booster.png",
+      "size": [
+        1536,
+        1024
+      ],
+      "mode": "RGBA",
+      "alpha": [
+        0,
+        254
+      ],
+      "bounds": [
+        0,
+        0,
+        1506,
+        1010
+      ],
+      "valid": true
+    },
+    {
+      "path": "public/assets/learning-lab/priority-1/helmet-test/bicycle-helmet.png",
+      "size": [
+        1536,
+        1024
+      ],
+      "mode": "RGBA",
+      "alpha": [
+        0,
+        254
+      ],
+      "bounds": [
+        33,
+        0,
+        1362,
+        1024
+      ],
+      "valid": true
+    },
+    {
+      "path": "public/assets/learning-lab/priority-1/helmet-test/motorcycle-helmet.png",
+      "size": [
+        1536,
+        1024
+      ],
+      "mode": "RGBA",
+      "alpha": [
+        0,
+        254
+      ],
+      "bounds": [
+        0,
+        0,
+        1506,
+        1024
+      ],
+      "valid": true
+    },
+    {
+      "path": "public/assets/learning-lab/priority-1/helmet-test/no-helmet.png",
+      "size": [
+        1536,
+        1024
+      ],
+      "mode": "RGBA",
+      "alpha": [
+        0,
+        254
+      ],
+      "bounds": [
+        0,
+        14,
+        1516,
+        1011
+      ],
+      "valid": true
+    },
+    {
+      "path": "public/assets/learning-lab/priority-1/motorcycle-rider/everyday-clothes.png",
+      "size": [
+        1024,
+        1536
+      ],
+      "mode": "RGBA",
+      "alpha": [
+        0,
+        254
+      ],
+      "bounds": [
+        43,
+        0,
+        946,
+        1506
+      ],
+      "valid": true
+    },
+    {
+      "path": "public/assets/learning-lab/priority-1/motorcycle-rider/full-protective-gear.png",
+      "size": [
+        1024,
+        1536
+      ],
+      "mode": "RGBA",
+      "alpha": [
+        0,
+        254
+      ],
+      "bounds": [
+        33,
+        0,
+        1010,
+        1520
+      ],
+      "valid": true
+    },
+    {
+      "path": "public/assets/learning-lab/priority-1/pedestrians/older-man/standing.png",
+      "size": [
+        1024,
+        1536
+      ],
+      "mode": "RGBA",
+      "alpha": [
+        0,
+        254
+      ],
+      "bounds": [
+        57,
+        13,
+        1008,
+        1473
+      ],
+      "valid": true
+    },
+    {
+      "path": "public/assets/learning-lab/priority-1/pedestrians/older-man/walk-a.png",
+      "size": [
+        1024,
+        1536
+      ],
+      "mode": "RGBA",
+      "alpha": [
+        0,
+        254
+      ],
+      "bounds": [
+        0,
+        16,
+        1004,
+        1510
+      ],
+      "valid": true
+    },
+    {
+      "path": "public/assets/learning-lab/priority-1/pedestrians/older-man/walk-b.png",
+      "size": [
+        1024,
+        1536
+      ],
+      "mode": "RGBA",
+      "alpha": [
+        0,
+        254
+      ],
+      "bounds": [
+        0,
+        18,
+        990,
+        1520
+      ],
+      "valid": true
+    },
+    {
+      "path": "public/assets/learning-lab/priority-1/pedestrians/schoolgirl/standing.png",
+      "size": [
+        1024,
+        1536
+      ],
+      "mode": "RGBA",
+      "alpha": [
+        0,
+        254
+      ],
+      "bounds": [
+        23,
+        11,
+        1010,
+        1520
+      ],
+      "valid": true
+    },
+    {
+      "path": "public/assets/learning-lab/priority-1/pedestrians/schoolgirl/walk-a.png",
+      "size": [
+        1024,
+        1536
+      ],
+      "mode": "RGBA",
+      "alpha": [
+        0,
+        254
+      ],
+      "bounds": [
+        0,
+        11,
+        1018,
+        1536
+      ],
+      "valid": true
+    },
+    {
+      "path": "public/assets/learning-lab/priority-1/pedestrians/schoolgirl/walk-b.png",
+      "size": [
+        1024,
+        1536
+      ],
+      "mode": "RGBA",
+      "alpha": [
+        0,
+        254
+      ],
+      "bounds": [
+        47,
+        11,
+        1004,
+        1512
+      ],
+      "valid": true
+    },
+    {
+      "path": "public/assets/learning-lab/priority-1/pedestrians/shopper/standing.png",
+      "size": [
+        1024,
+        1536
+      ],
+      "mode": "RGBA",
+      "alpha": [
+        0,
+        254
+      ],
+      "bounds": [
+        0,
+        14,
+        1002,
+        1518
+      ],
+      "valid": true
+    },
+    {
+      "path": "public/assets/learning-lab/priority-1/pedestrians/shopper/walk-a.png",
+      "size": [
+        1024,
+        1536
+      ],
+      "mode": "RGBA",
+      "alpha": [
+        0,
+        254
+      ],
+      "bounds": [
+        0,
+        15,
+        996,
+        1502
+      ],
+      "valid": true
+    },
+    {
+      "path": "public/assets/learning-lab/priority-1/pedestrians/shopper/walk-b.png",
+      "size": [
+        1024,
+        1536
+      ],
+      "mode": "RGBA",
+      "alpha": [
+        0,
+        254
+      ],
+      "bounds": [
+        49,
+        16,
+        978,
+        1505
+      ],
+      "valid": true
+    },
+    {
+      "path": "public/assets/learning-lab/priority-1/pedestrians/teen-phone/standing.png",
+      "size": [
+        1024,
+        1536
+      ],
+      "mode": "RGBA",
+      "alpha": [
+        0,
+        254
+      ],
+      "bounds": [
+        33,
+        15,
+        1004,
+        1504
+      ],
+      "valid": true
+    },
+    {
+      "path": "public/assets/learning-lab/priority-1/pedestrians/teen-phone/walk-a.png",
+      "size": [
+        1024,
+        1536
+      ],
+      "mode": "RGBA",
+      "alpha": [
+        0,
+        254
+      ],
+      "bounds": [
+        33,
+        14,
+        1004,
+        1474
+      ],
+      "valid": true
+    },
+    {
+      "path": "public/assets/learning-lab/priority-1/pedestrians/teen-phone/walk-b.png",
+      "size": [
+        1024,
+        1536
+      ],
+      "mode": "RGBA",
+      "alpha": [
+        0,
+        254
+      ],
+      "bounds": [
+        41,
+        14,
+        994,
+        1490
+      ],
+      "valid": true
+    },
+    {
+      "path": "public/assets/learning-lab/priority-1/pedestrians/vendor/standing.png",
+      "size": [
+        1024,
+        1536
+      ],
+      "mode": "RGBA",
+      "alpha": [
+        0,
+        254
+      ],
+      "bounds": [
+        0,
+        0,
+        1018,
+        1519
+      ],
+      "valid": true
+    },
+    {
+      "path": "public/assets/learning-lab/priority-1/pedestrians/vendor/walk-a.png",
+      "size": [
+        1024,
+        1536
+      ],
+      "mode": "RGBA",
+      "alpha": [
+        0,
+        254
+      ],
+      "bounds": [
+        0,
+        0,
+        958,
+        1518
+      ],
+      "valid": true
+    },
+    {
+      "path": "public/assets/learning-lab/priority-1/pedestrians/vendor/walk-b.png",
+      "size": [
+        1024,
+        1536
+      ],
+      "mode": "RGBA",
+      "alpha": [
+        0,
+        254
+      ],
+      "bounds": [
+        0,
+        0,
+        1010,
+        1520
+      ],
+      "valid": true
+    },
+    {
+      "path": "public/assets/learning-lab/priority-1/pedestrians/worker/standing.png",
+      "size": [
+        1024,
+        1536
+      ],
+      "mode": "RGBA",
+      "alpha": [
+        0,
+        254
+      ],
+      "bounds": [
+        39,
+        22,
+        1006,
+        1505
+      ],
+      "valid": true
+    },
+    {
+      "path": "public/assets/learning-lab/priority-1/pedestrians/worker/walk-a.png",
+      "size": [
+        1024,
+        1536
+      ],
+      "mode": "RGBA",
+      "alpha": [
+        0,
+        254
+      ],
+      "bounds": [
+        33,
+        22,
+        1015,
+        1504
+      ],
+      "valid": true
+    },
+    {
+      "path": "public/assets/learning-lab/priority-1/pedestrians/worker/walk-b.png",
+      "size": [
+        1024,
+        1536
+      ],
+      "mode": "RGBA",
+      "alpha": [
+        0,
+        254
+      ],
+      "bounds": [
+        0,
+        17,
+        1002,
+        1506
+      ],
+      "valid": true
+    },
+    {
+      "path": "public/assets/learning-lab/priority-1/vehicle/side-view-safety-features.png",
+      "size": [
+        1672,
+        941
+      ],
+      "mode": "RGBA",
+      "alpha": [
+        0,
+        255
+      ],
+      "bounds": [
+        0,
+        0,
+        1672,
+        923
+      ],
+      "valid": true
+    },
+    {
+      "path": "public/assets/learning-lab/priority-2/animals/grey-donkey.png",
+      "size": [
+        1536,
+        1024
+      ],
+      "mode": "RGBA",
+      "alpha": [
+        0,
+        254
+      ],
+      "bounds": [
+        0,
+        0,
+        1520,
+        1024
+      ],
+      "valid": true
+    },
+    {
+      "path": "public/assets/learning-lab/priority-2/animals/nguni-cow.png",
+      "size": [
+        1536,
+        1024
+      ],
+      "mode": "RGBA",
+      "alpha": [
+        0,
+        255
+      ],
+      "bounds": [
+        48,
+        18,
+        1505,
+        993
+      ],
+      "valid": true
+    },
+    {
+      "path": "public/assets/learning-lab/priority-2/top-down/cyclist-car-safe-pass.png",
+      "size": [
+        1024,
+        1536
+      ],
+      "mode": "RGBA",
+      "alpha": [
+        0,
+        255
+      ],
+      "bounds": [
+        40,
+        134,
+        1024,
+        1382
+      ],
+      "valid": true
+    },
+    {
+      "path": "public/assets/learning-lab/priority-2/top-down/cyclist.png",
+      "size": [
+        1024,
+        1536
+      ],
+      "mode": "RGBA",
+      "alpha": [
+        0,
+        255
+      ],
+      "bounds": [
+        242,
+        27,
+        783,
+        1506
+      ],
+      "valid": true
+    },
+    {
+      "path": "public/assets/learning-lab/priority-2/top-down/double-cab-bakkie.png",
+      "size": [
+        1024,
+        1536
+      ],
+      "mode": "RGBA",
+      "alpha": [
+        0,
+        255
+      ],
+      "bounds": [
+        137,
+        18,
+        888,
+        1501
+      ],
+      "valid": true
+    },
+    {
+      "path": "public/assets/learning-lab/priority-2/top-down/fuel-tanker.png",
+      "size": [
+        1024,
+        1536
+      ],
+      "mode": "RGBA",
+      "alpha": [
+        0,
+        255
+      ],
+      "bounds": [
+        332,
+        29,
+        692,
+        1506
+      ],
+      "valid": true
+    },
+    {
+      "path": "public/assets/learning-lab/priority-2/top-down/minibus-taxi.png",
+      "size": [
+        1024,
+        1536
+      ],
+      "mode": "RGBA",
+      "alpha": [
+        0,
+        255
+      ],
+      "bounds": [
+        180,
+        25,
+        844,
+        1503
+      ],
+      "valid": true
+    },
+    {
+      "path": "public/assets/learning-lab/priority-2/top-down/pedestrian.png",
+      "size": [
+        1024,
+        1536
+      ],
+      "mode": "RGBA",
+      "alpha": [
+        0,
+        255
+      ],
+      "bounds": [
+        193,
+        22,
+        852,
+        1503
+      ],
+      "valid": true
+    },
+    {
+      "path": "public/assets/learning-lab/priority-2/top-down/red-sedan.png",
+      "size": [
+        1024,
+        1536
+      ],
+      "mode": "RGBA",
+      "alpha": [
+        0,
+        255
+      ],
+      "bounds": [
+        123,
+        31,
+        901,
+        1511
+      ],
+      "valid": true
+    },
+    {
+      "path": "public/assets/learning-lab/priority-3/animals/grey-donkey-clean.png",
+      "size": [
+        1536,
+        1024
+      ],
+      "mode": "RGBA",
+      "alpha": [
+        0,
+        255
+      ],
+      "bounds": [
+        200,
+        6,
+        1430,
+        1010
+      ],
+      "valid": true
+    },
+    {
+      "path": "public/assets/learning-lab/priority-3/animals/grey-donkey.png",
+      "size": [
+        1536,
+        1024
+      ],
+      "mode": "RGBA",
+      "alpha": [
+        0,
+        254
+      ],
+      "bounds": [
+        0,
+        0,
+        1520,
+        1024
+      ],
+      "valid": true
+    },
+    {
+      "path": "public/assets/learning-lab/priority-3/animals/kudu-leaping.png",
+      "size": [
+        1536,
+        1024
+      ],
+      "mode": "RGBA",
+      "alpha": [
+        0,
+        255
+      ],
+      "bounds": [
+        22,
+        15,
+        1510,
+        995
+      ],
+      "valid": true
+    },
+    {
+      "path": "public/assets/learning-lab/priority-3/animals/kudu-standing.png",
+      "size": [
+        1312,
+        1199
+      ],
+      "mode": "RGBA",
+      "alpha": [
+        0,
+        255
+      ],
+      "bounds": [
+        99,
+        14,
+        1297,
+        1174
+      ],
+      "valid": true
+    },
+    {
+      "path": "public/assets/learning-lab/priority-3/animals/nguni-cow.png",
+      "size": [
+        1536,
+        1024
+      ],
+      "mode": "RGBA",
+      "alpha": [
+        0,
+        255
+      ],
+      "bounds": [
+        48,
+        18,
+        1505,
+        993
+      ],
+      "valid": true
+    },
+    {
+      "path": "public/assets/learning-lab/priority-3/scenery/acacia-tree.png",
+      "size": [
+        1220,
+        1289
+      ],
+      "mode": "RGBA",
+      "alpha": [
+        0,
+        255
+      ],
+      "bounds": [
+        19,
+        104,
+        1203,
+        1223
+      ],
+      "valid": true
+    },
+    {
+      "path": "public/assets/learning-lab/priority-3/scenery/palm-tree.png",
+      "size": [
+        1024,
+        1536
+      ],
+      "mode": "RGBA",
+      "alpha": [
+        0,
+        255
+      ],
+      "bounds": [
+        74,
+        25,
+        957,
+        1521
+      ],
+      "valid": true
+    },
+    {
+      "path": "public/assets/learning-lab/priority-3/scenery/road-marker-post.png",
+      "valid": false,
+      "error": "image file is truncated"
+    },
+    {
+      "path": "public/assets/learning-lab/priority-3/scenery/savanna-bush.png",
+      "size": [
+        1245,
+        1263
+      ],
+      "mode": "RGBA",
+      "alpha": [
+        0,
+        255
+      ],
+      "bounds": [
+        19,
+        122,
+        1218,
+        1146
+      ],
+      "valid": true
+    },
+    {
+      "path": "public/assets/learning-lab/priority-3/scenery/street-lamp.png",
+      "size": [
+        1024,
+        1536
+      ],
+      "mode": "RGBA",
+      "alpha": [
+        0,
+        255
+      ],
+      "bounds": [
+        331,
+        19,
+        874,
+        1514
+      ],
+      "valid": true
+    },
+    {
+      "path": "public/assets/learning-lab/priority-3/top-down/blue-sedan.png",
+      "size": [
+        1024,
+        1536
+      ],
+      "mode": "RGBA",
+      "alpha": [
+        0,
+        254
+      ],
+      "bounds": [
+        0,
+        33,
+        994,
+        1512
+      ],
+      "valid": true
+    },
+    {
+      "path": "public/assets/learning-lab/priority-3/top-down/cyclist-car-safe-pass.png",
+      "size": [
+        1024,
+        1536
+      ],
+      "mode": "RGBA",
+      "alpha": [
+        0,
+        255
+      ],
+      "bounds": [
+        40,
+        134,
+        1024,
+        1382
+      ],
+      "valid": true
+    },
+    {
+      "path": "public/assets/learning-lab/priority-3/top-down/cyclist.png",
+      "size": [
+        1024,
+        1536
+      ],
+      "mode": "RGBA",
+      "alpha": [
+        0,
+        255
+      ],
+      "bounds": [
+        242,
+        27,
+        783,
+        1506
+      ],
+      "valid": true
+    },
+    {
+      "path": "public/assets/learning-lab/priority-3/top-down/double-cab-bakkie.png",
+      "size": [
+        1024,
+        1536
+      ],
+      "mode": "RGBA",
+      "alpha": [
+        0,
+        255
+      ],
+      "bounds": [
+        137,
+        18,
+        888,
+        1501
+      ],
+      "valid": true
+    },
+    {
+      "path": "public/assets/learning-lab/priority-3/top-down/fuel-tanker.png",
+      "size": [
+        1024,
+        1536
+      ],
+      "mode": "RGBA",
+      "alpha": [
+        0,
+        255
+      ],
+      "bounds": [
+        332,
+        29,
+        692,
+        1506
+      ],
+      "valid": true
+    },
+    {
+      "path": "public/assets/learning-lab/priority-3/top-down/minibus-taxi.png",
+      "size": [
+        1024,
+        1536
+      ],
+      "mode": "RGBA",
+      "alpha": [
+        0,
+        255
+      ],
+      "bounds": [
+        180,
+        25,
+        844,
+        1503
+      ],
+      "valid": true
+    },
+    {
+      "path": "public/assets/learning-lab/priority-3/top-down/motorcycle-rider.png",
+      "size": [
+        1024,
+        1536
+      ],
+      "mode": "RGBA",
+      "alpha": [
+        0,
+        254
+      ],
+      "bounds": [
+        97,
+        15,
+        997,
+        1521
+      ],
+      "valid": true
+    },
+    {
+      "path": "public/assets/learning-lab/priority-3/top-down/pedestrian.png",
+      "size": [
+        1024,
+        1536
+      ],
+      "mode": "RGBA",
+      "alpha": [
+        0,
+        255
+      ],
+      "bounds": [
+        193,
+        22,
+        852,
+        1503
+      ],
+      "valid": true
+    },
+    {
+      "path": "public/assets/learning-lab/priority-3/top-down/red-sedan.png",
+      "size": [
+        1024,
+        1536
+      ],
+      "mode": "RGBA",
+      "alpha": [
+        0,
+        255
+      ],
+      "bounds": [
+        123,
+        31,
+        901,
+        1511
+      ],
+      "valid": true
+    },
+    {
+      "path": "public/assets/map_bg.webp",
+      "size": [
+        941,
+        1672
+      ],
+      "mode": "RGB",
+      "alpha": null,
+      "bounds": null,
+      "valid": true
+    },
+    {
+      "path": "public/assets/post.webp",
+      "size": [
+        60,
+        326
+      ],
+      "mode": "RGBA",
+      "alpha": [
+        0,
+        255
+      ],
+      "bounds": [
+        0,
+        0,
+        60,
+        326
+      ],
+      "valid": true
+    },
+    {
+      "path": "public/assets/scn_acacia.webp",
+      "size": [
+        593,
+        560
+      ],
+      "mode": "RGBA",
+      "alpha": [
+        0,
+        255
+      ],
+      "bounds": [
+        0,
+        0,
+        593,
+        560
+      ],
+      "valid": true
+    },
+    {
+      "path": "public/assets/scn_b1map.webp",
+      "size": [
+        582,
+        900
+      ],
+      "mode": "RGBA",
+      "alpha": [
+        0,
+        255
+      ],
+      "bounds": [
+        0,
+        0,
+        582,
+        900
+      ],
+      "valid": true
+    },
+    {
+      "path": "public/assets/scn_bush.webp",
+      "size": [
+        422,
+        360
+      ],
+      "mode": "RGBA",
+      "alpha": [
+        0,
+        255
+      ],
+      "bounds": [
+        0,
+        0,
+        422,
+        360
+      ],
+      "valid": true
+    },
+    {
+      "path": "public/assets/scn_crossing.webp",
+      "size": [
+        1285,
+        440
+      ],
+      "mode": "RGBA",
+      "alpha": [
+        0,
+        255
+      ],
+      "bounds": [
+        0,
+        0,
+        1285,
+        440
+      ],
+      "valid": true
+    },
+    {
+      "path": "public/assets/scn_donkey.webp",
+      "size": [
+        514,
+        420
+      ],
+      "mode": "RGBA",
+      "alpha": [
+        0,
+        255
+      ],
+      "bounds": [
+        0,
+        0,
+        514,
+        420
+      ],
+      "valid": true
+    },
+    {
+      "path": "public/assets/scn_kudu.webp",
+      "size": [
+        496,
+        480
+      ],
+      "mode": "RGBA",
+      "alpha": [
+        0,
+        255
+      ],
+      "bounds": [
+        0,
+        0,
+        496,
+        480
+      ],
+      "valid": true
+    },
+    {
+      "path": "public/assets/scn_kudu_leap.webp",
+      "size": [
+        730,
+        480
+      ],
+      "mode": "RGBA",
+      "alpha": [
+        0,
+        255
+      ],
+      "bounds": [
+        0,
+        0,
+        730,
+        480
+      ],
+      "valid": true
+    },
+    {
+      "path": "public/assets/scn_lamp.webp",
+      "size": [
+        218,
+        600
+      ],
+      "mode": "RGBA",
+      "alpha": [
+        0,
+        255
+      ],
+      "bounds": [
+        0,
+        0,
+        218,
+        600
+      ],
+      "valid": true
+    },
+    {
+      "path": "public/assets/scn_palm.webp",
+      "size": [
+        354,
+        600
+      ],
+      "mode": "RGBA",
+      "alpha": [
+        0,
+        255
+      ],
+      "bounds": [
+        0,
+        0,
+        354,
+        600
+      ],
+      "valid": true
+    },
+    {
+      "path": "public/assets/sky.webp",
+      "size": [
+        1008,
+        690
+      ],
+      "mode": "RGB",
+      "alpha": null,
+      "bounds": null,
+      "valid": true
+    },
+    {
+      "path": "public/assets/spot_beer.webp",
+      "size": [
+        264,
+        420
+      ],
+      "mode": "RGBA",
+      "alpha": [
+        0,
+        255
+      ],
+      "bounds": [
+        0,
+        0,
+        264,
+        420
+      ],
+      "valid": true
+    },
+    {
+      "path": "public/assets/spot_meds.webp",
+      "size": [
+        438,
+        420
+      ],
+      "mode": "RGBA",
+      "alpha": [
+        0,
+        255
+      ],
+      "bounds": [
+        0,
+        0,
+        438,
+        420
+      ],
+      "valid": true
+    },
+    {
+      "path": "public/assets/spot_phone.webp",
+      "size": [
+        340,
+        420
+      ],
+      "mode": "RGBA",
+      "alpha": [
+        0,
+        255
+      ],
+      "bounds": [
+        0,
+        0,
+        340,
+        420
+      ],
+      "valid": true
+    },
+    {
+      "path": "public/assets/spot_wheel.webp",
+      "size": [
+        427,
+        420
+      ],
+      "mode": "RGBA",
+      "alpha": [
+        0,
+        255
+      ],
+      "bounds": [
+        0,
+        0,
+        427,
+        420
+      ],
+      "valid": true
+    },
+    {
+      "path": "public/assets/suv.webp",
+      "size": [
+        420,
+        388
+      ],
+      "mode": "RGBA",
+      "alpha": [
+        0,
+        255
+      ],
+      "bounds": [
+        0,
+        0,
+        420,
+        388
+      ],
+      "valid": true
+    },
+    {
+      "path": "public/assets/td_crossroads.webp",
+      "size": [
+        655,
+        640
+      ],
+      "mode": "RGBA",
+      "alpha": [
+        0,
+        255
+      ],
+      "bounds": [
+        0,
+        0,
+        655,
+        640
+      ],
+      "valid": true
+    },
+    {
+      "path": "public/assets/td_fence.webp",
+      "size": [
+        368,
+        800
+      ],
+      "mode": "RGBA",
+      "alpha": [
+        0,
+        255
+      ],
+      "bounds": [
+        5,
+        0,
+        360,
+        800
+      ],
+      "valid": true
+    },
+    {
+      "path": "public/assets/td_lighting.webp",
+      "size": [
+        368,
+        800
+      ],
+      "mode": "RGBA",
+      "alpha": [
+        0,
+        255
+      ],
+      "bounds": [
+        51,
+        0,
+        315,
+        800
+      ],
+      "valid": true
+    },
+    {
+      "path": "public/assets/td_refuge.webp",
+      "size": [
+        368,
+        800
+      ],
+      "mode": "RGBA",
+      "alpha": [
+        0,
+        255
+      ],
+      "bounds": [
+        0,
+        0,
+        368,
+        800
+      ],
+      "valid": true
+    },
+    {
+      "path": "public/assets/td_road.webp",
+      "size": [
+        368,
+        800
+      ],
+      "mode": "RGBA",
+      "alpha": [
+        0,
+        255
+      ],
+      "bounds": [
+        21,
+        0,
+        345,
+        800
+      ],
+      "valid": true
+    },
+    {
+      "path": "public/assets/td_roundabout.webp",
+      "size": [
+        640,
+        640
+      ],
+      "mode": "RGBA",
+      "alpha": [
+        0,
+        255
+      ],
+      "bounds": [
+        0,
+        0,
+        640,
+        640
+      ],
+      "valid": true
+    },
+    {
+      "path": "public/assets/td_rumble.webp",
+      "size": [
+        368,
+        800
+      ],
+      "mode": "RGBA",
+      "alpha": [
+        0,
+        255
+      ],
+      "bounds": [
+        36,
+        0,
+        332,
+        800
+      ],
+      "valid": true
+    },
+    {
+      "path": "public/assets/tl_green.webp",
+      "size": [
+        201,
+        420
+      ],
+      "mode": "RGBA",
+      "alpha": [
+        0,
+        255
+      ],
+      "bounds": [
+        0,
+        0,
+        201,
+        420
+      ],
+      "valid": true
+    },
+    {
+      "path": "public/assets/tl_off.webp",
+      "size": [
+        201,
+        420
+      ],
+      "mode": "RGBA",
+      "alpha": [
+        0,
+        255
+      ],
+      "bounds": [
+        18,
+        8,
+        183,
+        420
+      ],
+      "valid": true
+    },
+    {
+      "path": "public/assets/tl_red.webp",
+      "size": [
+        201,
+        420
+      ],
+      "mode": "RGBA",
+      "alpha": [
+        0,
+        255
+      ],
+      "bounds": [
+        0,
+        6,
+        201,
+        413
+      ],
+      "valid": true
+    },
+    {
+      "path": "public/assets/tl_yellow.webp",
+      "size": [
+        201,
+        420
+      ],
+      "mode": "RGBA",
+      "alpha": [
+        0,
+        255
+      ],
+      "bounds": [
+        36,
+        4,
+        164,
+        415
+      ],
+      "valid": true
+    },
+    {
+      "path": "public/assets/truck.webp",
+      "size": [
+        380,
+        358
+      ],
+      "mode": "RGBA",
+      "alpha": [
+        0,
+        255
+      ],
+      "bounds": [
+        0,
+        0,
+        380,
+        358
+      ],
+      "valid": true
+    },
+    {
+      "path": "public/assets/veh_bakkie.webp",
+      "size": [
+        347,
+        320
+      ],
+      "mode": "RGBA",
+      "alpha": [
+        0,
+        255
+      ],
+      "bounds": [
+        0,
+        0,
+        347,
+        320
+      ],
+      "valid": true
+    },
+    {
+      "path": "public/assets/veh_sedan_blue.webp",
+      "size": [
+        423,
+        320
+      ],
+      "mode": "RGBA",
+      "alpha": [
+        0,
+        255
+      ],
+      "bounds": [
+        0,
+        0,
+        423,
+        320
+      ],
+      "valid": true
+    },
+    {
+      "path": "public/assets/veh_sedan_white.webp",
+      "size": [
+        399,
+        320
+      ],
+      "mode": "RGBA",
+      "alpha": [
+        0,
+        255
+      ],
+      "bounds": [
+        0,
+        0,
+        399,
+        320
+      ],
+      "valid": true
+    },
+    {
+      "path": "public/assets/veh_taxi.webp",
+      "size": [
+        315,
+        320
+      ],
+      "mode": "RGBA",
+      "alpha": [
+        0,
+        255
+      ],
+      "bounds": [
+        0,
+        0,
+        315,
+        320
+      ],
+      "valid": true
+    },
+    {
+      "path": "public/assets/veh_truck.webp",
+      "size": [
+        268,
+        320
+      ],
+      "mode": "RGBA",
+      "alpha": [
+        0,
+        255
+      ],
+      "bounds": [
+        0,
+        0,
+        268,
+        320
+      ],
+      "valid": true
+    },
+    {
+      "path": "public/assets/learning-lab/priority-2/side-view/namibian-road-freight-truck.png",
+      "size": [
+        1672,
+        941
+      ],
+      "mode": "RGBA",
+      "alpha": [
+        0,
+        255
+      ],
+      "bounds": [
+        0,
+        7,
+        1672,
+        941
+      ],
+      "valid": true,
+      "sha256": "8870fd0b7f9d1d5cd94f8e2a918fa36e2aaf51128597134a60faa42cd6ee7ff7"
+    }
+  ],
+  "external": [
+    {
+      "path": "/Users/luthando/Downloads/assets/learning-lab/priority-2/top-down/blue-sedan.png",
+      "valid": false,
+      "error": "image file is truncated"
+    },
+    {
+      "path": "/Users/luthando/Downloads/assets/learning-lab/priority-2/top-down/motorcycle-rider.png",
+      "valid": false,
+      "error": "image file is truncated"
+    }
+  ],
+  "checkedOn": "2026-10-14",
+  "scope": "Full decode and alpha inspection of public/assets, including subsequently uploaded priority-3 files. Damaged original Downloads copies are recorded for provenance; usable replacements now exist in priority-3."
+}

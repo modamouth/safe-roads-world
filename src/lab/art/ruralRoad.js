@@ -27,9 +27,10 @@ import { t } from '../content.js';
 import { clipTo, label } from './common.js';
 import { Debris, pop } from '../../ui.js';
 import { Sfx } from '../../sfx.js';
+import { LEARNING_LAB_ASSETS as A } from '../assets.js';
 
 const CAMH = 5.5, Z_R = 19, CAR_LEN = 4.5, CAR_W = 1.85, APPROACH = 20;
-const FREEZE = 12;   // when the car can't stop, freeze this far short of the animal so it stays in view (no impact is shown)
+const FREEZE = 12;   // preview distance for other animals and players who skip sensitive content
 const EDGE_L = -1.9, CENTRE = 1.7, EDGE_R = 5.3;
 const SKY = { day: [0x7FB8E6, 0xD9ECF7], dusk: [0x253A6B, 0xF2A65A], night: [0x060B16, 0x18243A] };
 const HAZE = { clear: 0xE6D7BE, rain: 0x8A97A6, dust: 0xC9A06A, fog: 0xC8CDD2 };
@@ -87,7 +88,13 @@ export default function create(scene, parent, p, a, ctx) {
   const scn = [];
   const add = (tex, wz, xm, sizeM, by, tint) => {
     if (!scene.textures.exists(tex)) return null;
-    const im = scene.add.image(0, 0, tex).setOrigin(0.5, 1).setVisible(false);
+    // Ignore empty padding in the supplied donkey without editing its PNG.
+    const isDonkey = tex === A.animals.donkey.key;
+    if (isDonkey && !scene.textures.get(tex).has('animal')) {
+      const [left, top, right, bottom] = A.animals.donkey.bounds;
+      scene.textures.get(tex).add('animal', 0, left, top, right - left, bottom - top);
+    }
+    const im = scene.add.image(0, 0, tex, isDonkey ? 'animal' : undefined).setOrigin(0.5, 1).setVisible(false);
     Object.assign(im, { wz, xm, sizeM, by: by || 'h', baseTint: tint || 0xFFFFFF });
     c.add(im); scn.push(im); return im;
   };
@@ -102,9 +109,10 @@ export default function create(scene, parent, p, a, ctx) {
   for (let z = 10; z < SPAN; z += 12) { add(post, z, -4.2, 1.2); const r = add(post, z + 6, 7.4, 1.2); if (r && post === 'img_post') r.setFlipX(true); }
   // Kudu: illustrated artwork (scn_kudu, optional leaping pose scn_kudu_leap) when loaded, else the drawn one.
   const kuduKey = scene.textures.exists('scn_kudu') ? 'scn_kudu' : 'kudu';
-  const donkeyKey = scene.textures.exists('scn_donkey') ? 'scn_donkey' : null;
+  const donkeyKey = scene.textures.exists(A.animals.donkey.key) ? A.animals.donkey.key : null;
+  const cowKey = scene.textures.exists(A.animals.cow.key) ? A.animals.cow.key : null;
   const hazardKey = p.hazard && p.hazard !== 'none'
-    ? (p.hazard === 'kudu' ? kuduKey : p.hazard === 'donkey' && donkeyKey ? donkeyKey : animalTexture(scene, p.hazard)) : null;
+    ? (p.hazard === 'kudu' ? kuduKey : p.hazard === 'donkey' && donkeyKey ? donkeyKey : p.hazard === 'cattle' && cowKey ? cowKey : animalTexture(scene, p.hazard)) : null;
   // Donkeys grazing on the verges, in story and decision scenes only (not in the stopping or microsleep tests).
   if (donkeyKey && (p.mode === 'scene' || p.mode === 'swerve') && (p.time || 'dusk') !== 'night') {
     [[90, -9.5, false], [210, 11, true], [340, -10.5, false]].forEach(([z, x, flip]) => { const d = add(donkeyKey, z, x, 1.4, 'h'); if (d && flip) d.setFlipX(true); });
@@ -116,7 +124,7 @@ export default function create(scene, parent, p, a, ctx) {
   if (oncoming) oncoming.fixed = true;
   // The kudu starts close enough to read clearly at phone size; it is larger than cattle.
   // Illustrated kudu is sized by height (horns included) so standing and leaping poses match.
-  if (animal && kuduKey === 'scn_kudu' && p.hazard === 'kudu') { animal.by = 'h'; animal.sizeM = 2.6; }
+  if (animal && kuduKey === 'scn_kudu' && p.hazard === 'kudu') { animal.by = 'h'; animal.sizeM = 2.6; animal.referenceHeight = animal.height; }
   if (swerveMode && animal) { animal.xm = -4.6; if (kuduKey !== 'scn_kudu') animal.sizeM = 2.8; animal.wz = 30 + Z_R + CAR_LEN; oncoming.wz = 170 + Z_R + CAR_LEN; }
   const eyes = scene.add.graphics(); c.add(eyes);
   const carKey = scene.textures.exists('img_suv') && scene.registry.get('REAL') ? 'img_suv' : 'carRear';
@@ -124,6 +132,7 @@ export default function create(scene, parent, p, a, ctx) {
   car.setScale((CAR_W * F / Z_R) / car.width); c.add(car);
   const brakeGlow = scene.add.graphics(); c.add(brakeGlow);
   const fx = scene.add.graphics(); c.add(fx);
+  const impactFx = scene.add.graphics(); c.add(impactFx);
   const hud = scene.add.container(0, 0); c.add(hud);
   const deb = new Debris(scene, 960);
   const blackout = scene.add.rectangle(a.x, a.y, a.w, a.h, 0x000000, 1).setOrigin(0).setAlpha(0); c.add(blackout);
@@ -185,7 +194,7 @@ export default function create(scene, parent, p, a, ctx) {
       const z = o.wz - st.pos;
       if (z < 7 || z > 520) { o.setVisible(false); if (!o.fixed && z < 7) o.wz += SPAN; return; }
       const kk = F / z, x = VPX + (o.xm - st.drift) * kk, y = HY + F * CAMH / z - (o.hop || 0) * kk;
-      const sc = o.by === 'w' ? o.sizeM * kk / o.width : o.sizeM * kk / o.height;
+      const sc = o.by === 'w' ? o.sizeM * kk / o.width : o.sizeM * kk / (o.referenceHeight || o.height);
       const v = vis(ahead(z));
       o.setVisible(true).setPosition(x, y).setScale(sc).setDepth(-z);
       // Trees and bush off the road sit outside the beam at night; marker posts and animals are lit.
@@ -194,12 +203,14 @@ export default function create(scene, parent, p, a, ctx) {
       // At night, an animal beyond the lights shows only as eyeshine.
       if (o === animal && look.time === 'night' && v < 0.5) {
         o.setAlpha(0.15);
-        eyes.fillStyle(0xFFF6C8, 0.9); eyes.fillCircle(x + o.displayWidth * 0.36, y - o.displayHeight * 0.68, Math.max(1.2, kk * 0.06)); eyes.fillCircle(x + o.displayWidth * 0.42, y - o.displayHeight * 0.68, Math.max(1.2, kk * 0.06));
+        eyes.fillStyle(0xFFF6C8, 0.9);
+        const points = o.texture.key === cowKey ? [[0.87, 0.205]] : o.texture.key === donkeyKey ? [[0.895, 0.27]] : [[0.86, 0.32], [0.92, 0.32]];
+        points.forEach(([ex, ey]) => eyes.fillCircle(x + (ex - 0.5) * o.displayWidth, y - (1 - ey) * o.displayHeight, Math.max(1.2, kk * 0.06)));
       }
     });
     c.sort('depth');
     // keep overlays on top after sorting
-    [eyes, car, brakeGlow, fx, hud, blackout, counter].forEach(o => c.bringToTop(o));
+    [eyes, car, brakeGlow, fx, impactFx, hud, blackout, counter].forEach(o => c.bringToTop(o));
   };
 
   const drawWeather = () => {
@@ -240,15 +251,19 @@ export default function create(scene, parent, p, a, ctx) {
       const s = stopping(kmh, reactionS, decel), ok = s.total <= seeM;
       const hit = ok ? 0 : impactKmh(kmh, seeM, reactionS, decel);
       Object.assign(vars, { kmh, seeM: Math.round(seeM), stopM: Math.round(s.total), gapM: Math.round(seeM - s.total), hitKmh: Math.round(hit) });
-      hud.removeAll(true); brakeGlow.clear(); car.y = CAR_Y;
-      st.kmh = kmh; st.pos = 0; st.drift = 0;
+      hud.removeAll(true); brakeGlow.clear(); impactFx.clear(); impactFx.setAlpha(1);
+      scene.tweens.killTweensOf(car); scene.tweens.killTweensOf(impactFx);
+      car.setPosition(VPX, CAR_Y).setAngle(0);
+      st.kmh = kmh; st.pos = 0; st.drift = 0; st.phase = 'stopping';
+      Object.assign(vars, { collided: false, currentKmh: kmh, outcome: '' });
       // The hazard sits exactly where it first becomes visible.
       if (animal) animal.wz = seeM + Z_R + CAR_LEN + APPROACH;   // a short approach before it comes into view
       if (run) run.res();   // a newer state replaces one still running
       return new Promise(res => {
-        run = { t: -APPROACH / (kmh / 3.6), kmh, seeM, s, ok, res, reactionS, decel, braking: false, startPos: null };
+        run = { t: -APPROACH / (kmh / 3.6), kmh, seeM, s, ok, res, reactionS, decel, braking: false, startPos: APPROACH, vars, hitKmh: hit, cowImpact: p.hazard === 'cattle' && !!animal && !(ctx && ctx.skipSensitive) };
         if (REDUCE_MOTION) { // jump straight to the outcome
-          st.pos = APPROACH + Math.min(s.total, seeM - FREEZE); finish();
+          st.pos = APPROACH + (ok ? s.total : run.cowImpact ? seeM : Math.max(0, seeM - FREEZE));
+          if (!ok && run.cowImpact) collideCow(run); else finish();
         }
       });
     },
@@ -310,30 +325,56 @@ export default function create(scene, parent, p, a, ctx) {
         counter.setAlpha(blackout.alpha).setText(Math.round(distanceAt(r.kmh, Math.min(r.t, r.seconds))) + ' m');
         st.drift = -Math.sin(k * Math.PI * 0.5) * 1.6;                       // drifting towards the edge
         if (r.t > r.seconds + 0.45) { run = null; blackout.setAlpha(0); counter.setAlpha(0); st.drift = 0; draw(); r.res(); return; }
+      } else if (run && run.impacted) {
+        draw(); return;
       } else if (run) {
         const r = run, v = r.kmh / 3.6;
         r.t += dt;
-        if (r.t < 0) st.pos += v * dt;                                       // approach until the hazard is first visible
+        if (r.t < 0) st.pos = APPROACH + v * r.t;                                       // approach until the hazard is first visible
         else {
           const tb = r.t - r.reactionS;
           let d;
           if (tb <= 0) d = v * r.t;
           else { if (!r.braking) { r.braking = true; brakeGlow.fillStyle(0xFF2A2A, 0.9); brakeGlow.fillCircle(car.x - car.displayWidth * 0.33, car.y - car.displayHeight * 0.5, 5); brakeGlow.fillCircle(car.x + car.displayWidth * 0.33, car.y - car.displayHeight * 0.5, 5); }
             const tt = Math.min(tb, v / r.decel); d = v * r.reactionS + v * tt - 0.5 * r.decel * tt * tt; }
-          if (r.startPos == null) r.startPos = st.pos;   // where the hazard first became visible
-          st.pos = r.startPos + d;
-          if (!r.ok && d >= r.seeM - FREEZE) finish();
-          else if (r.braking && d >= r.s.total - 0.01) finish();
+          const limit = r.ok ? r.s.total : r.cowImpact ? r.seeM : Math.max(0, r.seeM - FREEZE);
+          st.pos = r.startPos + Math.min(d, limit);
+          st.kmh = Math.max(0, v - Math.max(0, tb) * r.decel) * 3.6;
+          if (d >= limit - 0.01) {
+            if (!r.ok && r.cowImpact) collideCow(r); else finish();
+          }
         }
       } else if (swerveMode) {
         // hold still until the player chooses
-      } else if (p.mode === 'scene' || !run) {
+      } else if (p.mode === 'scene' || st.phase === 'cruise') {
         st.pos += (st.kmh / 3.6) * dt * 0.35;                                // slow idle cruise
       }
       draw();
     },
     destroy() {}
   };
+  // A short vehicle-only impact cue; no animal injury animation.
+  function collideCow(r) {
+    if (r.impacted || run !== r) return;
+    r.impacted = true; st.phase = 'impact'; st.kmh = 0;
+    r.vars.collided = true; r.vars.currentKmh = 0;
+    const strength = clamp(r.hitKmh / 120, 0.15, 1);
+    Sfx.init(scene); Sfx.impact(strength);
+    if (REDUCE_MOTION) { finish(); return; }
+    const x = car.x, y = CAR_Y - car.displayHeight * 0.65;
+    impactFx.lineStyle(3, 0xFFE9B0, 0.9);
+    for (let i = 0; i < 8; i++) {
+      const angle = i * Math.PI / 4, radius = 12 + strength * 12;
+      impactFx.lineBetween(x + Math.cos(angle) * 8, y + Math.sin(angle) * 8,
+        x + Math.cos(angle) * radius, y + Math.sin(angle) * radius);
+    }
+    scene.cameras.main.shake(160, 0.002 + strength * 0.004);
+    scene.tweens.add({ targets: impactFx, alpha: 0, duration: 260 });
+    scene.tweens.add({ targets: car, y: CAR_Y + 3 + strength * 4, angle: -strength * 2,
+      duration: 110, yoyo: true, hold: 60, ease: 'Sine.easeOut',
+      onComplete: () => { if (run === r) { car.setPosition(VPX, CAR_Y).setAngle(0); impactFx.clear(); finish(); } }
+    });
+  }
   // Head-on impact with the oncoming vehicle (restored from the original Speed drive).
   function collide(r) {
     // Severity follows the speed the player chose: 80 -> 0.33, 100 -> 0.67, 120 -> 1.
@@ -370,12 +411,22 @@ export default function create(scene, parent, p, a, ctx) {
   function finish() {
     const r = run; if (!r) return;
     run = null;
+    st.phase = 'stopped'; st.kmh = 0;
+    Object.assign(r.vars, { currentKmh: 0, travelM: st.pos - APPROACH });
+    r.vars.outcome = r.impacted ? t('art.road.cowImpact', { kmh: Math.round(r.hitKmh) })
+      : r.ok ? t('art.road.carStopped') : t('art.road.contactPreview');
     ruler(r.seeM, r.s.total, r.ok);
+    if (r.impacted) {
+      // Keep the distance ruler, replacing the former "still moving" status.
+      const status = hud.list[hud.list.length - 1]; if (status && status.type === 'Text') status.destroy();
+      hud.add(label(scene, a.x + a.w / 2, a.y + 22, r.vars.outcome, 15, '#FFFFFF',
+        { backgroundColor: '#8E2A2D', padding: { x: 8, y: 4 } }));
+    }
     if (!r.ok) { const dim = scene.add.rectangle(a.x, a.y, a.w, a.h, 0x05080D, 0.35).setOrigin(0); hud.addAt(dim, 0); }
     draw();
     r.res();
   }
   const m = clipTo(scene, c, a);
-  inst.destroy = () => { c.destroy(); m.destroy(); };
+  inst.destroy = () => { run = null; scene.tweens.killTweensOf(car); scene.tweens.killTweensOf(impactFx); c.destroy(); m.destroy(); };
   return inst;
 }

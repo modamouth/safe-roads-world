@@ -14,7 +14,7 @@ Seven of the nine supplied PNGs decode completely. Their RGBA alpha ranges are 0
 | blue-sedan | Not registered: image-data (IDAT) chunk is truncated; blue diagram fallback retained |
 | motorcycle-rider | Not registered: image-data (IDAT) chunk is truncated; motorcycle diagram fallback retained |
 
-The Nguni cow is still missing. Priority 1 missing artwork is unchanged.
+The Nguni cow was subsequently added to the night speed lessons and replaced with the supplied PNG; see [cow artwork and prompt](COW-ARTWORK.md). The previously missing Priority 1 artwork is now uploaded: see the [current artwork inventory](CURRENT-ARTWORK.md) for the 28 new files and their completed scene mapping.
 
 ## Display and interaction
 
@@ -37,9 +37,9 @@ The truckJunction lesson describes a loaded flatbed, so its existing drawn truck
 - `e2e/priority2.spec.js`: changed scenes, state selection, hotspot grading, placement, crossing/passing, aspect ratios, asset failures and fallback coverage.
 - This report and `priority-2-audit.json`.
 
-## Next files needed
+## Subsequent replacements
 
-Re-export `blue-sedan.png` and `motorcycle-rider.png` as complete transparent PNGs, and supply the Nguni cow. The damaged source files were not modified or loaded into the game.
+Valid blue sedan and motorcycle PNGs were subsequently uploaded under `priority-3/top-down/` and are now integrated into the heavy-vehicle hotspot scene. The truncated Downloads originals remain unchanged. The clean donkey, new kudu poses and newer scenery PNGs are also used; see [current inventory](CURRENT-ARTWORK.md). The new road-marker PNG is truncated, so the existing working WebP remains in use.
 
 ## Validation and screenshots
 

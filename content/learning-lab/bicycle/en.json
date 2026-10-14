@@ -198,7 +198,7 @@
           "id": "drop",
           "type": "toggle-lab",
           "sensitive": true,
-          "prompt": "Your head can hit the road even at cycling speed. Compare a head form with and without a bicycle helmet.",
+          "prompt": "Compare the impact on a test head form with and without a helmet.",
           "art": {
             "kind": "head-impact",
             "params": {

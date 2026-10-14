@@ -20,12 +20,14 @@ import { QUALITY } from '../quality.js';
 import { TYPE, INK, SPACE, BAND } from '../theme.js';
 import { experience, claim, text, t, sourceLine, hasUnverified, RELEASE, DAGGER } from './content.js';
 import { resolveParams } from './core/format.js';
+import { animationSeconds } from './core/time.js';
 import { buildFlow, needsNotice, topicOf, nextTopic } from './core/flow.js';
 import { labEvent, progress, labPoints } from './analytics.js';
 import { RENDERERS } from './renderers/index.js';
 import { loadArt, DEFAULT_AREA } from './art/index.js';
 import { LAB_ASSET_LIST } from './assets.js';
 import { loadLabAssets } from './loadAssets.js';
+import { rememberExperience, forgetExperience } from './session.js';
 import { para, heading, footnote } from './kit.js';
 
 // Player-facing strings inside art params; their {claim:...} tokens are filled before the art sees them.
@@ -48,6 +50,7 @@ export default class LabRunner extends Phaser.Scene {
     if (!this.exp) { this.chrome(() => this.go('LabMenu')); T(this, W / 2, H / 2, t('lab.missing'), 26, INK.strong); return; }
 
     const screen = this.d.screen || 'intro';
+    if (screen !== 'scene') rememberExperience({ slug: this.exp.slug, version: this.exp.version, screen, topic: this.d.topic });
     if (screen === 'intro') this.intro();
     else if (screen === 'notice') this.notice();
     else if (screen === 'complete') this.complete();
@@ -55,7 +58,7 @@ export default class LabRunner extends Phaser.Scene {
   }
 
   update(time, delta) {
-    const dt = Math.min(delta / 1000, 0.1);   // slow devices: let animations catch up rather than run in slow motion
+    const dt = animationSeconds(delta, this.game.loop.rawDelta);
     for (const a of this.arts) if (a.update) a.update(time, dt);
   }
 
@@ -63,6 +66,7 @@ export default class LabRunner extends Phaser.Scene {
   go(key, data) {
     if (this.leaving) return; this.leaving = true;
     this.exitLab = key !== 'LabRunner';
+    if (this.exitLab) forgetExperience();
     this.cameras.main.fadeOut(200, 8, 17, 30);
     this.cameras.main.once('camerafadeoutcomplete', () => this.scene.start(key, data));
   }
@@ -176,6 +180,7 @@ export default class LabRunner extends Phaser.Scene {
     const flow = buildFlow(e, topic.id, { skipSensitive: skip });
     const at = Math.min(Math.max(0, this.d.at || 0), flow.length - 1);
     const sc = flow[at];
+    rememberExperience({ slug: e.slug, version: e.version, screen: 'scene', topic: topic.id, sceneId: sc.id });
     this.where = { exp: e, topic, sc };
     progress.setAt(e.slug, topic.id, e.version, at);
     this.chrome(() => this.open({ screen: 'intro' }), { n: at + 1, of: flow.length });

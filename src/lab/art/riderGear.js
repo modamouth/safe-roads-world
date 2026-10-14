@@ -4,6 +4,8 @@
 //   params: { gear: 'everyday' | 'full' } initial look
 import { COLORS as C } from '../../config.js';
 import { t } from '../content.js';
+import { LEARNING_LAB_ASSETS as A } from '../assets.js';
+import { stateImages, imagePoint } from './fit.js';
 import { clipTo, label } from './common.js';
 
 export default function create(scene, parent, p, a) {
@@ -13,6 +15,21 @@ export default function create(scene, parent, p, a) {
   const cx = a.x + a.w / 2, top = a.y + 30, H = a.h - 60, u = H / 16;
   const st = { gear: p.gear || 'full', hi: null };
 
+  const keys = [A.rider.everyday.key, A.rider.full.key];
+  const photos = keys.every(key => scene.textures.exists(key)) ? stateImages(scene, c, keys,
+    { x: a.x + 8, y: a.y + 12, w: a.w - 16, h: a.h - 24 }, [200, 0, 812, 1516]) : null;
+  c.bringToTop(tags);
+  const spots = { helmet: [.5, .09], jacket: [.5, .3], visible: [.5, .25], gloves: [.27, .53], trousers: [.5, .68], boots: [.5, .95] };
+  const drawPhoto = () => {
+    const im = photos.images[st.gear === 'full' ? 1 : 0];
+    photos.show(st.gear === 'full' ? keys[1] : keys[0]);
+    if (spots[st.hi]) {
+      const overlay = scene.add.graphics(); tags.add(overlay); overlay.lineStyle(4, C.yellow, 1);
+      const points = st.hi === 'gloves' ? [[.27, .53], [.73, .53]] : [spots[st.hi]];
+      points.forEach(pt => { const q = imagePoint(im, ...pt); overlay.strokeCircle(q.x, q.y, im.displayWidth * (st.hi === 'jacket' || st.hi === 'trousers' ? .3 : .16)); });
+      tags.add(label(scene, a.x + a.w / 2, a.y + 24, t('art.gear.' + st.hi), 15, '#0B1B2E', { backgroundColor: '#FFCB2B', padding: { x: 8, y: 4 } }));
+    }
+  };
   const part = (id, fn) => {
     const on = st.hi === id;
     fn(on);
@@ -23,6 +40,7 @@ export default function create(scene, parent, p, a) {
   const draw = () => {
     g.clear(); tags.removeAll(true);
     g.fillStyle(0x0E1622, 1); g.fillRoundedRect(a.x, a.y, a.w, a.h, 18);
+    if (photos) { drawPhoto(); return; }
     const full = st.gear === 'full';
     const skin = 0x8D5B3F;
     // legs
@@ -65,7 +83,7 @@ export default function create(scene, parent, p, a) {
 
   const inst = {
     highlight(id) { st.hi = id; draw(); },
-    setState(s) { st.gear = s.gear || st.gear; if (s.highlight !== undefined) st.hi = s.highlight; draw(); },
+    async setState(s) { st.gear = s.gear || st.gear; if (s.highlight !== undefined) st.hi = s.highlight; draw(); if (photos) await photos.show(st.gear === 'full' ? keys[1] : keys[0]); },
     destroy() {}
   };
   draw();

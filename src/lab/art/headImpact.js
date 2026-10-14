@@ -4,6 +4,8 @@
 //   params: { style: 'motorcycle' | 'bicycle' }
 import { COLORS as C, REDUCE_MOTION } from '../../config.js';
 import { t } from '../content.js';
+import { LEARNING_LAB_ASSETS as A } from '../assets.js';
+import { stateImages, imagePoint } from './fit.js';
 import { clipTo, label, tweenTo, wait } from './common.js';
 
 const RISK = {
@@ -19,11 +21,20 @@ export default function create(scene, parent, p, a) {
   const leg = scene.add.container(0, 0); c.add(leg);
   const cx = a.x + a.w * 0.42, blockY = a.y + a.h - 70, R = Math.min(a.w, a.h) * 0.2;
   const st = { y: a.y + 40 + R, map: 0, helmet: false, impact: 0 };
+  let revision = 0;
 
   bg.fillStyle(0x0E1622, 1); bg.fillRoundedRect(a.x, a.y, a.w, a.h, 18);
   bg.lineStyle(1, 0xFFFFFF, 0.08); for (let x = a.x + 20; x < a.x + a.w; x += 28) bg.lineBetween(x, a.y, x, a.y + a.h);
+  const keys = [A.helmet.none.key, p.style === 'bicycle' ? A.helmet.bicycle.key : A.helmet.motorcycle.key];
+  const photos = keys.every(key => scene.textures.exists(key)) ? stateImages(scene, c, keys,
+    { x: a.x + 8, y: a.y + 18, w: a.w - 136, h: a.h - 30 }, [311, 0, 1225, 1015]) : null;
+  if (photos) photos.show(keys[0]);
+  c.bringToTop(g); c.bringToTop(leg);
+  if (!photos) {
   bg.fillStyle(0x6B737D, 1); bg.fillRect(cx - R * 1.4, blockY, R * 2.8, 18);           // test block
   bg.fillStyle(0x4A5058, 1); bg.fillRect(cx - R * 1.6, blockY + 18, R * 3.2, 30);
+
+  }
 
   const zone = (x, y, r, risk) => {
     const k = RISK[risk];
@@ -33,6 +44,23 @@ export default function create(scene, parent, p, a) {
 
   const draw = () => {
     g.clear();
+    if (photos) {
+      const im = photos.images[st.helmet ? 1 : 0], q = imagePoint(im, .5, .34), radius = im.displayWidth * .2;
+      // The supplied artwork includes a fixed test fixture. Animate a force
+      // arrow beside it, rather than making its bolted base fall with the head.
+      if (!REDUCE_MOTION && st.map === 0 && st.impact === 0) {
+        const progress = Math.max(0, Math.min(1, (st.y - a.y - 40 - R * 1.2) / Math.max(1, blockY - R * 2.65 - a.y - 40)));
+        const x = q.x - radius * 1.2, y = q.y - radius + progress * radius;
+        g.lineStyle(3, C.yellow, 1); g.lineBetween(x, y - 24, x, y);
+        g.lineBetween(x, y, x - 6, y - 8); g.lineBetween(x, y, x + 6, y - 8);
+      }
+      if (st.map > 0) zone(q.x, q.y, radius, st.helmet ? 'low' : 'high');
+      if (st.impact > 0) {
+        g.lineStyle(3, C.yellow, st.impact);
+        for (let i = -2; i <= 2; i++) g.lineBetween(q.x + i * radius * .3, q.y + radius, q.x + i * radius * .5, q.y + radius * 1.4);
+      }
+      return;
+    }
     const hy = st.y, hx = cx;
     // neck and head form (side view, facing right)
     g.fillStyle(0xC7B9A6, 1); g.fillRoundedRect(hx - R * 0.35, hy + R * 0.55, R * 0.7, R * 0.9, 8);
@@ -71,14 +99,19 @@ export default function create(scene, parent, p, a) {
 
   const inst = {
     async setState(s) {
+      const my = ++revision;
+      if (photos) photos.show(keys[s.helmet ? 1 : 0]);
       st.helmet = !!s.helmet; st.map = 0; st.impact = 0; st.y = a.y + 40 + R * 1.2;
       leg.removeAll(true); draw();
       const rest = blockY - R * 1.45 - (st.helmet ? R * 0.15 : 0);
       await tweenTo(scene, st, { y: rest }, REDUCE_MOTION ? 0 : 520, REDUCE_MOTION);
+      if (my !== revision) return;
       st.impact = 1; draw();
       if (!REDUCE_MOTION) { scene.cameras.main.shake(140, 0.003); await wait(scene, 160); }
+      if (my !== revision) return;
       st.impact = 0;
       await tweenTo(scene, st, { map: 1 }, REDUCE_MOTION ? 0 : 450, REDUCE_MOTION);
+      if (my !== revision) return;
       draw(); legend();
     },
     update() { draw(); },
@@ -86,6 +119,6 @@ export default function create(scene, parent, p, a) {
   };
   draw();
   const m = clipTo(scene, c, a);
-  inst.destroy = () => { c.destroy(); m.destroy(); };
+  inst.destroy = () => { revision++; scene.tweens.killTweensOf(st); c.destroy(); m.destroy(); };
   return inst;
 }

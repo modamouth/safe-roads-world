@@ -59,7 +59,7 @@
           "id": "drop",
           "type": "toggle-lab",
           "sensitive": true,
-          "prompt": "In a fall, your head hits the road at the speed you were riding. Compare a head form dropped with and without a helmet.",
+          "prompt": "Compare the impact on a test head form with and without a helmet.",
           "art": {
             "kind": "head-impact",
             "params": {

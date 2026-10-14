@@ -42,6 +42,13 @@ for (const width of [360, 390, 540]) test(`Priority 2 scenes at ${width}`, async
       visit(s.layer); return valid;
     });
     expect(valid).toBe(true);
+    if (d.sc.id === 'spot' && d.sc.art.kind === 'truck-lanes') {
+      const keys = await page.evaluate(() => {
+        const keys = []; const visit = o => { if (o.type === 'Image' && o.visible) keys.push(o.texture.key); if (o.type === 'Container') o.list.forEach(visit); };
+        visit(window.__srwGame.scene.getScene('LabRunner').layer); return keys;
+      });
+      expect(keys).toContain('lab-td-blue-sedan'); expect(keys).toContain('lab-td-motorcycle-rider');
+    }
     if (d.sc.art.kind === 'crossing-street' || ['spot', 'gap', 'cross', 'setting', 'decide'].includes(d.sc.id)) {
       mkdirSync('test-results/priority2', { recursive: true });
       await page.screenshot({ path: `test-results/priority2/${width}-${d.slug}-${d.topic}-${d.sc.id}.png` });

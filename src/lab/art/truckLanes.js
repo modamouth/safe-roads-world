@@ -111,7 +111,7 @@ export default function create(scene, parent, p, a) {
       const g = userG; g.clear(); users.begin();
       items.forEach(it => {
         const kind = it.kind || 'car', [w, l] = SIZE[kind] || SIZE.car, cx = sx(it.x), cy = sy(it.y), body = col(it.color, 0x7B5CC9);
-        const key = kind === 'taxi' ? A.topDown.taxi.key : kind === 'bike' ? A.topDown.cyclist.key : kind === 'ped' ? A.topDown.pedestrian.key : kind === 'car' && it.color === '#A93226' ? A.topDown.redSedan.key : '';
+        const key = kind === 'moto' ? A.topDown.motorcycle.key : kind === 'car' && it.color === '#3C7FC2' ? A.topDown.blueSedan.key : kind === 'taxi' ? A.topDown.taxi.key : kind === 'bike' ? A.topDown.cyclist.key : kind === 'ped' ? A.topDown.pedestrian.key : kind === 'car' ? A.topDown.redSedan.key : '';
         if (users.draw(key, cx, cy, w * S, l * SY)) return;
         if (kind === 'car' || kind === 'van' || kind === 'taxi') {
           g.fillStyle(0x000000, 0.25); g.fillRoundedRect(cx - w * S / 2 + 2, cy - l * SY / 2 + 3, w * S, l * SY, 6);

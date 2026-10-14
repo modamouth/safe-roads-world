@@ -199,7 +199,10 @@
       "short": "✕ Still moving: {m} m short",
       "lane": "✓ Stayed in your lane: the kudu crossed",
       "oncoming": "✕ Swerved into the path of oncoming traffic",
-      "headon": "✕ Head-on crash at {kmh} km/h"
+      "headon": "✕ Head-on crash at {kmh} km/h",
+      "cowImpact": "Impact at {kmh} km/h — car stopped",
+      "carStopped": "The car has stopped before the hazard.",
+      "contactPreview": "The preview pauses before contact."
     },
     "city": {
       "stopped": "✓ Stopped {m} m before the pedestrian",

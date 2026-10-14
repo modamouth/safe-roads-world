@@ -14,22 +14,42 @@ export function fitImage(image, area, canvas = { w: image.width, h: image.height
 
 // One source canvas and one origin across a state set; alpha padding remains
 // intact. Each image keeps its own aspect ratio. Rapid taps replace the fade.
-export function stateImages(scene, parent, keys, area) {
+export function stateImages(scene, parent, keys, area, bounds) {
   const available = keys.filter(key => scene.textures.exists(key));
-  const images = available.map(key => scene.add.image(0, 0, key).setAlpha(0));
+  const images = available.map(key => {
+    const texture = scene.textures.get(key);
+    if (bounds && !texture.has('lab-state')) texture.add('lab-state', 0, bounds[0], bounds[1], bounds[2] - bounds[0], bounds[3] - bounds[1]);
+    return scene.add.image(0, 0, key, bounds ? 'lab-state' : undefined).setAlpha(0);
+  });
   const canvas = { w: Math.max(...images.map(i => i.width)), h: Math.max(...images.map(i => i.height)) };
   images.forEach(image => { fitImage(image, area, canvas); parent.add(image); });
   let initialized = false;
+  let current = null, transition = Promise.resolve(), finish = null;
   return {
     show(key) {
+      if (current === key) return transition;
+      current = key;
+      if (finish) finish();
+      transition = new Promise(resolve => { finish = resolve; });
+      let remaining = images.length;
+      const done = finish;
       images.forEach(image => {
         scene.tweens.killTweensOf(image);
         const alpha = image.texture.key === key ? 1 : 0;
-        if (REDUCE_MOTION || !initialized) image.setAlpha(alpha);
-        else scene.tweens.add({ targets: image, alpha, duration: 220, ease: 'Sine.easeInOut' });
+        if (REDUCE_MOTION || !initialized) { image.setAlpha(alpha); if (--remaining === 0) done(); }
+        else scene.tweens.add({ targets: image, alpha, duration: 220, ease: 'Sine.easeInOut', onComplete: () => { if (--remaining === 0) done(); } });
       });
+      if (!images.length) done();
       initialized = true;
+      return transition;
     },
     images
   };
+}
+
+// Map normalized original-canvas coordinates through a non-destructive frame.
+export function imagePoint(image, x, y) {
+  const source = image.texture.getSourceImage(), frame = image.frame;
+  return { x: image.x + (x * source.width - frame.cutX - image.width / 2) * image.scaleX,
+    y: image.y + (y * source.height - frame.cutY - image.height / 2) * image.scaleY };
 }

@@ -164,7 +164,7 @@
         {
           "id": "headlights",
           "type": "toggle-lab",
-          "prompt": "Dipped headlights only have to light up {claim:na.law.dippedbeam} of road. A cow is standing in your lane, just where the light ends. Can you stop in time?",
+          "prompt": "Dipped headlights reveal a cow {claim:na.law.dippedbeam} ahead. Compare the speeds.",
           "art": {
             "kind": "rural-road",
             "params": {
@@ -187,7 +187,7 @@
               "params": {
                 "kmh": 60
               },
-              "caption": "At {var:kmh} km/h you need about {var:stopM} m to stop. The cow was {var:seeM} m ahead when you first saw it."
+              "caption": "At {var:kmh} km/h: {var:seeM} m visible, {var:stopM} m to stop. {var:outcome}"
             },
             {
               "id": "80",
@@ -195,7 +195,7 @@
               "params": {
                 "kmh": 80
               },
-              "caption": "At {var:kmh} km/h you need about {var:stopM} m to stop. The cow was {var:seeM} m ahead when you first saw it."
+              "caption": "At {var:kmh} km/h: {var:seeM} m visible, {var:stopM} m to stop. {var:outcome}"
             },
             {
               "id": "100",
@@ -203,7 +203,7 @@
               "params": {
                 "kmh": 100
               },
-              "caption": "At {var:kmh} km/h you need about {var:stopM} m to stop. The cow was {var:seeM} m ahead when you first saw it."
+              "caption": "At {var:kmh} km/h: {var:seeM} m visible, {var:stopM} m to stop. {var:outcome}"
             },
             {
               "id": "120",
@@ -211,14 +211,14 @@
               "params": {
                 "kmh": 120
               },
-              "caption": "At {var:kmh} km/h you need about {var:stopM} m to stop. The cow was {var:seeM} m ahead when you first saw it."
+              "caption": "At {var:kmh} km/h: {var:seeM} m visible, {var:stopM} m to stop. {var:outcome}"
             }
           ]
         },
         {
           "id": "main-beam",
           "type": "toggle-lab",
-          "prompt": "Main beam must light at least {claim:na.law.mainbeam} ahead. Compare the two at the same speed.",
+          "prompt": "Main beam reveals {claim:na.law.mainbeam} ahead. Dip it for oncoming traffic.",
           "art": {
             "kind": "rural-road",
             "params": {
@@ -241,7 +241,7 @@
                 "kmh": 100,
                 "seeM": "$claim:na.law.dippedbeam"
               },
-              "caption": "Dipped beam at {var:kmh} km/h: you see the cow at {var:seeM} m but need {var:stopM} m to stop."
+              "caption": "Dipped beam at {var:kmh} km/h: {var:seeM} m visible, {var:stopM} m to stop. {var:outcome}"
             },
             {
               "id": "main",
@@ -250,7 +250,7 @@
                 "kmh": 100,
                 "seeM": "$claim:na.law.mainbeam"
               },
-              "caption": "Main beam at {var:kmh} km/h: you see the cow at {var:seeM} m and need {var:stopM} m to stop. Dip it when another car comes."
+              "caption": "Main beam at {var:kmh} km/h: {var:seeM} m visible, {var:stopM} m to stop. {var:outcome}"
             }
           ]
         },

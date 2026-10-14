@@ -18,11 +18,16 @@ export default function create(scene, parent, p, a) {
   g.lineStyle(2, tint, 0.6); g.strokeRoundedRect(a.x, a.y, a.w, a.h, 22);
   const size = Math.min(a.w, a.h) * 0.42;
   const pic = p.image && scene.textures.exists(p.image) ? scene.add.image(a.x + a.w / 2, a.y + a.h / 2, p.image) : null;
-  if (pic) fitImage(pic, { x: a.x + a.w * 0.1, y: a.y + a.h * 0.09, w: a.w * 0.8, h: a.h * 0.82 });
+  const extras = (p.extras || []).slice(0, 4);
+  if (pic) fitImage(pic, extras.length
+    ? { x: a.x + 24, y: a.y + 78, w: a.w - 48, h: a.h - 104 }
+    : { x: a.x + a.w * 0.1, y: a.y + a.h * 0.09, w: a.w * 0.8, h: a.h * 0.82 });
   else drawIcon(g, p.icon || 'info', a.x + a.w / 2, a.y + a.h / 2, size, 0xFFFFFF);
-  (p.extras || []).slice(0, 4).forEach((ic, i) => {
+  extras.forEach((ic, i) => {
     const ang = -Math.PI * 0.8 + i * (Math.PI * 1.6 / Math.max(1, (p.extras.length - 1) || 1));
-    const r = Math.min(a.w, a.h) * 0.4, x = a.x + a.w / 2 + Math.cos(ang) * r * 1.05, y = a.y + a.h / 2 + Math.sin(ang) * r * 0.85;
+    const r = Math.min(a.w, a.h) * 0.4;
+    const x = pic ? a.x + a.w * (i + 1) / (extras.length + 1) : a.x + a.w / 2 + Math.cos(ang) * r * 1.05;
+    const y = pic ? a.y + 38 : a.y + a.h / 2 + Math.sin(ang) * r * 0.85;
     g.fillStyle(C.navy, 0.95); g.fillCircle(x, y, 30); g.lineStyle(2, tint, 0.9); g.strokeCircle(x, y, 30);
     drawIcon(g, ic, x, y, 34, C.yellow);
   });

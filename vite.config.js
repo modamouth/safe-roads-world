@@ -9,7 +9,9 @@ import { defineConfig } from 'vite';
 // downloaded; this stops casual copying, it isn't encryption.)
 export default defineConfig(({ mode }) => ({
   base: './',
-  server: { port: 5173, open: !process.env.PLAYWRIGHT },
+  // Game sessions should survive ongoing code/artwork work. Refresh manually
+  // to pick up changes; live reload can be enabled explicitly for development.
+  server: { port: 5173, open: !process.env.PLAYWRIGHT, hmr: process.env.SRW_LIVE_RELOAD === '1' },
   build: {
     outDir: 'dist',
     assetsDir: 'assets',

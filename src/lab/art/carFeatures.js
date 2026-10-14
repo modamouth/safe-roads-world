@@ -6,6 +6,9 @@
 //     'belt'  side view of a crash-test dummy in a sudden stop; setState({ on }) with and without a seatbelt
 import { COLORS as C, REDUCE_MOTION } from '../../config.js';
 import { t } from '../content.js';
+import { LEARNING_LAB_ASSETS as A } from '../assets.js';
+import { stateImages, imagePoint } from './fit.js';
+import { TopDownArt } from './topDown.js';
 import { clipTo, label, tweenTo } from './common.js';
 
 export default function create(scene, parent, p, a) {
@@ -15,6 +18,24 @@ export default function create(scene, parent, p, a) {
   const st = { hi: null, on: false, k: 0 };
   const view = p.view || 'side';
 
+  const keys = view === 'belt' ? [A.adultBelt.bad.key, A.adultBelt.good.key] : view === 'side' ? [A.vehicle.key] : [];
+  const photos = keys.length && keys.every(key => scene.textures.exists(key)) ? stateImages(scene, c, keys,
+    { x: a.x + 8, y: a.y + 42, w: a.w - 16, h: a.h - 52 }, view === 'belt' ? [186, 25, 1432, 988] : [8, 83, 1666, 813]) : null;
+  if (photos) photos.show(keys[0]);
+  c.bringToTop(tags);
+  const cars = scene.add.container(0, 0); c.add(cars);
+  const topDown = new TopDownArt(scene, cars);
+  c.bringToTop(tags);
+  const photoSpots = { seatbelt: [.64, .42], airbag: [.7, .4], abs: [.79, .66], esc: [.5, .63], tyres: [.8, .72], lights: [.94, .5], headrest: [.59, .34], mirrors: [.73, .36] };
+  const drawPhoto = () => {
+    bgPanel();
+    if (view === 'belt') { tags.add(label(scene, a.x + a.w / 2, a.y + 24, t(st.on ? 'art.belt.on' : 'art.belt.off'), 14, '#FFFFFF', { backgroundColor: '#05080DCC', padding: { x: 6, y: 3 } })); return; }
+    if (photoSpots[st.hi]) {
+      const q = imagePoint(photos.images[0], ...photoSpots[st.hi]), overlay = scene.add.graphics(); tags.add(overlay);
+      overlay.lineStyle(4, C.yellow, 1); overlay.strokeCircle(q.x, q.y, 20); overlay.lineBetween(q.x, q.y - 20, q.x, a.y + 38);
+      tags.add(label(scene, Math.max(a.x + 70, Math.min(a.x + a.w - 70, q.x)), a.y + 24, t('art.feature.' + st.hi), 15, '#0B1B2E', { backgroundColor: '#FFCB2B', padding: { x: 8, y: 4 } }));
+    }
+  };
   const bgPanel = () => { g.fillStyle(0x0E1622, 1); g.fillRoundedRect(a.x, a.y, a.w, a.h, 18); };
 
   // --- side view -------------------------------------------------------------
@@ -76,9 +97,11 @@ export default function create(scene, parent, p, a) {
     g.strokePath();
     const q = path(st.k, st.on);
     const q0 = path(Math.max(0, st.k - 0.02), st.on), ang = (q0.x === q.x && q0.y === q.y ? -Math.PI / 2 : Math.atan2(q.y - q0.y, q.x - q0.x)) + (st.on ? 0 : st.k * 0.9);
-    const car = scene.add.graphics(); tags.add(car);
-    car.fillStyle(0xF4F5F6, 1); car.fillRoundedRect(-16, -9, 32, 18, 5); car.fillStyle(0x24364B, 1); car.fillRect(4, -7, 6, 14);
-    car.setPosition(q.x, q.y).setRotation(ang);
+    if (!topDown.draw(A.topDown.redSedan.key, q.x, q.y, 24, 44, ang * 180 / Math.PI + 90)) {
+      const car = scene.add.graphics(); tags.add(car);
+      car.fillStyle(0xF4F5F6, 1); car.fillRoundedRect(-16, -9, 32, 18, 5); car.fillStyle(0x24364B, 1); car.fillRect(4, -7, 6, 14);
+      car.setPosition(q.x, q.y).setRotation(ang);
+    }
     if (st.k >= 1) tags.add(label(scene, q.x, Math.max(a.y + 24, q.y - 30), t(st.on ? 'art.esc.on' : 'art.esc.off'), 14, '#FFFFFF', { backgroundColor: '#05080DCC', padding: { x: 6, y: 3 } }));
   };
 
@@ -100,13 +123,14 @@ export default function create(scene, parent, p, a) {
     tags.add(label(scene, a.x + a.w / 2, a.y + 24, t(st.on ? 'art.belt.on' : 'art.belt.off'), 14, '#FFFFFF', { backgroundColor: '#05080DCC', padding: { x: 6, y: 3 } }));
   };
 
-  const draw = () => { g.clear(); tags.removeAll(true); (view === 'skid' ? skid : view === 'belt' ? belt : side)(); };
+  const draw = () => { topDown.begin(); g.clear(); tags.removeAll(true); if (photos) { drawPhoto(); return; } (view === 'skid' ? skid : view === 'belt' ? belt : side)(); };
   const inst = {
     highlight(id) { st.hi = id; draw(); },
     async setState(s) {
       if (s.highlight !== undefined) st.hi = s.highlight;
       if (s.on !== undefined) {
-        st.on = !!s.on; st.k = 0; draw();
+        st.on = !!s.on; st.k = 0; if (photos) photos.show(keys[st.on ? 1 : 0]); draw();
+        if (photos) { await photos.show(keys[st.on ? 1 : 0]); return; }
         await tweenTo(scene, st, { k: 1 }, REDUCE_MOTION ? 0 : 1100, REDUCE_MOTION);
       }
       draw();

@@ -1,6 +1,6 @@
 # Learning Lab artwork mapping
 
-The later supplied Priority 2 PNGs are covered in [the follow-up report](PRIORITY-2-INTEGRATION.md), including seven integrated assets and two truncated files needing re-export.
+Later uploads and their completed integration are covered in [Priority 1 integration](PRIORITY-1-INTEGRATION.md), [Priority 2 integration](PRIORITY-2-INTEGRATION.md) and the [current inventory](CURRENT-ARTWORK.md). Valid blue sedan and motorcycle replacements are now available and integrated.
 
 Inspected before implementation. Source location for every available image: `public/assets/`. The existing project uses JavaScript, Phaser 3, Vite, 540 × 960 design space, camera scaling, reduced-motion support and accessible HTML mirrors. Keep those conventions. At the initial audit, no PNG source files or other priority artwork were found in the workspace. The later supplied PNGs are documented in the follow-up report. No pre-existing working-tree changes were present.
 

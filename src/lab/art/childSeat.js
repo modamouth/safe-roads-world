@@ -7,7 +7,8 @@
 //                'back' | 'knees' | 'sash' | 'lap' | 'stay'
 import { COLORS as C, REDUCE_MOTION } from '../../config.js';
 import { t } from '../content.js';
-import { stateImages } from './fit.js';
+import { LEARNING_LAB_ASSETS as A } from '../assets.js';
+import { stateImages, imagePoint } from './fit.js';
 import { clipTo, label, tweenTo } from './common.js';
 
 export default function create(scene, parent, p, a) {
@@ -81,20 +82,28 @@ export default function create(scene, parent, p, a) {
     tag(a.x + a.w / 2, a.y + 24, good ? 'art.child.beltGood' : 'art.child.beltBad', good);
   };
 
-  // Illustrated artwork for 'install' and 'harness' when loaded; the drawn version is the fallback.
-  // All three images share one frame: firm/snug (good), loose seat, slack straps.
-  const badKey = view === 'harness' ? 'img_childseat_slack' : 'img_childseat_loose';
-  const photo = view !== 'belt' && scene.textures.exists('img_childseat_firm') && scene.textures.exists(badKey);
+  // Each complete state pair shares one frame; drawings remain the fallback.
+  const goodKey = view === 'belt' ? A.booster.good.key : 'img_childseat_firm';
+  const badKey = view === 'belt' ? A.booster.bad.key : view === 'harness' ? 'img_childseat_slack' : 'img_childseat_loose';
+  const photo = scene.textures.exists(goodKey) && scene.textures.exists(badKey);
   let photos = null;
   if (photo) {
     g.fillStyle(0x0E1622, 1); g.fillRoundedRect(a.x, a.y, a.w, a.h, 18);
-    photos = stateImages(scene, c, ['img_childseat_firm', badKey], { x: a.x + 8, y: a.y + 38, w: a.w - 16, h: a.h - 46 });
+    photos = stateImages(scene, c, [goodKey, badKey], { x: a.x + 8, y: a.y + 38, w: a.w - 16, h: a.h - 46 }, view === 'belt' ? [202, 0, 1362, 1014] : undefined);
     c.bringToTop(tags);
   }
   const drawPhoto = () => {
     tags.removeAll(true);
-    const key = view === 'harness' ? (st.ok ? 'art.child.snug' : 'art.child.slack') : (st.ok ? 'art.child.firm' : 'art.child.loose');
+    const key = view === 'belt' ? (st.ok ? 'art.child.beltGood' : 'art.child.beltBad') : view === 'harness' ? (st.ok ? 'art.child.snug' : 'art.child.slack') : (st.ok ? 'art.child.firm' : 'art.child.loose');
     tag(a.x + a.w / 2, a.y + 22, key, st.ok);
+    if (view === 'belt') {
+      const im = photos.images[st.ok ? 0 : 1], overlay = scene.add.graphics(); tags.add(overlay);
+      const spots = st.ok ? { back: [.41, .40], knees: [.7, .59], sash: [.49, .36], lap: [.50, .56], stay: [.52, .42] }
+        : { back: [.41, .46], knees: [.7, .61], sash: [.43, .31], lap: [.51, .52], stay: [.52, .48] };
+      overlay.lineStyle(3, st.ok ? C.green : C.red, 1);
+      ['sash', 'lap'].forEach(id => { const q = imagePoint(im, ...spots[id]); overlay.strokeCircle(q.x, q.y, im.displayWidth * .07); });
+      if (spots[st.hi]) { const q = imagePoint(im, ...spots[st.hi]); overlay.lineStyle(4, C.yellow, 1); overlay.strokeCircle(q.x, q.y, im.displayWidth * (st.hi === 'stay' ? .25 : .09)); }
+    }
     // Highlight the straps in normalized source-image coordinates.
     if (view === 'harness') {
       const im = photos.images[0], ox = im.x - im.displayWidth / 2, oy = im.y - im.displayHeight / 2;
@@ -111,8 +120,8 @@ export default function create(scene, parent, p, a) {
       if (s.highlight !== undefined) st.hi = s.highlight;
       const v = s.firm !== undefined ? s.firm : s.snug !== undefined ? s.snug : s.booster;
       if (v !== undefined) st.ok = !!v;
+      if (photos) { const transition = photos.show(st.ok ? goodKey : badKey); draw(); await transition; return; }
       if (view === 'belt') { draw(); return; }
-      if (photos) { photos.show(st.ok ? 'img_childseat_firm' : badKey); draw(); return; }
       st.k = 0; st.shown = true; draw();
       await tweenTo(scene, st, { k: 1 }, REDUCE_MOTION ? 0 : 700, REDUCE_MOTION);
       draw();
@@ -120,7 +129,7 @@ export default function create(scene, parent, p, a) {
     update() { if (st.k > 0 && st.k < 1) draw(); },
     destroy() {}
   };
-  if (photos) photos.show(st.ok ? 'img_childseat_firm' : badKey);
+  if (photos) photos.show(st.ok ? goodKey : badKey);
   draw();
   const m = clipTo(scene, c, a);
   inst.destroy = () => { c.destroy(); m.destroy(); };

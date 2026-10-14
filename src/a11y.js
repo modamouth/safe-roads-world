@@ -70,8 +70,10 @@ export function mirror(obj, label, onActivate, o = {}) {
   el.type = 'button';
   const setLabel = l => { el.textContent = typeof l === 'function' ? l() : l; };
   setLabel(label);
-  el.addEventListener('click', () => { if (!el.disabled) onActivate(); });
   let alive = true;
+  // A queued activation from an old screen must not navigate the current one.
+  // Recheck game state directly instead of waiting for the 250 ms sync timer.
+  el.addEventListener('click', () => { if (alive && shown(obj) && !el.disabled && (!o.isEnabled || o.isEnabled())) onActivate(); });
   if (o.onFocus) { el.addEventListener('focus', () => { if (alive) o.onFocus(true); }); el.addEventListener('blur', () => { if (alive) o.onFocus(false); }); }
   if (o.testId) el.dataset.testid = o.testId;
   controls.appendChild(el);
