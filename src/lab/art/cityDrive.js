@@ -33,8 +33,10 @@ export default function create(scene, parent, p, a) {
     Object.assign(im, { wz, xm, sizeM, by: by || 'h' }); c.add(im); scn.push(im); return im;
   };
   const end = ZP + 140, dens = QUALITY.density;
-  for (let z = 30; z < end; z += 22 / dens) { add('palm', z, -6.4, 7.5); add('palm', z + 11, 7.6, 7.5); }
-  for (let z = 42; z < end; z += 30) { add('lamp', z, -4.6, 6.5); add('lamp', z + 15, 6.2, 6.5); }
+  // Illustrated palms and street lamps when loaded; drawn shapes otherwise. Lamp arms face the road.
+  const palmKey = scene.textures.exists('scn_palm') ? 'scn_palm' : 'palm', lampKey = scene.textures.exists('scn_lamp') ? 'scn_lamp' : 'lamp';
+  for (let z = 30; z < end; z += 22 / dens) { add(palmKey, z, -6.4, 7.5); const r = add(palmKey, z + 11, 7.6, 7.5); if (r) r.setFlipX(true); }
+  for (let z = 42; z < end; z += 30) { add(lampKey, z, -4.6, 6.5); const r = add(lampKey, z + 15, 6.2, 6.5); if (r) r.setFlipX(true); }
   const vehicles = PARKED_VEHICLES.filter(v => scene.textures.exists(v.key));
   [ZP - 7.5, ZP + 5.5, ZP - 26, ZP + 21, ZP + 40, 48, 70].forEach((z, i) => {
     if (vehicles.length) { const v = vehicles[i % vehicles.length]; add(v.key, z, -2.9, v.w, 'w'); }

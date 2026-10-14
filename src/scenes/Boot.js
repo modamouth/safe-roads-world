@@ -23,8 +23,10 @@ export default class Boot extends Phaser.Scene {
     Object.entries(OPTIONAL_ART).forEach(([name, path]) => this.load.image(optKey(name), path));
     PARKED_VEHICLES.forEach(v => this.load.image(v.key, v.url));
     // Crash-lab photos and the oncoming vehicle (optional: the art falls back to drawn versions).
-    ['labbg', 'labcar0', 'labcar60', 'labcar80', 'labcar90', 'truck', 'childseat_firm', 'childseat_loose', 'childseat_slack']
+    ['labbg', 'labcar0', 'labcar60', 'labcar80', 'labcar90', 'truck', 'post', 'childseat_firm', 'childseat_loose', 'childseat_slack']
       .forEach(k => this.load.image('img_' + k, 'assets/' + k + '.webp'));
+    // Illustrated roadside scenery (optional: drawn versions are used if these are missing).
+    ['scn_acacia', 'scn_bush', 'scn_palm', 'scn_lamp'].forEach(k => this.load.image(k, 'assets/' + k + '.webp'));
     // If any image 404s or fails, don't block the boot — REAL just stays false
     // and the game runs on the drawn fallback art.
     this.load.on('loaderror', () => {});

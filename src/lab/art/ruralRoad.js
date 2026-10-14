@@ -92,9 +92,14 @@ export default function create(scene, parent, p, a, ctx) {
     c.add(im); scn.push(im); return im;
   };
   const SPAN = 600, dens = QUALITY.density;
-  for (let z = 25; z < SPAN; z += 34 / dens) { add('acacia', z, -8 - (z * 7) % 6, 7, 'h', 0x8A7A5E); add('acacia', z + 17, 10 + (z * 3) % 5, 7, 'h', 0x8A7A5E); }
-  for (let z = 15; z < SPAN; z += 22 / dens) { add('bush', z, -4.6 - (z % 3), 1.6, 'h', 0x9A8A5E); add('bush', z + 9, 8 + (z % 4), 1.6, 'h', 0x9A8A5E); }
-  for (let z = 10; z < SPAN; z += 12) { add('post', z, -4.2, 1.2); add('post', z + 6, 7.4, 1.2); }
+  // Illustrated scenery when loaded (no tint needed); drawn shapes otherwise.
+  const ART = k => scene.textures.exists(k);
+  const tree = ART('scn_acacia') ? ['scn_acacia', 0xFFFFFF] : ['acacia', 0x8A7A5E];
+  const shrub = ART('scn_bush') ? ['scn_bush', 0xFFFFFF] : ['bush', 0x9A8A5E];
+  const post = ART('img_post') ? 'img_post' : 'post';
+  for (let z = 25; z < SPAN; z += 34 / dens) { add(tree[0], z, -8 - (z * 7) % 6, 7, 'h', tree[1]); const r = add(tree[0], z + 17, 10 + (z * 3) % 5, 7, 'h', tree[1]); if (r) r.setFlipX(true); }
+  for (let z = 15; z < SPAN; z += 22 / dens) { add(shrub[0], z, -4.6 - (z % 3), 1.6, 'h', shrub[1]); const r = add(shrub[0], z + 9, 8 + (z % 4), 1.6, 'h', shrub[1]); if (r) r.setFlipX(true); }
+  for (let z = 10; z < SPAN; z += 12) { add(post, z, -4.2, 1.2); const r = add(post, z + 6, 7.4, 1.2); if (r && post === 'img_post') r.setFlipX(true); }
   const hazardKey = p.hazard && p.hazard !== 'none' ? (p.hazard === 'kudu' ? 'kudu' : animalTexture(scene, p.hazard)) : null;
   const animal = hazardKey ? add(hazardKey, 9999, -0.3, p.hazard === 'kudu' ? 2.4 : 2.3, 'w') : null;
   if (animal) animal.fixed = true;
