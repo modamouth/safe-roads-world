@@ -100,7 +100,9 @@ export default function create(scene, parent, p, a, ctx) {
   for (let z = 25; z < SPAN; z += 34 / dens) { add(tree[0], z, -8 - (z * 7) % 6, 7, 'h', tree[1]); const r = add(tree[0], z + 17, 10 + (z * 3) % 5, 7, 'h', tree[1]); if (r) r.setFlipX(true); }
   for (let z = 15; z < SPAN; z += 22 / dens) { add(shrub[0], z, -4.6 - (z % 3), 1.6, 'h', shrub[1]); const r = add(shrub[0], z + 9, 8 + (z % 4), 1.6, 'h', shrub[1]); if (r) r.setFlipX(true); }
   for (let z = 10; z < SPAN; z += 12) { add(post, z, -4.2, 1.2); const r = add(post, z + 6, 7.4, 1.2); if (r && post === 'img_post') r.setFlipX(true); }
-  const hazardKey = p.hazard && p.hazard !== 'none' ? (p.hazard === 'kudu' ? 'kudu' : animalTexture(scene, p.hazard)) : null;
+  // Kudu: illustrated artwork (scn_kudu, optional leaping pose scn_kudu_leap) when loaded, else the drawn one.
+  const kuduKey = scene.textures.exists('scn_kudu') ? 'scn_kudu' : 'kudu';
+  const hazardKey = p.hazard && p.hazard !== 'none' ? (p.hazard === 'kudu' ? kuduKey : animalTexture(scene, p.hazard)) : null;
   const animal = hazardKey ? add(hazardKey, 9999, -0.3, p.hazard === 'kudu' ? 2.4 : 2.3, 'w') : null;
   if (animal) animal.fixed = true;
   const swerveMode = p.mode === 'swerve';
@@ -272,6 +274,7 @@ export default function create(scene, parent, p, a, ctx) {
         // the kudu leaps out from the verge and across the road
         const k = clamp((r.t - 0.15) / 1.5, 0, 1);
         animal.xm = -4.6 + 12.9 * k; animal.hop = k > 0 && k < 1 ? Math.abs(Math.sin(k * Math.PI * 3)) * 0.6 : 0;
+        if (scene.textures.exists('scn_kudu_leap')) animal.setTexture(animal.hop > 0.15 ? 'scn_kudu_leap' : 'scn_kudu');
         if (r.choice === 'brake') {
           if (r.t > 0.6) {
             if (!r.braking) { r.braking = true; brakeGlow.fillStyle(0xFF2A2A, 0.9); brakeGlow.fillCircle(car.x - car.displayWidth * 0.33, car.y - car.displayHeight * 0.5, 5); brakeGlow.fillCircle(car.x + car.displayWidth * 0.33, car.y - car.displayHeight * 0.5, 5); }
