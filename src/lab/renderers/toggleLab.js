@@ -3,7 +3,7 @@
 // state must be viewed before Continue.
 import { W } from '../../config.js';
 import { panel } from '../../ui.js';
-import { TYPE, INK, SPACE } from '../../theme.js';
+import { TYPE, INK, SPACE, BAND } from '../../theme.js';
 import { para, segmented } from '../kit.js';
 import { resolveParams } from '../core/format.js';
 import { claim } from '../content.js';
@@ -42,9 +42,16 @@ export default async function toggleLab(ctx, sc) {
       capBox = scene.add.container(0, 0); layer.add(capBox);
       // Under the controls, so it never hides the part of the picture that matters.
       const tx = para(scene, null, ctx.text(s.caption), 0, { size: TYPE.body, color: INK.strong, width: W - 96 });
-      const h = tx.height + 30, top = segY + (sc.requireAll ? 66 : 48);
+      const top = segY + (sc.requireAll ? 66 : 48);
+      const available = BAND.primaryY - 40 - top;
+      // Keep longer captions above the fixed navigation, without moving art.
+      let size = TYPE.body;
+      while (tx.height + 24 > available && size > TYPE.small) {
+        size--; tx.setFontSize(size).setLineSpacing(Math.round(size * 0.28));
+      }
+      const h = tx.height + 24;
       capBox.add(panel(scene, SPACE.gutter + 8, top, W - SPACE.gutter * 2 - 16, h, { alpha: 0.9, r: 14 }));
-      tx.setY(top + 15); capBox.add(tx);
+      tx.setY(top + 12); capBox.add(tx);
     }
     ctx.announce([ctx.text(s.label), s.caption ? ctx.text(s.caption) : ''].filter(Boolean).join('. '));
   }

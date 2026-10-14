@@ -3,6 +3,7 @@
 //   setState({ on }) toggles it.
 import { COLORS as C } from '../../config.js';
 import { t } from '../content.js';
+import { stateImages } from './fit.js';
 import { clipTo, label } from './common.js';
 
 export default function create(scene, parent, p, a) {
@@ -79,15 +80,12 @@ export default function create(scene, parent, p, a) {
     refuge: ['td_road', 'td_refuge'], roundabout: ['td_crossroads', 'td_roundabout'] }[p.treatment];
   if (ART && ART.every(k => scene.textures.exists(k))) {
     const bg = scene.add.rectangle(a.x, a.y, a.w, a.h, 0x8C6A45).setOrigin(0);
-    const pics = ART.map(k => {
-      const im = scene.add.image(a.x + a.w / 2, a.y + a.h / 2, k);
-      im.setScale(Math.max(a.w / im.width, a.h / im.height) * (p.treatment === 'roundabout' ? 1 : 1.05));
-      return im;
-    });
-    c.addAt([bg, ...pics], 0);
+    c.addAt(bg, 0);
+    const photos = stateImages(scene, c, ART, a);
+    c.bringToTop(tags);
     g.setVisible(false);
     const draw2 = () => {
-      pics[0].setVisible(!st.on); pics[1].setVisible(st.on);
+      photos.show(ART[st.on ? 1 : 0]);
       tags.removeAll(true);
       tags.add(label(scene, a.x + a.w / 2, a.y + 20, t(st.on ? 'art.treatment.with' : 'art.treatment.without'), 13, '#FFFFFF', { backgroundColor: '#05080DCC', padding: { x: 6, y: 3 } }));
     };

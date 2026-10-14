@@ -15,7 +15,7 @@ export default async function pickAPoint(ctx, sc) {
   if (!art) return;
   const visited = Object.assign({}, (ctx.saved() || {}).visited);
   const letter = i => String.fromCharCode(65 + i);
-  const pos = p => (art.toScreen ? art.toScreen(p.x, p.y) : { x: p.x, y: p.y });
+  const pos = p => art.pointPosition ? art.pointPosition(p) : (art.toScreen ? art.toScreen(p.x, p.y) : { x: p.x, y: p.y });
   const ui = scene.add.container(0, 0); layer.add(ui);
   const prompt = para(scene, ui, ctx.text(sc.prompt), 748, { size: TYPE.body, color: INK.strong, bold: true });
   let chosen = false;
@@ -34,7 +34,7 @@ export default async function pickAPoint(ctx, sc) {
     draw();
     ui.add(artLabel(scene, p.x, p.y, letter(i), 20, INK.dark));
     if (v) { g.fillStyle(C.navy, 1); g.fillCircle(p.x + 17, p.y - 17, 10); ui.add(artLabel(scene, p.x + 17, p.y - 17, v.symbol, 12, '#FFFFFF')); }
-    const z = scene.add.zone(p.x, p.y, 56, 56).setInteractive({ useHandCursor: true }); ui.add(z);
+    const z = scene.add.zone(p.x, p.y, 68, 68).setInteractive({ useHandCursor: true }); ui.add(z);
     const pick = () => { if (chosen) return; Sfx.init(scene); Sfx.click(); choose(pt, i); };
     z.on('pointerup', pick);
     mirror(z, t('point.label', { letter: letter(i), label: ctx.text(pt.label) }) + (v ? ', ' + t('point.seen') : ''), pick, { onFocus: f => { focused = f; draw(); } });

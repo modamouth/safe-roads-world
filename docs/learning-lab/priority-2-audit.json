@@ -1,0 +1,140 @@
+{
+  "integrated": [
+    {
+      "file": "public/assets/learning-lab/priority-2/top-down/fuel-tanker.png",
+      "size": [
+        1024,
+        1536
+      ],
+      "alphaRange": [
+        0,
+        255
+      ],
+      "alphaBounds": [
+        332,
+        29,
+        692,
+        1506
+      ],
+      "sha256": "52fb0a0fb7cbf89ecd1314967a219fd1dd846e9c44b28de34cc3b5cef3721bdc"
+    },
+    {
+      "file": "public/assets/learning-lab/priority-2/top-down/red-sedan.png",
+      "size": [
+        1024,
+        1536
+      ],
+      "alphaRange": [
+        0,
+        255
+      ],
+      "alphaBounds": [
+        123,
+        31,
+        901,
+        1511
+      ],
+      "sha256": "2015839d2b34df8da897c813b618dd409cc88830ed29c373afb3b864cfe6c66f"
+    },
+    {
+      "file": "public/assets/learning-lab/priority-2/top-down/minibus-taxi.png",
+      "size": [
+        1024,
+        1536
+      ],
+      "alphaRange": [
+        0,
+        255
+      ],
+      "alphaBounds": [
+        180,
+        25,
+        844,
+        1503
+      ],
+      "sha256": "c398e98b1d05814e9b95c2ce96fa1d87a379abcc5423fb1d8d69fc9474408347"
+    },
+    {
+      "file": "public/assets/learning-lab/priority-2/top-down/double-cab-bakkie.png",
+      "size": [
+        1024,
+        1536
+      ],
+      "alphaRange": [
+        0,
+        255
+      ],
+      "alphaBounds": [
+        137,
+        18,
+        888,
+        1501
+      ],
+      "sha256": "47b3ac3b969f8aa814bec923e8ec0a65147a129875c356bf1245181f8b594e80"
+    },
+    {
+      "file": "public/assets/learning-lab/priority-2/top-down/cyclist.png",
+      "size": [
+        1024,
+        1536
+      ],
+      "alphaRange": [
+        0,
+        255
+      ],
+      "alphaBounds": [
+        242,
+        27,
+        783,
+        1506
+      ],
+      "sha256": "b8d93cf3a40e4df56f31da96a1e3b42e5b0013ab2062f27ca39244602b0c95ba"
+    },
+    {
+      "file": "public/assets/learning-lab/priority-2/top-down/pedestrian.png",
+      "size": [
+        1024,
+        1536
+      ],
+      "alphaRange": [
+        0,
+        255
+      ],
+      "alphaBounds": [
+        193,
+        22,
+        852,
+        1503
+      ],
+      "sha256": "6b314452ba13176912594e6b14bf0b5db10ecaae4566231c3980d1983a067eed"
+    },
+    {
+      "file": "public/assets/learning-lab/priority-2/top-down/cyclist-car-safe-pass.png",
+      "size": [
+        1024,
+        1536
+      ],
+      "alphaRange": [
+        0,
+        255
+      ],
+      "alphaBounds": [
+        40,
+        134,
+        1024,
+        1382
+      ],
+      "sha256": "8224e81b975a068bdbf72c4011f3afdb1c12119bab4be46e72ca46fb61497d1c"
+    }
+  ],
+  "unusable": [
+    {
+      "filename": "blue-sedan.png",
+      "reason": "PNG decoding fails: image file is truncated"
+    },
+    {
+      "filename": "motorcycle-rider.png",
+      "reason": "PNG decoding fails: image file is truncated"
+    }
+  ]
+}

@@ -4,6 +4,7 @@
 //   image: texture key of an illustration shown instead of the icon (falls back to the icon).
 import { drawIcon } from '../../icons.js';
 import { COLORS as C } from '../../config.js';
+import { fitImage } from './fit.js';
 import { col, tag } from './common.js';
 
 export default function create(scene, parent, p, a) {
@@ -17,7 +18,7 @@ export default function create(scene, parent, p, a) {
   g.lineStyle(2, tint, 0.6); g.strokeRoundedRect(a.x, a.y, a.w, a.h, 22);
   const size = Math.min(a.w, a.h) * 0.42;
   const pic = p.image && scene.textures.exists(p.image) ? scene.add.image(a.x + a.w / 2, a.y + a.h / 2, p.image) : null;
-  if (pic) pic.setScale(Math.min(a.w * 0.8 / pic.width, a.h * 0.82 / pic.height));
+  if (pic) fitImage(pic, { x: a.x + a.w * 0.1, y: a.y + a.h * 0.09, w: a.w * 0.8, h: a.h * 0.82 });
   else drawIcon(g, p.icon || 'info', a.x + a.w / 2, a.y + a.h / 2, size, 0xFFFFFF);
   (p.extras || []).slice(0, 4).forEach((ic, i) => {
     const ang = -Math.PI * 0.8 + i * (Math.PI * 1.6 / Math.max(1, (p.extras.length - 1) || 1));

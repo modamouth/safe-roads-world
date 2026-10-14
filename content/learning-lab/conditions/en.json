@@ -1,6 +1,6 @@
 {
   "slug": "conditions",
-  "version": 1,
+  "version": 2,
   "status": "draft",
   "locale": "en",
   "order": 7,
@@ -211,7 +211,7 @@
         {
           "id": "depth",
           "type": "toggle-lab",
-          "prompt": "You can't see how deep or fast the water is, or whether the road underneath has washed away. See what different depths do.",
+          "prompt": "Compare water levels. If depth or flow is uncertain, stop and turn around.",
           "art": {
             "kind": "water-crossing",
             "params": {
@@ -236,13 +236,22 @@
           "requireAll": true,
           "states": [
             {
+              "id": "dry",
+              "label": "Dry",
+              "params": {
+                "depthCm": 0,
+                "flowing": false
+              },
+              "caption": "The dry crossing is shown for comparison. If water covers it and depth or flow is uncertain, stop and turn around."
+            },
+            {
               "id": "ankle",
-              "label": "Ankle deep",
+              "label": "Looks shallow",
               "params": {
                 "depthCm": "$claim:int.nws.water-person",
                 "flowing": true
               },
-              "caption": "Fast water only {claim:int.nws.water-person} deep can knock an adult off their feet."
+              "caption": "Fast water only {claim:int.nws.water-person} deep can knock an adult off their feet. Do not enter when depth or flow is uncertain."
             },
             {
               "id": "knee",

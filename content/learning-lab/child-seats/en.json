@@ -1,6 +1,6 @@
 {
   "slug": "child-seats",
-  "version": 1,
+  "version": 2,
   "status": "draft",
   "locale": "en",
   "order": 8,
@@ -54,6 +54,35 @@
             },
             "alt": "Side view of a child seat on the back seat of a car."
           }
+        },
+        {
+          "id": "tighten",
+          "type": "choice",
+          "prompt": "The seat is loose. What should you do before driving?",
+          "art": {
+            "kind": "child-seat",
+            "params": {
+              "view": "install",
+              "firm": false
+            },
+            "alt": "A loosely fitted child seat tipped forward."
+          },
+          "retry": true,
+          "options": [
+            {
+              "id": "tighten",
+              "label": "Tighten and check the fitted restraints",
+              "verdict": "good",
+              "play": true,
+              "reason": "Follow the seat and vehicle instructions. Check the approved belt or anchors and top tether, where required, before every trip."
+            },
+            {
+              "id": "leave",
+              "label": "Leave it loose for a short trip",
+              "verdict": "bad",
+              "reason": "A short trip still needs a correctly fitted restraint."
+            }
+          ]
         },
         {
           "id": "install",

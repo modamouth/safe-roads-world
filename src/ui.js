@@ -1,3 +1,4 @@
+import Phaser from 'phaser';
 import { W, H, Z, COLORS as C, FONT } from './config.js';
 import { Sfx } from './sfx.js';
 import { drawIcon } from './icons.js';

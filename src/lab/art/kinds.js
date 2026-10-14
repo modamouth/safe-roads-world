@@ -2,6 +2,7 @@
 // Each has a module in this folder, loaded on demand by art/index.js.
 // Kept free of Phaser so the content checker can import it.
 export const ART_KINDS = [
+  'traffic-light',  // four signal states in one shared frame
   'card',            // icon vignette on a tinted panel; the default for stories and quizzes
   'rural-road',      // chase view down a Namibian rural road: time of day, surface, weather, animal, braking
   'city-drive',      // chase view down a Windhoek street: a pedestrian steps out, braking at a chosen speed

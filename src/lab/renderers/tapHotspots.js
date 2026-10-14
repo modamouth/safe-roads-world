@@ -42,7 +42,7 @@ export default async function tapHotspots(ctx, sc) {
     });
   };
   sc.items.forEach(it => {
-    const p = pos(it), d = dim(it), z = scene.add.zone(p.x, p.y, Math.max(48, d.w + 12), Math.max(48, d.h + 12)).setInteractive({ useHandCursor: true });
+    const p = pos(it), d = dim(it), z = scene.add.zone(p.x, p.y, Math.max(66, d.w + 12), Math.max(66, d.h + 12)).setInteractive({ useHandCursor: true });
     layer.add(z);
     const toggle = () => { if (checked) return; Sfx.init(scene); Sfx.click(); sel.has(it.id) ? sel.delete(it.id) : sel.add(it.id); check.setEnabled(sel.size > 0); draw(); };
     z.on('pointerup', toggle);

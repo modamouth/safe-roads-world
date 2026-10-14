@@ -1,6 +1,6 @@
 {
   "slug": "road-treatments",
-  "version": 1,
+  "version": 2,
   "status": "draft",
   "locale": "en",
   "order": 10,
@@ -149,6 +149,279 @@
             }
           ],
           "requireAll": true
+        },
+        {
+          "id": "lighting",
+          "type": "toggle-lab",
+          "prompt": "Street lighting: compare the road with and without this treatment.",
+          "art": {
+            "kind": "road-treatment",
+            "params": {
+              "treatment": "lighting"
+            },
+            "alt": "Street lighting on a top-down road."
+          },
+          "requireAll": true,
+          "states": [
+            {
+              "id": "off",
+              "label": "Without",
+              "params": {
+                "on": false
+              },
+              "caption": "Identify the risk before choosing a treatment."
+            },
+            {
+              "id": "on",
+              "label": "With",
+              "params": {
+                "on": true
+              },
+              "caption": "Street lighting improves night-time visibility. Keep scanning for people and hazards."
+            }
+          ]
+        },
+        {
+          "id": "fence",
+          "type": "toggle-lab",
+          "prompt": "Wildlife fencing: compare the road with and without this treatment.",
+          "art": {
+            "kind": "road-treatment",
+            "params": {
+              "treatment": "fence"
+            },
+            "alt": "Wildlife fencing on a top-down road."
+          },
+          "requireAll": true,
+          "states": [
+            {
+              "id": "off",
+              "label": "Without",
+              "params": {
+                "on": false
+              },
+              "caption": "Identify the risk before choosing a treatment."
+            },
+            {
+              "id": "on",
+              "label": "With",
+              "params": {
+                "on": true
+              },
+              "caption": "Wildlife fencing helps keep animals away from the road. Keep watching for gaps and crossings."
+            }
+          ]
+        },
+        {
+          "id": "choose-treatment",
+          "type": "quiz-ladder",
+          "questions": [
+            {
+              "id": "refuge",
+              "kind": "choice",
+              "prompt": "Which treatment helps people cross one direction at a time?",
+              "art": {
+                "kind": "road-treatment",
+                "params": {
+                  "treatment": "refuge",
+                  "on": false
+                },
+                "alt": "A road before a safety treatment is installed."
+              },
+              "options": [
+                {
+                  "id": "refuge",
+                  "label": "Pedestrian refuge island",
+                  "correct": true
+                },
+                {
+                  "id": "lighting",
+                  "label": "Street lighting",
+                  "correct": false
+                },
+                {
+                  "id": "fence",
+                  "label": "Wildlife fencing",
+                  "correct": false
+                },
+                {
+                  "id": "roundabout",
+                  "label": "Roundabout",
+                  "correct": false
+                },
+                {
+                  "id": "rumble",
+                  "label": "Centre-line rumble strips",
+                  "correct": false
+                }
+              ],
+              "reason": "A refuge island splits the crossing into two stages."
+            },
+            {
+              "id": "lighting",
+              "kind": "choice",
+              "prompt": "Which treatment improves visibility at night?",
+              "art": {
+                "kind": "road-treatment",
+                "params": {
+                  "treatment": "lighting",
+                  "on": false
+                },
+                "alt": "A road before a safety treatment is installed."
+              },
+              "options": [
+                {
+                  "id": "refuge",
+                  "label": "Pedestrian refuge island",
+                  "correct": false
+                },
+                {
+                  "id": "lighting",
+                  "label": "Street lighting",
+                  "correct": true
+                },
+                {
+                  "id": "fence",
+                  "label": "Wildlife fencing",
+                  "correct": false
+                },
+                {
+                  "id": "roundabout",
+                  "label": "Roundabout",
+                  "correct": false
+                },
+                {
+                  "id": "rumble",
+                  "label": "Centre-line rumble strips",
+                  "correct": false
+                }
+              ],
+              "reason": "Street lighting helps road users see each other."
+            },
+            {
+              "id": "fence",
+              "kind": "choice",
+              "prompt": "Which treatment reduces wildlife entering the road?",
+              "art": {
+                "kind": "road-treatment",
+                "params": {
+                  "treatment": "fence",
+                  "on": false
+                },
+                "alt": "A road before a safety treatment is installed."
+              },
+              "options": [
+                {
+                  "id": "refuge",
+                  "label": "Pedestrian refuge island",
+                  "correct": false
+                },
+                {
+                  "id": "lighting",
+                  "label": "Street lighting",
+                  "correct": false
+                },
+                {
+                  "id": "fence",
+                  "label": "Wildlife fencing",
+                  "correct": true
+                },
+                {
+                  "id": "roundabout",
+                  "label": "Roundabout",
+                  "correct": false
+                },
+                {
+                  "id": "rumble",
+                  "label": "Centre-line rumble strips",
+                  "correct": false
+                }
+              ],
+              "reason": "Wildlife fencing separates wildlife from traffic."
+            },
+            {
+              "id": "roundabout",
+              "kind": "choice",
+              "prompt": "Which treatment reduces high-speed intersection conflicts?",
+              "art": {
+                "kind": "road-treatment",
+                "params": {
+                  "treatment": "roundabout",
+                  "on": false
+                },
+                "alt": "A road before a safety treatment is installed."
+              },
+              "options": [
+                {
+                  "id": "refuge",
+                  "label": "Pedestrian refuge island",
+                  "correct": false
+                },
+                {
+                  "id": "lighting",
+                  "label": "Street lighting",
+                  "correct": false
+                },
+                {
+                  "id": "fence",
+                  "label": "Wildlife fencing",
+                  "correct": false
+                },
+                {
+                  "id": "roundabout",
+                  "label": "Roundabout",
+                  "correct": true
+                },
+                {
+                  "id": "rumble",
+                  "label": "Centre-line rumble strips",
+                  "correct": false
+                }
+              ],
+              "reason": "A roundabout slows approaches and reduces crossing conflicts."
+            },
+            {
+              "id": "rumble",
+              "kind": "choice",
+              "prompt": "Which treatment warns a driver drifting over the centre line?",
+              "art": {
+                "kind": "road-treatment",
+                "params": {
+                  "treatment": "rumble",
+                  "on": false
+                },
+                "alt": "A road before a safety treatment is installed."
+              },
+              "options": [
+                {
+                  "id": "refuge",
+                  "label": "Pedestrian refuge island",
+                  "correct": false
+                },
+                {
+                  "id": "lighting",
+                  "label": "Street lighting",
+                  "correct": false
+                },
+                {
+                  "id": "fence",
+                  "label": "Wildlife fencing",
+                  "correct": false
+                },
+                {
+                  "id": "roundabout",
+                  "label": "Roundabout",
+                  "correct": false
+                },
+                {
+                  "id": "rumble",
+                  "label": "Centre-line rumble strips",
+                  "correct": true
+                }
+              ],
+              "reason": "Centre-line rumble strips provide noise and vibration."
+            }
+          ]
         },
         {
           "id": "more",

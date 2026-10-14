@@ -6,6 +6,8 @@
 //   params: { carKmh, crossY, shopBrand, spots: { <pointId>: 'yield' | 'nearmiss' | 'wait' } }
 //   toScreen(x, y) for points; play(pointId, vars, point) walks there and shows what happens.
 import { COLORS as C, REDUCE_MOTION } from '../../config.js';
+import { LEARNING_LAB_ASSETS as A } from '../assets.js';
+import { TopDownArt } from './topDown.js';
 import { T } from '../../ui.js';
 import { t } from '../content.js';
 import { clipTo, label, tweenTo, wait } from './common.js';
@@ -49,10 +51,17 @@ export default function create(scene, parent, p, a) {
   const fogG = scene.make.graphics({ x: 0, y: 0, add: false });
   const fog = scene.add.renderTexture(a.x, a.y, a.w, a.h).setOrigin(0).setAlpha(0.58); c.add(fog);
   const parkedG = scene.add.graphics(); c.add(parkedG);
+  const parkedPics = scene.add.container(0, 0); c.add(parkedPics);
+  const carPics = scene.add.container(0, 0); c.addAt(carPics, 2);
+  const pedPics = scene.add.container(0, 0); c.add(pedPics);
+  const parkedArt = new TopDownArt(scene, parkedPics), carArt = new TopDownArt(scene, carPics), pedArt = new TopDownArt(scene, pedPics);
   const pedG = scene.add.graphics(); c.add(pedG);
   const hud = scene.add.container(0, 0); c.add(hud);
 
   const topCar = (g, cx, cy, len, wid, body, kind) => {
+    const art = g === parkedG ? parkedArt : carArt;
+    const key = kind === 'taxi' ? A.topDown.taxi.key : kind === 'bakkie' ? A.topDown.bakkie.key : A.topDown.redSedan.key;
+    if (art.draw(key, cx, cy, wid * S, len * S)) return;
     const L = len * S, w = wid * S;
     g.fillStyle(0x000000, 0.28); g.fillRoundedRect(cx - w / 2 + 2, cy - L / 2 + 3, w, L, 6);
     g.fillStyle(kind === 'taxi' ? 0xF2F2F2 : body, 1); g.fillRoundedRect(cx - w / 2, cy - L / 2, w, L, kind === 'taxi' ? 4 : 7);
@@ -111,7 +120,7 @@ export default function create(scene, parent, p, a) {
     c.add(T(scene, (x0 + a.x + a.w) / 2, (shop0 + shop1) / 2, t('art.cross.shop'), 18, '#FFFFFF', { letterSpacing: 3 }).setAngle(90));
   }
   PARKED_L.forEach(([y0, y1, kind], i) => topCar(parkedG, sx(1.2), sy((y0 + y1) / 2), y1 - y0, kind === 'taxi' ? 2.0 : CAR_W, BODY[i % BODY.length], kind));
-  PARKED_R.forEach(([y0, y1], i) => topCar(parkedG, sx(10.6), sy((y0 + y1) / 2), y1 - y0, CAR_W, BODY[(i + 3) % BODY.length]));
+  PARKED_R.forEach(([y0, y1], i) => topCar(parkedG, sx(10.6), sy((y0 + y1) / 2), y1 - y0, CAR_W, BODY[(i + 3) % BODY.length], i === 0 ? 'bakkie' : undefined));
 
   // --- dynamic ---------------------------------------------------------------------
   const updateFog = () => {
@@ -129,11 +138,13 @@ export default function create(scene, parent, p, a) {
     return [[r.x0, r.y0], [r.x1, r.y0], [r.x0, r.y1], [r.x1, r.y1]].some(([x, y]) => !occ.some(o => segHitsRect(P.x, P.y, x, y, o)));
   };
   const drawDyn = () => {
-    pedG.clear(); carG.clear();
+    pedG.clear(); carG.clear(); carArt.begin(); pedArt.begin();
     const x = sx(st.ped.x), y = sy(st.ped.y);
+    if (!pedArt.draw(A.topDown.pedestrian.key, x, y, .85 * S, 1.8 * S, st.ped.x > 0 ? 90 : 0)) {
     pedG.fillStyle(0x000000, 0.3); pedG.fillEllipse(x + 2, y + 3, 18, 12);
     pedG.fillStyle(0xE8743B, 1); pedG.fillEllipse(x, y, 17, 11);
     pedG.fillStyle(0x2A1A12, 1); pedG.fillCircle(x, y, 5);
+    }
     pedG.lineStyle(2, C.yellow, 0.9); pedG.strokeCircle(x, y, 13);
     if (st.car && canSeeCar()) topCar(carG, sx(NEAR_C), sy(st.car.y - CAR_L / 2), CAR_L, CAR_W, 0xFFFFFF);
   };

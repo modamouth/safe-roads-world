@@ -3,6 +3,7 @@
 //   the levels given in params.marks ([{ cm, label }]).
 //   params: { marks: [{ cm, label }], vehicle: 'car' | 'bakkie' }
 import { COLORS as C, REDUCE_MOTION } from '../../config.js';
+import { fitImage } from './fit.js';
 import { clipTo, label, tweenTo } from './common.js';
 
 export default function create(scene, parent, p, a) {
@@ -55,7 +56,7 @@ export default function create(scene, parent, p, a) {
   const pic = scene.textures.exists('scn_crossing') ? scene.add.image(a.x + a.w / 2, a.y + a.h / 2, 'scn_crossing') : null;
   let PX = null;
   if (pic) {
-    pic.setScale(Math.max(a.w / pic.width, a.h / pic.height) * 1.02);
+    fitImage(pic, a);
     const ix = a.x + a.w / 2 - pic.displayWidth / 2, iy = a.y + a.h / 2 - pic.displayHeight / 2;
     PX = DIP.map(([fx, fy]) => ({ x: ix + fx * pic.displayWidth, y: iy + fy * pic.displayHeight }));
     // The dip is drawn about 1.1 m deep so the water levels are easy to compare (depths exaggerated for clarity).
@@ -70,8 +71,11 @@ export default function create(scene, parent, p, a) {
     (p.marks || []).forEach(mk => {
       const y = bottom - mk.cm * PX.cm;
       post.fillStyle(C.red, 1); post.fillRect(postX - 8, y - 2, 16, 4);
-      const left = (p.marks || []).indexOf(mk) % 2 === 1;   // alternate sides so labels don't overlap
-      tags.add(label(scene, postX + (left ? -14 : 14), y, mk.label, 12, '#0B1B2E', { backgroundColor: '#FFFFFFDD', padding: { x: 4, y: 2 } }).setOrigin(left ? 1 : 0, 0.5));
+      // Containing the wide artwork compresses the depth ticks. Keep labels
+      // in the clear space below it, rather than stacking them on the post.
+      const index = (p.marks || []).indexOf(mk);
+      tags.add(label(scene, a.x + a.w / 2, a.y + a.h - 78 + index * 26,
+        mk.cm + ' cm: ' + mk.label, 13, '#0B1B2E', { backgroundColor: '#FFFFFF', padding: { x: 6, y: 3 } }));
     });
     c.bringToTop(tags);
     PX.bottom = bottom;

@@ -22,14 +22,6 @@ export default class Boot extends Phaser.Scene {
     // file just means Title/Map use their drawn placeholders.
     Object.entries(OPTIONAL_ART).forEach(([name, path]) => this.load.image(optKey(name), path));
     PARKED_VEHICLES.forEach(v => this.load.image(v.key, v.url));
-    // Crash-lab photos and the oncoming vehicle (optional: the art falls back to drawn versions).
-    ['labbg', 'labcar0', 'labcar60', 'labcar80', 'labcar90', 'truck', 'post', 'childseat_firm', 'childseat_loose', 'childseat_slack']
-      .forEach(k => this.load.image('img_' + k, 'assets/' + k + '.webp'));
-    // Illustrated roadside scenery (optional: drawn versions are used if these are missing).
-    ['scn_acacia', 'scn_bush', 'scn_palm', 'scn_lamp', 'scn_kudu', 'scn_kudu_leap', 'scn_donkey',
-      'scn_crossing', 'scn_b1map', 'spot_meds', 'spot_beer', 'spot_phone', 'spot_wheel',
-      'td_road', 'td_rumble', 'td_lighting', 'td_fence', 'td_refuge', 'td_crossroads', 'td_roundabout',
-      'tl_red', 'tl_yellow', 'tl_green', 'tl_off'].forEach(k => this.load.image(k, 'assets/' + k + '.webp'));
     // If any image 404s or fails, don't block the boot — REAL just stays false
     // and the game runs on the drawn fallback art.
     this.load.on('loaderror', () => {});

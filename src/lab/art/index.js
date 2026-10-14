@@ -14,6 +14,7 @@
 // See docs/learning-lab/ENGINE.md.
 // ---------------------------------------------------------------------------
 const LOADERS = {
+  'traffic-light': () => import('./trafficLight.js'),
   card: () => import('./card.js'),
   'rural-road': () => import('./ruralRoad.js'),
   'city-drive': () => import('./cityDrive.js'),

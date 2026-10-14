@@ -7,6 +7,7 @@
 //                'back' | 'knees' | 'sash' | 'lap' | 'stay'
 import { COLORS as C, REDUCE_MOTION } from '../../config.js';
 import { t } from '../content.js';
+import { stateImages } from './fit.js';
 import { clipTo, label, tweenTo } from './common.js';
 
 export default function create(scene, parent, p, a) {
@@ -14,7 +15,7 @@ export default function create(scene, parent, p, a) {
   const g = scene.add.graphics(); c.add(g);
   const tags = scene.add.container(0, 0); c.add(tags);
   const view = p.view || 'install';
-  const st = { ok: view === 'belt' ? !!p.booster : true, k: 0, hi: null };
+  const st = { ok: view === 'belt' ? !!p.booster : view === 'harness' ? !!p.snug : !!p.firm, k: 0, hi: null };
   const u = Math.min(a.w, a.h) / 10, sx = a.x + a.w * 0.62, sy = a.y + a.h * 0.78;
   const CHILD = 0xFFCB2B;
 
@@ -84,32 +85,34 @@ export default function create(scene, parent, p, a) {
   // All three images share one frame: firm/snug (good), loose seat, slack straps.
   const badKey = view === 'harness' ? 'img_childseat_slack' : 'img_childseat_loose';
   const photo = view !== 'belt' && scene.textures.exists('img_childseat_firm') && scene.textures.exists(badKey);
-  let imgGood = null, imgBad = null;
+  let photos = null;
   if (photo) {
     g.fillStyle(0x0E1622, 1); g.fillRoundedRect(a.x, a.y, a.w, a.h, 18);
-    imgGood = scene.add.image(a.x + a.w / 2, a.y + a.h - 6, 'img_childseat_firm').setOrigin(0.5, 1);
-    imgBad = scene.add.image(imgGood.x, imgGood.y, badKey).setOrigin(0.5, 1).setAlpha(0);
-    const sc = Math.min((a.w - 16) / imgGood.width, (a.h - 40) / imgGood.height);
-    imgGood.setScale(sc); imgBad.setScale(sc);
-    c.addAt([imgGood, imgBad], 1);
+    photos = stateImages(scene, c, ['img_childseat_firm', badKey], { x: a.x + 8, y: a.y + 38, w: a.w - 16, h: a.h - 46 });
+    c.bringToTop(tags);
   }
   const drawPhoto = () => {
-    imgBad.setAlpha(st.ok ? 0 : Math.min(1, st.k * 1.6));
-    imgGood.setAlpha(st.ok ? 1 : 1 - Math.min(1, st.k * 1.6));
     tags.removeAll(true);
-    if (st.k >= 1 || (st.ok && st.k === 0 && st.shown)) {
-      const key = view === 'harness' ? (st.ok ? 'art.child.snug' : 'art.child.slack') : (st.ok ? 'art.child.firm' : 'art.child.loose');
-      tag(a.x + a.w / 2, a.y + 22, key, st.ok);
+    const key = view === 'harness' ? (st.ok ? 'art.child.snug' : 'art.child.slack') : (st.ok ? 'art.child.firm' : 'art.child.loose');
+    tag(a.x + a.w / 2, a.y + 22, key, st.ok);
+    // Highlight the straps in normalized source-image coordinates.
+    if (view === 'harness') {
+      const im = photos.images[0], ox = im.x - im.displayWidth / 2, oy = im.y - im.displayHeight / 2;
+      const overlay = scene.add.graphics(); tags.add(overlay);
+      overlay.lineStyle(3, C.yellow, 1);
+      (st.ok ? [[0.5, 0.38], [0.61, 0.51]] : [[0.64, 0.38], [0.68, 0.52]]).forEach(([x, y]) => overlay.strokeCircle(ox + im.displayWidth * x, oy + im.displayHeight * y, im.displayWidth * 0.08));
     }
   };
   const draw = () => { if (photo) { drawPhoto(); return; } g.clear(); tags.removeAll(true); (view === 'harness' ? harness : view === 'belt' ? beltFit : install)(); };
   const inst = {
+    play(id) { return inst.setState({ firm: id === 'tighten' }); },
     highlight(id) { st.hi = id; draw(); },
     async setState(s) {
       if (s.highlight !== undefined) st.hi = s.highlight;
       const v = s.firm !== undefined ? s.firm : s.snug !== undefined ? s.snug : s.booster;
       if (v !== undefined) st.ok = !!v;
       if (view === 'belt') { draw(); return; }
+      if (photos) { photos.show(st.ok ? 'img_childseat_firm' : badKey); draw(); return; }
       st.k = 0; st.shown = true; draw();
       await tweenTo(scene, st, { k: 1 }, REDUCE_MOTION ? 0 : 700, REDUCE_MOTION);
       draw();
@@ -117,6 +120,7 @@ export default function create(scene, parent, p, a) {
     update() { if (st.k > 0 && st.k < 1) draw(); },
     destroy() {}
   };
+  if (photos) photos.show(st.ok ? 'img_childseat_firm' : badKey);
   draw();
   const m = clipTo(scene, c, a);
   inst.destroy = () => { c.destroy(); m.destroy(); };

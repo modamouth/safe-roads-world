@@ -71,13 +71,14 @@ export function mirror(obj, label, onActivate, o = {}) {
   const setLabel = l => { el.textContent = typeof l === 'function' ? l() : l; };
   setLabel(label);
   el.addEventListener('click', () => { if (!el.disabled) onActivate(); });
-  if (o.onFocus) { el.addEventListener('focus', () => o.onFocus(true)); el.addEventListener('blur', () => o.onFocus(false)); }
+  let alive = true;
+  if (o.onFocus) { el.addEventListener('focus', () => { if (alive) o.onFocus(true); }); el.addEventListener('blur', () => { if (alive) o.onFocus(false); }); }
   if (o.testId) el.dataset.testid = o.testId;
   controls.appendChild(el);
   const e = { obj, el, isEnabled: o.isEnabled, isPressed: o.isPressed };
   entries.add(e);
   el.hidden = !shown(obj);
-  obj.once('destroy', () => { entries.delete(e); el.remove(); });
+  obj.once('destroy', () => { alive = false; entries.delete(e); el.remove(); });
   return { el, setLabel };
 }
 

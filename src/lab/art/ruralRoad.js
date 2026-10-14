@@ -281,7 +281,7 @@ export default function create(scene, parent, p, a, ctx) {
         r.t += dt;
         // the kudu leaps out from the verge and across the road
         const k = clamp((r.t - 0.15) / 1.5, 0, 1);
-        animal.xm = -4.6 + 12.9 * k; animal.hop = k > 0 && k < 1 ? Math.abs(Math.sin(k * Math.PI * 3)) * 0.6 : 0;
+        animal.xm = -4.6 + 12.9 * k; animal.hop = k > 0 && k < 1 ? Math.sin(k * Math.PI) * 0.6 : 0;
         if (scene.textures.exists('scn_kudu_leap')) animal.setTexture(animal.hop > 0.15 ? 'scn_kudu_leap' : 'scn_kudu');
         if (r.choice === 'brake') {
           if (r.t > 0.6) {
@@ -356,6 +356,7 @@ export default function create(scene, parent, p, a, ctx) {
     run = null;
     if (r.choice === 'brake') {
       animal.xm = 8.3; animal.hop = 0;
+      if (scene.textures.exists('scn_kudu')) animal.setTexture('scn_kudu');
       hud.add(label(scene, a.x + a.w / 2, a.y + 22, t('art.road.lane'), 15, '#FFFFFF', { backgroundColor: '#1E6B45', padding: { x: 8, y: 4 } }));
     } else {
       st.drift = 3.6; if (!r.crashed) car.angle = 0;

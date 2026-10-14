@@ -24,6 +24,8 @@ import { buildFlow, needsNotice, topicOf, nextTopic } from './core/flow.js';
 import { labEvent, progress, labPoints } from './analytics.js';
 import { RENDERERS } from './renderers/index.js';
 import { loadArt, DEFAULT_AREA } from './art/index.js';
+import { LAB_ASSET_LIST } from './assets.js';
+import { loadLabAssets } from './loadAssets.js';
 import { para, heading, footnote } from './kit.js';
 
 // Player-facing strings inside art params; their {claim:...} tokens are filled before the art sees them.
@@ -36,12 +38,13 @@ export default class LabRunner extends Phaser.Scene {
     setupCam(this);
     Sfx.init(this);
     this.cameras.main.fadeIn(220, 8, 17, 30);
+    this.artVisit = {}; this.exitLab = false;
     this.leaving = false; this.arts = []; this.foot = null; // scene instances are reused between visits
     this.d = data || {};
     this.exp = experience(this.d.slug);
     duskBg(this);
     this.layer = this.add.container(0, 0).setDepth(10);
-    this.events.once('shutdown', () => { this.arts.slice().forEach(a => a.destroy()); this.arts = []; });
+    this.events.once('shutdown', () => { this.arts.slice().forEach(a => a.destroy()); this.arts = []; if (this.exitLab) LAB_ASSET_LIST.forEach(a => { if (this.textures.exists(a.key)) this.textures.remove(a.key); }); });
     if (!this.exp) { this.chrome(() => this.go('LabMenu')); T(this, W / 2, H / 2, t('lab.missing'), 26, INK.strong); return; }
 
     const screen = this.d.screen || 'intro';
@@ -59,6 +62,7 @@ export default class LabRunner extends Phaser.Scene {
   // --- navigation ----------------------------------------------------------------
   go(key, data) {
     if (this.leaving) return; this.leaving = true;
+    this.exitLab = key !== 'LabRunner';
     this.cameras.main.fadeOut(200, 8, 17, 30);
     this.cameras.main.once('camerafadeoutcomplete', () => this.scene.start(key, data));
   }
@@ -193,8 +197,8 @@ export default class LabRunner extends Phaser.Scene {
       score: (score, total) => progress.setScore(e.slug, topic.id, e.version, { score, total }),
       next: () => this.nextScene(flow, at),
       again: () => this.open({ screen: 'scene', topic: topic.id, at }),
-      primary: (label, cb, y, o) => button(this, W / 2, y || BAND.primaryY, (o && o.w) || 280, 64, label, cb, Object.assign({ size: 23, fill: C.yellow, fillA: 1, color: INK.dark }, o)),
-      secondary: (label, cb, y, o) => button(this, W / 2, y || BAND.primaryY, (o && o.w) || 260, 58, label, cb, Object.assign({ size: 19, fill: C.navy, fillA: 0.95, stroke: 0xFFFFFF }, o)),
+      primary: (label, cb, y, o) => button(this, W / 2, y || BAND.primaryY, (o && o.w) || 280, 64, label, cb, Object.assign({ hitH: 66, size: 23, fill: C.yellow, fillA: 1, color: INK.dark }, o)),
+      secondary: (label, cb, y, o) => button(this, W / 2, y || BAND.primaryY, (o && o.w) || 260, 58, label, cb, Object.assign({ hitH: 66, size: 19, fill: C.navy, fillA: 0.95, stroke: 0xFFFFFF }, o)),
       art: (spec, area) => this.makeArt(spec, area),
       describe: (h, lines) => describe(h, lines),
       announce,
@@ -223,9 +227,12 @@ export default class LabRunner extends Phaser.Scene {
   async makeArt(spec, area) {
     const a = Object.assign({}, DEFAULT_AREA, area || {});
     const loading = T(this, a.x + a.w / 2, a.y + a.h / 2, t('lab.loading'), TYPE.small, INK.muted, { fontStyle: 'normal' });
+    const visit = this.artVisit;
     const create = await loadArt(spec.kind);
+    if (visit !== this.artVisit || !this.scene.isActive()) return null;
+    await loadLabAssets(this, spec);
+    if (visit !== this.artVisit || !this.scene.isActive()) return null;
     loading.destroy();
-    if (!this.scene.isActive()) return null;
     const vars = this.ctx ? this.ctx.vars : {};
     const fillLabels = o => (Array.isArray(o) ? o.map(fillLabels) : o && typeof o === 'object'
       ? Object.fromEntries(Object.entries(o).map(([k, v]) => [k, typeof v === 'string' && LABEL_KEYS.has(k) ? text(v, vars) : fillLabels(v)])) : o);

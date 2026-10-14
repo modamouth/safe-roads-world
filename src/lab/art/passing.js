@@ -4,6 +4,8 @@
 // labelled danger zone (not colour alone).
 //   params: { safeM, kmh, scene: 'town' | 'rural' }
 import { COLORS as C, REDUCE_MOTION } from '../../config.js';
+import { LEARNING_LAB_ASSETS as A } from '../assets.js';
+import { TopDownArt } from './topDown.js';
 import { t } from '../content.js';
 import { clipTo, label, tweenTo } from './common.js';
 
@@ -11,6 +13,8 @@ export default function create(scene, parent, p, a) {
   const c = scene.add.container(0, 0); parent.add(c);
   const g = scene.add.graphics(); c.add(g);
   const fx = scene.add.graphics(); c.add(fx);
+  const pictures = scene.add.container(0, 0); c.add(pictures);
+  const art = new TopDownArt(scene, pictures);
   const txt = scene.add.container(0, 0); c.add(txt);
   const S = a.w / 13;                        // px per metre across
   const roadL = a.x + a.w / 2 - 3.6 * S, roadR = a.x + a.w / 2 + 3.6 * S, mid = a.x + a.w / 2;
@@ -20,6 +24,7 @@ export default function create(scene, parent, p, a) {
   const rural = p.scene === 'rural';
 
   const draw = () => {
+    art.begin();
     g.clear(); fx.clear(); txt.removeAll(true);
     g.fillStyle(rural ? 0xC9A877 : 0xBFB59E, 1); g.fillRect(a.x, a.y, a.w, a.h);           // verge / sidewalk
     if (rural) { for (let i = 0; i < 9; i++) { g.fillStyle(0x8C9B54, 0.8); g.fillCircle(a.x + 20 + (i * 53) % (a.w - 40), a.y + ((i * 97 + st.scroll * 8) % a.h), 9); } }
@@ -29,18 +34,22 @@ export default function create(scene, parent, p, a) {
 
     // cyclist (top-down): wheels, body, helmet
     const bx = bikeX, byy = bikeY + Math.sin(st.bob) * 1.5;
+    if (!art.draw(A.topDown.cyclist.key, bx, byy, .7 * S, 1.8 * S)) {
     g.fillStyle(0x222222, 1); g.fillRoundedRect(bx - 3, byy - 0.9 * S, 6, 1.8 * S, 3);
     g.fillStyle(0x2E9E5B, 1); g.fillRoundedRect(bx - 9, byy - 10, 18, 20, 6);
     g.fillStyle(0xFFCB2B, 1); g.fillCircle(bx, byy - 4, 7);
 
+    }
     // car: outer edge of the cyclist + gap + half the car width
     const carW = 1.8 * S, carL = 4.5 * S;
     const cx = bx + 0.35 * S + st.gap * S + carW / 2, cy = st.y;
+    if (!art.draw(A.topDown.redSedan.key, cx, cy, carW, carL)) {
     g.fillStyle(0x000000, 0.25); g.fillRoundedRect(cx - carW / 2 + 3, cy - carL / 2 + 4, carW, carL, 8);
     g.fillStyle(0xF4F5F6, 1); g.fillRoundedRect(cx - carW / 2, cy - carL / 2, carW, carL, 8);
     g.fillStyle(0x1D2733, 0.92); g.fillRoundedRect(cx - carW * 0.38, cy - carL * 0.3, carW * 0.76, carL * 0.13, 3);
     g.fillRoundedRect(cx - carW * 0.34, cy + carL * 0.24, carW * 0.68, carL * 0.1, 3);
 
+    }
     // the side gap, measured at the moment the car is beside the rider
     const gx0 = bx + 0.35 * S, gx1 = gx0 + st.gap * S, unsafe = st.gap < p.safeM;
     const zy0 = bikeY - 1.6 * S, zy1 = bikeY + 1.6 * S;
@@ -58,7 +67,7 @@ export default function create(scene, parent, p, a) {
       await tweenTo(scene, st, { y: bikeY }, REDUCE_MOTION ? 0 : 1300, REDUCE_MOTION);
       draw();
     },
-    update(t, dt) { st.scroll += dt * (p.kmh || 50) / 36; st.bob += dt * 8; draw(); },
+    update(t, dt) { if (!REDUCE_MOTION) { st.scroll += dt * (p.kmh || 50) / 36; st.bob += dt * 8; } draw(); },
     destroy() {}
   };
   draw();

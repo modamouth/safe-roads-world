@@ -13,6 +13,11 @@ export default defineConfig({
   reporter: process.env.CI ? 'github' : 'list',
   use: {
     baseURL: 'http://localhost:' + PORT,
+    ...(process.env.PLAYWRIGHT_CHANNEL ? { channel: process.env.PLAYWRIGHT_CHANNEL } : {}),
+    launchOptions: {
+      ...(process.env.PLAYWRIGHT_EXECUTABLE ? { executablePath: process.env.PLAYWRIGHT_EXECUTABLE } : {}),
+      args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader']
+    },
     ...devices['Pixel 7'],
     reducedMotion: 'reduce',
     trace: 'retain-on-failure'

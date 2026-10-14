@@ -6,6 +6,8 @@
 //   the light; the scene freezes before any contact (no collision is shown) and
 //   writes vars.truckKmh, the truck's speed when it reaches your car.
 import { COLORS as C, clamp, REDUCE_MOTION } from '../../config.js';
+import { LEARNING_LAB_ASSETS as A } from '../assets.js';
+import { TopDownArt } from './topDown.js';
 import { clipTo } from './common.js';
 
 const L_LANE = -1.75, R_LANE = 1.75, TRUCK_L = 16.5, TRUCK_W = 2.5, CAR_L = 4.5, CAR_W = 1.85;
@@ -14,6 +16,8 @@ const LINE = 100, FREEZE_GAP = 3;
 export default function create(scene, parent, p, a) {
   const c = scene.add.container(0, 0); parent.add(c);
   const g = scene.add.graphics(); c.add(g);
+  const pictures = scene.add.container(0, 0); c.add(pictures);
+  const art = new TopDownArt(scene, pictures);
   const S = Math.min(12, a.w / 34), X0 = a.x + a.w / 2 - 3.5 * S, CAM0 = a.y + a.h * 0.62;
   const v = p.speedKmh / 3.6;
   const st = { phase: 'cruise', light: 'green', camY: 0, tc: 0, dim: false };
@@ -28,9 +32,12 @@ export default function create(scene, parent, p, a) {
 
   const carTop = (x, yFront, body, brake, rot, ring) => {
     const w = CAR_W * S, l = CAR_L * S, cx = sx(x), top = rot ? sy(yFront + CAR_L) : sy(yFront);
+    const photo = art.draw(rot ? A.topDown.bakkie.key : A.topDown.redSedan.key, cx, top + l / 2, w, l, rot ? 180 : 0);
+    if (!photo) {
     g.fillStyle(0x000000, 0.28); g.fillRoundedRect(cx - w / 2 + 2, top + 2, w, l, 4);
     g.fillStyle(body, 1); g.fillRoundedRect(cx - w / 2, top, w, l, 4);
     g.fillStyle(0x1D2733, 0.9); g.fillRect(cx - w * 0.36, top + l * (rot ? 0.62 : 0.22), w * 0.72, l * 0.13);
+    }
     if (brake && !rot) { g.fillStyle(0xFF2A2A, 1); g.fillRect(cx - w / 2, top + l - 2, 4, 3); g.fillRect(cx + w / 2 - 4, top + l - 2, 4, 3); }
     if (ring) { g.lineStyle(2, C.teal, 1); g.strokeRoundedRect(cx - w / 2 - 4, top - 4, w + 8, l + 8, 6); }
   };
@@ -44,7 +51,7 @@ export default function create(scene, parent, p, a) {
     if (truck.brake) { g.fillStyle(0xFF2A2A, 1); g.fillRect(cx - w / 2, top + TRUCK_L * S - 3, 5, 3); g.fillRect(cx + w / 2 - 5, top + TRUCK_L * S - 3, 5, 3); }
   };
   const draw = () => {
-    g.clear();
+    g.clear(); art.begin();
     g.fillStyle(0x6E8A4E, 1); g.fillRoundedRect(a.x, a.y, a.w, a.h, 18);
     g.fillStyle(0x4E4D52, 1); g.fillRect(sx(-3.8), a.y, 7.6 * S, a.h); g.fillRect(sx(5.4), a.y, 7.6 * S, a.h);
     g.fillStyle(0xB9B6AE, 1); g.fillRect(sx(3.8), a.y, 1.6 * S, a.h);
@@ -119,7 +126,7 @@ export default function create(scene, parent, p, a) {
     },
     destroy() {}
   };
-  if (tlImg) { c.add(tlImg); const upd = inst.update; inst.update = (t2, dt) => { upd(t2, dt); tlImg.setTexture('tl_' + st.light); c.bringToTop(tlImg); }; }
+  if (tlImg) { c.add(tlImg); const upd = inst.update; inst.update = (t2, dt) => { upd(t2, dt); tlImg.setVisible(scene.textures.exists('tl_' + st.light)); if (tlImg.visible) tlImg.setTexture('tl_' + st.light); c.bringToTop(tlImg); }; }
   function finish(kmh) { const d = done; done = null; if (d) d(kmh); }
   draw();
   const m = clipTo(scene, c, a);

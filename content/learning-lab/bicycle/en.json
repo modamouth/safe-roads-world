@@ -50,22 +50,21 @@
           "type": "story",
           "lines": [
             "You're driving out of town on a two-lane road. A cyclist is riding ahead of you, close to the edge.",
-            "There's no oncoming traffic yet. You want to pass."
+            "There's no oncoming traffic yet. You want to pass.",
+            "The illustration shows the road users to watch for. In the comparison, the drawn distance markers show the gap to leave."
           ],
           "art": {
-            "kind": "passing",
+            "kind": "card",
             "params": {
-              "safeM": "$claim:int.uk.cyclist-gap",
-              "kmh": 60,
-              "scene": "rural"
+              "image": "lab-td-cyclist-car-safe-pass"
             },
-            "alt": "Top-down view of a car behind a cyclist on a two-lane road."
+            "alt": "A top-down reference illustration of a red car alongside a cyclist. The illustration is not a distance measurement."
           }
         },
         {
           "id": "gap",
           "type": "toggle-lab",
-          "prompt": "Wind from a passing car can push a cyclist sideways, and they may swerve around a pothole. Compare how much space you leave.",
+          "prompt": "Compare the gap. Leave room for wind and for a cyclist avoiding potholes.",
           "art": {
             "kind": "passing",
             "params": {

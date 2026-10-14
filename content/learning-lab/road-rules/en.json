@@ -1,6 +1,6 @@
 {
   "slug": "road-rules",
-  "version": 1,
+  "version": 2,
   "status": "draft",
   "locale": "en",
   "order": 9,
@@ -36,6 +36,50 @@
           ],
           "answerClaim": "na.law.speed-urban",
           "unit": "km/h"
+        },
+        {
+          "id": "signal-states",
+          "type": "toggle-lab",
+          "prompt": "Compare the signals. Yellow means stop when you can do so safely; never accelerate to beat it.",
+          "art": {
+            "kind": "traffic-light",
+            "alt": "One traffic signal changing between off, red, yellow and green."
+          },
+          "requireAll": true,
+          "states": [
+            {
+              "id": "off",
+              "label": "Off",
+              "params": {
+                "light": "off"
+              },
+              "caption": "Treat a junction with dead signals as a four-way stop."
+            },
+            {
+              "id": "red",
+              "label": "Red",
+              "params": {
+                "light": "red"
+              },
+              "caption": "Stop behind the stop line."
+            },
+            {
+              "id": "yellow",
+              "label": "Yellow",
+              "params": {
+                "light": "yellow"
+              },
+              "caption": "Stop if you can safely. Yellow does not mean accelerate."
+            },
+            {
+              "id": "green",
+              "label": "Green",
+              "params": {
+                "light": "green"
+              },
+              "caption": "Proceed only when the way is clear; watch for people crossing."
+            }
+          ]
         },
         {
           "id": "quiz",

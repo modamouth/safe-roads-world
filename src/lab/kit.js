@@ -44,9 +44,9 @@ export function option(scene, parent, box, label, onTap, o) {
   const { x, y, w, h } = box;
   const c = scene.add.container(x, y);
   const g = scene.add.graphics();
-  const t = scene.add.text(0, 0, label, style(o.size || TYPE.lead, INK.strong, { fontStyle: 'bold', align: 'center', wordWrap: { width: w - 56 } })).setOrigin(0.5);
+  const t = scene.add.text(o.compact ? -10 : 0, 0, label, style(o.size || TYPE.lead, INK.strong, { fontStyle: 'bold', align: 'center', wordWrap: { width: w - (o.compact ? 44 : 56) } })).setOrigin(0.5);
   const mark = scene.add.text(w / 2 - 22, 0, '', style(20, INK.dark, { fontStyle: 'bold' })).setOrigin(0.5);
-  const zone = scene.add.zone(0, 0, w, Math.max(h, 48)).setInteractive({ useHandCursor: true });
+  const zone = scene.add.zone(0, 0, w, Math.max(h, 66)).setInteractive({ useHandCursor: true });
   c.add([g, t, mark, zone]);
   c.hi = false; c.focused = false; c.enabled = true; c.state = null;  // state: null | 'ok' | 'wrong' | 'missed' | 'answer'
   c.redraw = () => {
@@ -120,7 +120,7 @@ export function segmented(scene, parent, states, y, onPick, current) {
   let cur = current;
   const buttons = states.map((s, i) => {
     const c = option(scene, parent, { x: x0 + i * (w + gap), y, w, h }, s.label, () => { cur = s.id; buttons.forEach(b => b.redraw()); onPick(s); },
-      { selected: () => cur === s.id, size: TYPE.body, a11y: s.a11y || s.label });
+      { compact: true, selected: () => cur === s.id, size: n === 4 ? 20 : TYPE.body, a11y: s.a11y || s.label });
     return c;
   });
   return { buttons, setCurrent: id => { cur = id; buttons.forEach(b => b.redraw()); } };

@@ -1,0 +1,662 @@
+[
+  {
+    "file": "public/assets/childseat_firm.webp",
+    "width": 761,
+    "height": 720,
+    "alphaRange": [
+      0,
+      255
+    ],
+    "alphaBounds": [
+      0,
+      0,
+      713,
+      720
+    ]
+  },
+  {
+    "file": "public/assets/childseat_loose.webp",
+    "width": 761,
+    "height": 720,
+    "alphaRange": [
+      0,
+      255
+    ],
+    "alphaBounds": [
+      0,
+      0,
+      761,
+      720
+    ]
+  },
+  {
+    "file": "public/assets/childseat_slack.webp",
+    "width": 761,
+    "height": 720,
+    "alphaRange": [
+      0,
+      255
+    ],
+    "alphaBounds": [
+      0,
+      0,
+      761,
+      720
+    ]
+  },
+  {
+    "file": "public/assets/city_backdrop.webp",
+    "width": 564,
+    "height": 352,
+    "alphaRange": [
+      255,
+      255
+    ],
+    "alphaBounds": [
+      0,
+      0,
+      564,
+      352
+    ]
+  },
+  {
+    "file": "public/assets/hero_passport.webp",
+    "width": 620,
+    "height": 1100,
+    "alphaRange": [
+      0,
+      255
+    ],
+    "alphaBounds": [
+      0,
+      0,
+      620,
+      1100
+    ]
+  },
+  {
+    "file": "public/assets/labbg.webp",
+    "width": 800,
+    "height": 427,
+    "alphaRange": [
+      255,
+      255
+    ],
+    "alphaBounds": [
+      0,
+      0,
+      800,
+      427
+    ]
+  },
+  {
+    "file": "public/assets/labcar0.webp",
+    "width": 760,
+    "height": 335,
+    "alphaRange": [
+      0,
+      255
+    ],
+    "alphaBounds": [
+      0,
+      0,
+      760,
+      335
+    ]
+  },
+  {
+    "file": "public/assets/labcar60.webp",
+    "width": 760,
+    "height": 335,
+    "alphaRange": [
+      0,
+      255
+    ],
+    "alphaBounds": [
+      0,
+      0,
+      760,
+      335
+    ]
+  },
+  {
+    "file": "public/assets/labcar80.webp",
+    "width": 760,
+    "height": 335,
+    "alphaRange": [
+      0,
+      255
+    ],
+    "alphaBounds": [
+      0,
+      0,
+      760,
+      335
+    ]
+  },
+  {
+    "file": "public/assets/labcar90.webp",
+    "width": 760,
+    "height": 335,
+    "alphaRange": [
+      0,
+      255
+    ],
+    "alphaBounds": [
+      0,
+      0,
+      755,
+      335
+    ]
+  },
+  {
+    "file": "public/assets/map_bg.webp",
+    "width": 941,
+    "height": 1672,
+    "alphaRange": [
+      255,
+      255
+    ],
+    "alphaBounds": [
+      0,
+      0,
+      941,
+      1672
+    ]
+  },
+  {
+    "file": "public/assets/post.webp",
+    "width": 60,
+    "height": 326,
+    "alphaRange": [
+      0,
+      255
+    ],
+    "alphaBounds": [
+      0,
+      0,
+      60,
+      326
+    ]
+  },
+  {
+    "file": "public/assets/scn_acacia.webp",
+    "width": 593,
+    "height": 560,
+    "alphaRange": [
+      0,
+      255
+    ],
+    "alphaBounds": [
+      0,
+      0,
+      593,
+      560
+    ]
+  },
+  {
+    "file": "public/assets/scn_b1map.webp",
+    "width": 582,
+    "height": 900,
+    "alphaRange": [
+      0,
+      255
+    ],
+    "alphaBounds": [
+      0,
+      0,
+      582,
+      900
+    ]
+  },
+  {
+    "file": "public/assets/scn_bush.webp",
+    "width": 422,
+    "height": 360,
+    "alphaRange": [
+      0,
+      255
+    ],
+    "alphaBounds": [
+      0,
+      0,
+      422,
+      360
+    ]
+  },
+  {
+    "file": "public/assets/scn_crossing.webp",
+    "width": 1285,
+    "height": 440,
+    "alphaRange": [
+      0,
+      255
+    ],
+    "alphaBounds": [
+      0,
+      0,
+      1285,
+      440
+    ]
+  },
+  {
+    "file": "public/assets/scn_donkey.webp",
+    "width": 514,
+    "height": 420,
+    "alphaRange": [
+      0,
+      255
+    ],
+    "alphaBounds": [
+      0,
+      0,
+      514,
+      420
+    ]
+  },
+  {
+    "file": "public/assets/scn_kudu.webp",
+    "width": 496,
+    "height": 480,
+    "alphaRange": [
+      0,
+      255
+    ],
+    "alphaBounds": [
+      0,
+      0,
+      496,
+      480
+    ]
+  },
+  {
+    "file": "public/assets/scn_kudu_leap.webp",
+    "width": 730,
+    "height": 480,
+    "alphaRange": [
+      0,
+      255
+    ],
+    "alphaBounds": [
+      0,
+      0,
+      730,
+      480
+    ]
+  },
+  {
+    "file": "public/assets/scn_lamp.webp",
+    "width": 218,
+    "height": 600,
+    "alphaRange": [
+      0,
+      255
+    ],
+    "alphaBounds": [
+      0,
+      0,
+      218,
+      600
+    ]
+  },
+  {
+    "file": "public/assets/scn_palm.webp",
+    "width": 354,
+    "height": 600,
+    "alphaRange": [
+      0,
+      255
+    ],
+    "alphaBounds": [
+      0,
+      0,
+      354,
+      600
+    ]
+  },
+  {
+    "file": "public/assets/sky.webp",
+    "width": 1008,
+    "height": 690,
+    "alphaRange": [
+      255,
+      255
+    ],
+    "alphaBounds": [
+      0,
+      0,
+      1008,
+      690
+    ]
+  },
+  {
+    "file": "public/assets/spot_beer.webp",
+    "width": 264,
+    "height": 420,
+    "alphaRange": [
+      0,
+      255
+    ],
+    "alphaBounds": [
+      0,
+      0,
+      264,
+      420
+    ]
+  },
+  {
+    "file": "public/assets/spot_meds.webp",
+    "width": 438,
+    "height": 420,
+    "alphaRange": [
+      0,
+      255
+    ],
+    "alphaBounds": [
+      0,
+      0,
+      438,
+      420
+    ]
+  },
+  {
+    "file": "public/assets/spot_phone.webp",
+    "width": 340,
+    "height": 420,
+    "alphaRange": [
+      0,
+      255
+    ],
+    "alphaBounds": [
+      0,
+      0,
+      340,
+      420
+    ]
+  },
+  {
+    "file": "public/assets/spot_wheel.webp",
+    "width": 427,
+    "height": 420,
+    "alphaRange": [
+      0,
+      255
+    ],
+    "alphaBounds": [
+      0,
+      0,
+      427,
+      420
+    ]
+  },
+  {
+    "file": "public/assets/suv.webp",
+    "width": 420,
+    "height": 388,
+    "alphaRange": [
+      0,
+      255
+    ],
+    "alphaBounds": [
+      0,
+      0,
+      420,
+      388
+    ]
+  },
+  {
+    "file": "public/assets/td_crossroads.webp",
+    "width": 655,
+    "height": 640,
+    "alphaRange": [
+      0,
+      255
+    ],
+    "alphaBounds": [
+      0,
+      0,
+      655,
+      640
+    ]
+  },
+  {
+    "file": "public/assets/td_fence.webp",
+    "width": 368,
+    "height": 800,
+    "alphaRange": [
+      0,
+      255
+    ],
+    "alphaBounds": [
+      5,
+      0,
+      360,
+      800
+    ]
+  },
+  {
+    "file": "public/assets/td_lighting.webp",
+    "width": 368,
+    "height": 800,
+    "alphaRange": [
+      0,
+      255
+    ],
+    "alphaBounds": [
+      51,
+      0,
+      315,
+      800
+    ]
+  },
+  {
+    "file": "public/assets/td_refuge.webp",
+    "width": 368,
+    "height": 800,
+    "alphaRange": [
+      0,
+      255
+    ],
+    "alphaBounds": [
+      0,
+      0,
+      368,
+      800
+    ]
+  },
+  {
+    "file": "public/assets/td_road.webp",
+    "width": 368,
+    "height": 800,
+    "alphaRange": [
+      0,
+      255
+    ],
+    "alphaBounds": [
+      21,
+      0,
+      345,
+      800
+    ]
+  },
+  {
+    "file": "public/assets/td_roundabout.webp",
+    "width": 640,
+    "height": 640,
+    "alphaRange": [
+      0,
+      255
+    ],
+    "alphaBounds": [
+      0,
+      0,
+      640,
+      640
+    ]
+  },
+  {
+    "file": "public/assets/td_rumble.webp",
+    "width": 368,
+    "height": 800,
+    "alphaRange": [
+      0,
+      255
+    ],
+    "alphaBounds": [
+      36,
+      0,
+      332,
+      800
+    ]
+  },
+  {
+    "file": "public/assets/tl_green.webp",
+    "width": 201,
+    "height": 420,
+    "alphaRange": [
+      0,
+      255
+    ],
+    "alphaBounds": [
+      0,
+      0,
+      201,
+      420
+    ]
+  },
+  {
+    "file": "public/assets/tl_off.webp",
+    "width": 201,
+    "height": 420,
+    "alphaRange": [
+      0,
+      255
+    ],
+    "alphaBounds": [
+      18,
+      8,
+      183,
+      420
+    ]
+  },
+  {
+    "file": "public/assets/tl_red.webp",
+    "width": 201,
+    "height": 420,
+    "alphaRange": [
+      0,
+      255
+    ],
+    "alphaBounds": [
+      0,
+      6,
+      201,
+      413
+    ]
+  },
+  {
+    "file": "public/assets/tl_yellow.webp",
+    "width": 201,
+    "height": 420,
+    "alphaRange": [
+      0,
+      255
+    ],
+    "alphaBounds": [
+      36,
+      4,
+      164,
+      415
+    ]
+  },
+  {
+    "file": "public/assets/truck.webp",
+    "width": 380,
+    "height": 358,
+    "alphaRange": [
+      0,
+      255
+    ],
+    "alphaBounds": [
+      0,
+      0,
+      380,
+      358
+    ]
+  },
+  {
+    "file": "public/assets/veh_bakkie.webp",
+    "width": 347,
+    "height": 320,
+    "alphaRange": [
+      0,
+      255
+    ],
+    "alphaBounds": [
+      0,
+      0,
+      347,
+      320
+    ]
+  },
+  {
+    "file": "public/assets/veh_sedan_blue.webp",
+    "width": 423,
+    "height": 320,
+    "alphaRange": [
+      0,
+      255
+    ],
+    "alphaBounds": [
+      0,
+      0,
+      423,
+      320
+    ]
+  },
+  {
+    "file": "public/assets/veh_sedan_white.webp",
+    "width": 399,
+    "height": 320,
+    "alphaRange": [
+      0,
+      255
+    ],
+    "alphaBounds": [
+      0,
+      0,
+      399,
+      320
+    ]
+  },
+  {
+    "file": "public/assets/veh_taxi.webp",
+    "width": 315,
+    "height": 320,
+    "alphaRange": [
+      0,
+      255
+    ],
+    "alphaBounds": [
+      0,
+      0,
+      315,
+      320
+    ]
+  },
+  {
+    "file": "public/assets/veh_truck.webp",
+    "width": 268,
+    "height": 320,
+    "alphaRange": [
+      0,
+      255
+    ],
+    "alphaBounds": [
+      0,
+      0,
+      268,
+      320
+    ]
+  }
+]
