@@ -30,9 +30,10 @@ export const LEARNING_LAB_ASSETS = {
   childSeat: { firm: asset('childseat_firm', true), loose: asset('childseat_loose', true), harnessLoose: asset('childseat_slack', true) },
   animals: { kudu: { key: 'scn_kudu', path: 'assets/learning-lab/priority-3/animals/kudu-standing.png' }, kuduLeaping: { key: 'scn_kudu_leap', path: 'assets/learning-lab/priority-3/animals/kudu-leaping.png' }, donkey: { key: 'scn_donkey', path: 'assets/learning-lab/priority-3/animals/grey-donkey-clean.png', bounds: [192, 0, 1438, 1018] }, cow: { key: 'lab-nguni-cow', path: 'assets/learning-lab/priority-2/animals/nguni-cow.png' } },
   scenery: { acacia: { key: 'scn_acacia', path: 'assets/learning-lab/priority-3/scenery/acacia-tree.png' }, bush: { key: 'scn_bush', path: 'assets/learning-lab/priority-3/scenery/savanna-bush.png' }, palm: { key: 'scn_palm', path: 'assets/learning-lab/priority-3/scenery/palm-tree.png' }, lamp: { key: 'scn_lamp', path: 'assets/learning-lab/priority-3/scenery/street-lamp.png' }, post: asset('post', true) },
+  escRoad: { key: 'lab-esc-wet-road', path: 'assets/learning-lab/priority-3/roads/wet-esc-bend.png' },
   roads: { base: asset('td_road'), rumble: asset('td_rumble'), refuge: asset('td_refuge'), lighting: asset('td_lighting'), fence: asset('td_fence'), crossroads: asset('td_crossroads'), roundabout: asset('td_roundabout') },
   trafficLight: { off: asset('tl_off'), red: asset('tl_red'), yellow: asset('tl_yellow'), green: asset('tl_green') },
-  cards: { freightTruck: { key: 'lab-freight-truck-side', path: 'assets/learning-lab/priority-2/side-view/namibian-road-freight-truck.png' }, alcohol: asset('spot_beer'), medicine: asset('spot_meds'), phone: asset('spot_phone'), wheel: asset('spot_wheel') },
+  cards: { cityBus: { key: 'lab-city-bus-open-door', path: 'assets/learning-lab/priority-2/side-view/city-bus-open-door.png' }, freightTruck: { key: 'lab-freight-truck-side', path: 'assets/learning-lab/priority-2/side-view/namibian-road-freight-truck.png' }, alcohol: asset('spot_beer'), medicine: asset('spot_meds'), phone: asset('spot_phone'), wheel: asset('spot_wheel') },
   crossing: asset('scn_crossing'), route: asset('scn_b1map'),
   crash: { background: asset('labbg', true), car: asset('labcar0', true), car60: asset('labcar60', true), car80: asset('labcar80', true), car90: asset('labcar90', true) },
   oncomingTruck: asset('truck', true)
@@ -42,7 +43,7 @@ const values = Object.values;
 /** @type {Record<string, LabAsset[]>} */
 const BY_KIND = {
   'child-seat': [...values(A.childSeat), ...values(A.booster)],
-  'car-features': [A.vehicle, ...values(A.adultBelt), A.topDown.redSedan],
+  'car-features': [A.vehicle, ...values(A.adultBelt), A.topDown.redSedan, A.escRoad],
   'rider-gear': values(A.rider), 'head-impact': values(A.helmet),
   'rural-road': [...values(A.animals), A.scenery.acacia, A.scenery.bush, A.scenery.post, A.oncomingTruck],
   'city-drive': [A.scenery.palm, A.scenery.lamp, ...values(A.pedestrians).flatMap(values)],
@@ -62,10 +63,11 @@ export function assetsForArt(spec) {
     if (spec.params?.view === 'belt') return values(A.booster);
     return [A.childSeat.firm, spec.params?.view === 'harness' ? A.childSeat.harnessLoose : A.childSeat.loose];
   }
-  if (spec.kind === 'car-features') return spec.params?.view === 'belt' ? values(A.adultBelt) : spec.params?.view === 'skid' ? [A.topDown.redSedan] : [A.vehicle];
+  if (spec.kind === 'car-features') return spec.params?.view === 'belt' ? values(A.adultBelt) : spec.params?.view === 'skid' ? [A.topDown.redSedan, A.escRoad] : [A.vehicle];
   if (spec.kind === 'head-impact') return [A.helmet.none, spec.params?.style === 'bicycle' ? A.helmet.bicycle : A.helmet.motorcycle];
   if (spec.kind === 'road-treatment') {
     const treatment = spec.params?.treatment;
+    if (treatment === 'shoulder' || treatment === 'humps') return [A.topDown.blueSedan];
     if (treatment === 'roundabout') return [A.roads.crossroads, A.roads.roundabout];
     if (typeof treatment === 'string' && ['rumble', 'refuge', 'lighting', 'fence'].includes(treatment)) {
       return [A.roads.base, A.roads[treatment]];

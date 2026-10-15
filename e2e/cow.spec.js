@@ -36,7 +36,7 @@ for (const width of [360, 540]) test(`night cow at ${width}`, async ({ page }) =
   expect(errors).toEqual([]); expect(failures).toEqual([]); expect(warnings).toEqual([]);
 });
 test('missing cow artwork keeps night comparison usable', async ({ page }) => {
-  await page.route('**/nguni-cow.png', route => route.abort());
+  await page.route('**/nguni-cow.webp', route => route.abort());
   const errors = await boot(page);
   await expect.poll(() => page.evaluate(() => window.__srwGame?.scene.isActive('Title'))).toBe(true);
   await open(page, 'headlights'); await tap(page, '80');

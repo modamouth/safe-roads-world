@@ -1,3 +1,4 @@
+import { sourceBounds } from '../../imageAssets.js';
 import { REDUCE_MOTION } from '../../config.js';
 
 /** @typedef {{x:number,y:number,w:number,h:number}} ArtArea */
@@ -18,7 +19,10 @@ export function stateImages(scene, parent, keys, area, bounds) {
   const available = keys.filter(key => scene.textures.exists(key));
   const images = available.map(key => {
     const texture = scene.textures.get(key);
-    if (bounds && !texture.has('lab-state')) texture.add('lab-state', 0, bounds[0], bounds[1], bounds[2] - bounds[0], bounds[3] - bounds[1]);
+    if (bounds && !texture.has('lab-state')) {
+      const [left, top, right, bottom] = sourceBounds(scene, key, bounds);
+      texture.add('lab-state', 0, left, top, right - left, bottom - top);
+    }
     return scene.add.image(0, 0, key, bounds ? 'lab-state' : undefined).setAlpha(0);
   });
   const canvas = { w: Math.max(...images.map(i => i.width)), h: Math.max(...images.map(i => i.height)) };

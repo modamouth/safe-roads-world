@@ -1,3 +1,4 @@
+import { sourceBounds } from '../../imageAssets.js';
 import { LEARNING_LAB_ASSETS } from '../assets.js';
 
 const ART = Object.fromEntries(Object.values(LEARNING_LAB_ASSETS.topDown).map(a => [a.key, a]));
@@ -10,7 +11,7 @@ export class TopDownArt {
   draw(key, x, y, w, h, angle = 0) {
     const { scene } = this, spec = ART[key];
     if (!spec || !scene.textures.exists(key)) return false;
-    const texture = scene.textures.get(key), [left, top, right, bottom] = spec.bounds;
+    const texture = scene.textures.get(key), [left, top, right, bottom] = sourceBounds(scene, key, spec.bounds);
     if (!texture.has('subject')) texture.add('subject', 0, left, top, right - left, bottom - top);
     let image = this.images[this.index++];
     if (!image) { image = scene.add.image(0, 0, key, 'subject'); this.images.push(image); this.parent.add(image); }

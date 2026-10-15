@@ -17,7 +17,8 @@
     "test:e2e": "playwright test",
     "lint": "eslint .",
     "typecheck": "tsc -p jsconfig.json",
-    "ci": "npm run lint && npm run typecheck && npm test && npm run build && npm run test:e2e"
+    "ci": "npm run lint && npm run typecheck && npm test && npm run build && npm run test:e2e",
+    "optimize:images": "python3 scripts/optimize-images.py"
   },
   "dependencies": {
     "phaser": "^3.80.1"

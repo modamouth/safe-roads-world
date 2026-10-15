@@ -1,3 +1,4 @@
+import { loadImage } from '../imageAssets.js';
 import { assetsForArt } from './assets.js';
 
 // Loader jobs are serialized per scene. Textures already in the shared manager
@@ -20,7 +21,7 @@ export function loadLabAssets(scene, spec) {
     scene.load.once('complete', finish); scene.load.on('loaderror', failed);
     scene.events.once('shutdown', finish);
     scene.load.setPath(import.meta.env.BASE_URL);
-    missing.forEach(a => scene.load.image(a.key, a.path));
+    missing.forEach(a => loadImage(scene, a.key, a.path));
     if (!scene.load.isLoading()) scene.load.start();
   }));
   jobs.set(scene, job);

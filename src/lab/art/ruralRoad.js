@@ -1,3 +1,4 @@
+import { sourceBounds } from '../../imageAssets.js';
 import Phaser from 'phaser';
 // Chase view down a Namibian rural road, drawn in perspective (no video).
 // World units are metres; z runs forward from the camera, x across the road
@@ -91,7 +92,7 @@ export default function create(scene, parent, p, a, ctx) {
     // Ignore empty padding in the supplied donkey without editing its PNG.
     const isDonkey = tex === A.animals.donkey.key;
     if (isDonkey && !scene.textures.get(tex).has('animal')) {
-      const [left, top, right, bottom] = A.animals.donkey.bounds;
+      const [left, top, right, bottom] = sourceBounds(scene, tex, A.animals.donkey.bounds);
       scene.textures.get(tex).add('animal', 0, left, top, right - left, bottom - top);
     }
     const im = scene.add.image(0, 0, tex, isDonkey ? 'animal' : undefined).setOrigin(0.5, 1).setVisible(false);

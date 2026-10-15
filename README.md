@@ -13,8 +13,9 @@ Mission Map) leads to two places:
 Flow: `Boot → Title → Map → CityRunStub` or `Map → LabMenu → Predict → Drive → Lab → Reveal → Passport`.
 
 Built with [Phaser 3](https://phaser.io/) and [Vite](https://vitejs.dev/).
-No build step is required to edit copy, tuning numbers, or images — only to
-preview or ship.
+Copy and tuning changes need no asset build. After changing source artwork,
+run `npm run optimize:images` to regenerate the runtime WebPs. See
+[image optimization](docs/learning-lab/IMAGE-OPTIMIZATION.md) for encoder setup.
 
 ## Open in VS Code
 
@@ -28,8 +29,9 @@ preview or ship.
    ```
 
 4. Vite prints a local URL (usually `http://localhost:5173`) and opens it in
-   your browser automatically. Edit any file in `src/` and the page
-   hot-reloads.
+   your browser automatically. Refresh manually after edits; live reload is
+   disabled to protect active game sessions. Use `SRW_LIVE_RELOAD=1 npm run dev`
+   when you want live reload.
 
 To produce a static build you can deploy anywhere (Cloudflare Pages, same as
 your other PromoPlays games):

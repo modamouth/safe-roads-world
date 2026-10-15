@@ -1873,6 +1873,38 @@
       ],
       "valid": true,
       "sha256": "8870fd0b7f9d1d5cd94f8e2a918fa36e2aaf51128597134a60faa42cd6ee7ff7"
+    },
+    {
+      "path": "public/assets/learning-lab/priority-3/roads/wet-esc-bend.png",
+      "size": [
+        1254,
+        1254
+      ],
+      "mode": "RGB",
+      "alpha": null,
+      "bounds": null,
+      "valid": true,
+      "sha256": "05948f10a06c83907c389b6911ce67f46f18d5a06830d9a03f0f5a267c6f7ece"
+    },
+    {
+      "path": "public/assets/learning-lab/priority-2/side-view/city-bus-open-door.png",
+      "size": [
+        2048,
+        768
+      ],
+      "mode": "RGBA",
+      "alpha": [
+        0,
+        254
+      ],
+      "bounds": [
+        0,
+        23,
+        2012,
+        768
+      ],
+      "valid": true,
+      "sha256": "738b6087624a1925ce4acf7587a323d45ca0ae8fa52d2fc5e2a2db89f6082477"
     }
   ],
   "external": [

@@ -27,7 +27,7 @@ for (const [width, height] of [[360, 640], [390, 844], [540, 960]]) test(`freigh
   expect(errors).toEqual([]); expect(failures).toEqual([]);
 });
 test('missing freight truck retains the icon fallback', async ({ page }) => {
-  await page.route('**/namibian-road-freight-truck.png', r => r.abort());
+  await page.route('**/namibian-road-freight-truck.webp', r => r.abort());
   const errors = await open(page);
   expect(await page.evaluate(() => window.__srwGame.textures.exists('lab-freight-truck-side'))).toBe(false);
   await tap(page, 'Continue'); await tap(page, 'Continue');

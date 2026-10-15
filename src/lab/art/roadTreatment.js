@@ -4,12 +4,16 @@
 import { COLORS as C } from '../../config.js';
 import { t } from '../content.js';
 import { stateImages } from './fit.js';
+import { LEARNING_LAB_ASSETS as A } from '../assets.js';
+import { TopDownArt } from './topDown.js';
 import { clipTo, label } from './common.js';
 
 export default function create(scene, parent, p, a) {
   const c = scene.add.container(0, 0); parent.add(c);
   const g = scene.add.graphics(); c.add(g);
   const tags = scene.add.container(0, 0); c.add(tags);
+  const cars = scene.add.container(0, 0); c.addAt(cars, 1);
+  const carArt = new TopDownArt(scene, cars);
   const st = { on: p.on !== false };
   const cx = a.x + a.w / 2, rw = Math.min(a.w * 0.5, 220);
   const night = p.treatment === 'lighting';
@@ -20,12 +24,14 @@ export default function create(scene, parent, p, a) {
   };
   const centreDashes = () => { g.fillStyle(0xF2F2F2, 1); for (let y = a.y; y < a.y + a.h; y += 30) g.fillRect(cx - 2, y, 4, 16); };
   const car = (x, y, rot) => {
+    if (carArt.draw(A.topDown.blueSedan.key, x, y, 22, 40, (rot || 0) * 180 / Math.PI)) return;
     const k = scene.add.graphics(); tags.add(k);
     k.fillStyle(0xF4F5F6, 1); k.fillRoundedRect(-11, -20, 22, 40, 6); k.fillStyle(0x24364B, 1); k.fillRect(-8, -12, 16, 7);
     k.setPosition(x, y).setRotation(rot || 0);
   };
 
   const draw = () => {
+    carArt.begin();
     g.clear(); tags.removeAll(true);
     g.fillStyle(night ? 0x1F2A1E : 0xB9A47E, 1); g.fillRoundedRect(a.x, a.y, a.w, a.h, 18);
     const tr = p.treatment;

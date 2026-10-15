@@ -1,6 +1,8 @@
 # Uploaded artwork check — 14 October 2026
 
-Inspected all 101 PNG/WebP images under `public/assets`. Of these, 100 fully decode; the newly supplied road-marker PNG is truncated. The Priority 1 folder contains 28 PNGs; Priority 2 contains ten PNGs; the subsequently uploaded Priority 3 folder contains 19 PNGs. All valid priority-folder images have real alpha transparency. Detailed dimensions, alpha ranges and visible bounds are recorded in [current-artwork-audit.json](current-artwork-audit.json).
+Inspected all 103 PNG/WebP images under `public/assets`. Of these, 102 fully decode; the newly supplied road-marker PNG is truncated. The Priority 1 folder contains 28 PNGs; Priority 2 contains eleven PNGs; the subsequently uploaded Priority 3 folder contains 20 PNGs. All valid priority-folder cutouts have real alpha transparency. The generated ESC road background is intentionally opaque. Detailed dimensions, alpha ranges and visible bounds are recorded in [current-artwork-audit.json](current-artwork-audit.json).
+
+Runtime images now use smaller WebP derivatives; the paths below identify the preserved source artwork. Run `npm run optimize:images` after replacing uploads. See [runtime image optimization](IMAGE-OPTIMIZATION.md).
 
 ## Newly available Priority 1 artwork
 
@@ -36,3 +38,7 @@ Visual review confirms the new images match their intended subjects. Adult dummy
 The original inventory check changed no runtime code or source artwork. Subsequent integration uses non-destructive texture frames and preserves all source PNGs.
 
 The supplied side-view Namibian freight truck is now integrated into the braking-topic story card. See [freight truck integration and screenshot](FREIGHT-TRUCK.md).
+
+The ESC comparison uses a generated wet-road background and the supplied red sedan. See [artwork provenance, prompt and validation](ESC-ROAD.md).
+
+The supplied open-door city bus replaces the pedestrian/taxi vignette in the road-rules bus question. See [bus artwork and validation](BUS-QUESTION.md).

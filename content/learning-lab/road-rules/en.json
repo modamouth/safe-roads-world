@@ -196,7 +196,7 @@
                   "treatment": "shoulder",
                   "on": true
                 },
-                "alt": "Top-down view of a road with a wide shoulder."
+                "alt": "Top-down view of a blue car in its lane beside a wide road shoulder."
               },
               "reason": "You may not drive on the shoulder of a public road."
             }
@@ -374,11 +374,9 @@
                 "params": {
                   "icon": "pedestrian",
                   "tint": "#1FA3B5",
-                  "extras": [
-                    "taxi"
-                  ]
+                  "image": "lab-city-bus-open-door"
                 },
-                "alt": "People getting off a stopped bus."
+                "alt": "Side view of a stopped blue-and-white city bus with its passenger door open."
               },
               "reason": "When passing a stationary bus, take care for people getting on or off, or walking to or from it."
             }

@@ -1,3 +1,4 @@
+import { sourceBounds, sourceScale } from '../../imageAssets.js';
 import { LEARNING_LAB_ASSETS as A } from '../assets.js';
 
 // Shared frames preserve scale; per-pose ground anchors prevent walking jitter.
@@ -14,11 +15,12 @@ export function pedestrianSet(scene, name) {
   const spec = A.pedestrians[name], alignment = ALIGNMENT[name];
   const assets = [spec.standing, spec.walkA, spec.walkB];
   if (!assets.every(a => scene.textures.exists(a.key))) return null;
-  const [left, top, right, bottom] = alignment.bounds;
   return assets.map((asset, i) => {
     const texture = scene.textures.get(asset.key);
+    const [left, top, right, bottom] = sourceBounds(scene, asset.key, alignment.bounds);
+    const scale = sourceScale(scene, asset.key);
     if (!texture.has('pedestrian')) texture.add('pedestrian', 0, left, top, right - left, bottom - top);
-    return { key: asset.key, frame: 'pedestrian', originY: (alignment.ground[i] - top) / (bottom - top) };
+    return { key: asset.key, frame: 'pedestrian', originY: (alignment.ground[i] * scale.y - top) / (bottom - top) };
   });
 }
 export function setPedestrianPose(image, pose) {

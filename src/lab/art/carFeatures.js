@@ -8,10 +8,11 @@ import { COLORS as C, REDUCE_MOTION } from '../../config.js';
 import { t } from '../content.js';
 import { LEARNING_LAB_ASSETS as A } from '../assets.js';
 import { stateImages, imagePoint } from './fit.js';
-import { TopDownArt } from './topDown.js';
+import createEscRoad from './escRoad.js';
 import { clipTo, label, tweenTo } from './common.js';
 
 export default function create(scene, parent, p, a) {
+  if (p.view === 'skid') return createEscRoad(scene, parent, p, a);
   const c = scene.add.container(0, 0); parent.add(c);
   const g = scene.add.graphics(); c.add(g);
   const tags = scene.add.container(0, 0); c.add(tags);
@@ -22,9 +23,6 @@ export default function create(scene, parent, p, a) {
   const photos = keys.length && keys.every(key => scene.textures.exists(key)) ? stateImages(scene, c, keys,
     { x: a.x + 8, y: a.y + 42, w: a.w - 16, h: a.h - 52 }, view === 'belt' ? [186, 25, 1432, 988] : [8, 83, 1666, 813]) : null;
   if (photos) photos.show(keys[0]);
-  c.bringToTop(tags);
-  const cars = scene.add.container(0, 0); c.add(cars);
-  const topDown = new TopDownArt(scene, cars);
   c.bringToTop(tags);
   const photoSpots = { seatbelt: [.64, .42], airbag: [.7, .4], abs: [.79, .66], esc: [.5, .63], tyres: [.8, .72], lights: [.94, .5], headrest: [.59, .34], mirrors: [.73, .36] };
   const drawPhoto = () => {
@@ -71,40 +69,6 @@ export default function create(scene, parent, p, a) {
     }
   };
 
-  // --- skid (top-down bend) ------------------------------------------------------
-  // Quadratic curve for the bend; without ESC the car runs wide after mid-bend (understeer).
-  const P0 = [a.x + a.w * 0.62, a.y + a.h + 10], P1 = [a.x + a.w * 0.62, a.y + a.h * 0.12], P2 = [a.x - 20, a.y + a.h * 0.12], P3 = [a.x + a.w * 0.78, a.y - 20];
-  const bez = (k, end) => [0, 1].map(d => (1 - k) * (1 - k) * P0[d] + 2 * (1 - k) * k * P1[d] + k * k * end[d]);
-  const path = (k, on) => {
-    const base = bez(k, P2);
-    if (on) return { x: base[0], y: base[1] };
-    const wide = bez(k, P3), m = Math.min(1, Math.max(0, (k - 0.35) / 0.65)), s2 = m * m * (3 - 2 * m);
-    return { x: base[0] + (wide[0] - base[0]) * s2, y: base[1] + (wide[1] - base[1]) * s2 };
-  };
-  const skid = () => {
-    bgPanel();
-    g.fillStyle(0x6E8A4E, 1); g.fillRoundedRect(a.x, a.y, a.w, a.h, 18);
-    g.lineStyle(a.w * 0.2, 0x4A494D, 1); g.beginPath();
-    for (let i = 0; i <= 20; i++) { const q = path(i / 20, true); i ? g.lineTo(q.x, q.y) : g.moveTo(q.x, q.y); }
-    g.strokePath();
-    g.lineStyle(2, 0xF2F2F2, 0.7);
-    for (let i = 0; i < 20; i += 2) { const q1 = path(i / 20, true), q2 = path((i + 1) / 20, true); g.lineBetween(q1.x, q1.y, q2.x, q2.y); }
-    // wet sheen
-    g.fillStyle(0x9EDCF0, 0.12); for (let i = 0; i < 14; i++) g.fillEllipse(a.x + (i * 67) % a.w, a.y + (i * 113) % a.h, 40, 10);
-    // trail and car
-    g.lineStyle(3, st.on ? C.green : C.red, 0.85); g.beginPath();
-    for (let i = 0; i <= 30; i++) { const q = path(st.k * i / 30, st.on); i ? g.lineTo(q.x, q.y) : g.moveTo(q.x, q.y); }
-    g.strokePath();
-    const q = path(st.k, st.on);
-    const q0 = path(Math.max(0, st.k - 0.02), st.on), ang = (q0.x === q.x && q0.y === q.y ? -Math.PI / 2 : Math.atan2(q.y - q0.y, q.x - q0.x)) + (st.on ? 0 : st.k * 0.9);
-    if (!topDown.draw(A.topDown.redSedan.key, q.x, q.y, 24, 44, ang * 180 / Math.PI + 90)) {
-      const car = scene.add.graphics(); tags.add(car);
-      car.fillStyle(0xF4F5F6, 1); car.fillRoundedRect(-16, -9, 32, 18, 5); car.fillStyle(0x24364B, 1); car.fillRect(4, -7, 6, 14);
-      car.setPosition(q.x, q.y).setRotation(ang);
-    }
-    if (st.k >= 1) tags.add(label(scene, q.x, Math.max(a.y + 24, q.y - 30), t(st.on ? 'art.esc.on' : 'art.esc.off'), 14, '#FFFFFF', { backgroundColor: '#05080DCC', padding: { x: 6, y: 3 } }));
-  };
-
   // --- belt (dummy in a sudden stop) ------------------------------------------------------
   const belt = () => {
     bgPanel();
@@ -123,7 +87,7 @@ export default function create(scene, parent, p, a) {
     tags.add(label(scene, a.x + a.w / 2, a.y + 24, t(st.on ? 'art.belt.on' : 'art.belt.off'), 14, '#FFFFFF', { backgroundColor: '#05080DCC', padding: { x: 6, y: 3 } }));
   };
 
-  const draw = () => { topDown.begin(); g.clear(); tags.removeAll(true); if (photos) { drawPhoto(); return; } (view === 'skid' ? skid : view === 'belt' ? belt : side)(); };
+  const draw = () => { g.clear(); tags.removeAll(true); if (photos) { drawPhoto(); return; } (view === 'belt' ? belt : side)(); };
   const inst = {
     highlight(id) { st.hi = id; draw(); },
     async setState(s) {

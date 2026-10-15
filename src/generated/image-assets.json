@@ -1,0 +1,1022 @@
+{
+  "assets/childseat_firm.webp": {
+    "url": "optimized/assets/childseat_firm.webp",
+    "width": 761,
+    "height": 720,
+    "runtimeWidth": 761,
+    "runtimeHeight": 720,
+    "sourceBytes": 50982,
+    "runtimeBytes": 50982,
+    "sha256": "6c2e85cc6b1927f6c315e376be70f48544f94f5edb1a88ec7661125c854ea428"
+  },
+  "assets/childseat_loose.webp": {
+    "url": "optimized/assets/childseat_loose.webp",
+    "width": 761,
+    "height": 720,
+    "runtimeWidth": 761,
+    "runtimeHeight": 720,
+    "sourceBytes": 57686,
+    "runtimeBytes": 57686,
+    "sha256": "433373a36a3979d9bc604711cca56bedc64df3b54979d68a0b92b2ed6ad1cef9"
+  },
+  "assets/childseat_slack.webp": {
+    "url": "optimized/assets/childseat_slack.webp",
+    "width": 761,
+    "height": 720,
+    "runtimeWidth": 761,
+    "runtimeHeight": 720,
+    "sourceBytes": 54998,
+    "runtimeBytes": 54998,
+    "sha256": "76bc3ff21cc6a36457f947fbed579b133d4cb9ab1a401a971675a34d77aa5129"
+  },
+  "assets/city_backdrop.webp": {
+    "url": "optimized/assets/city_backdrop.webp",
+    "width": 564,
+    "height": 352,
+    "runtimeWidth": 564,
+    "runtimeHeight": 352,
+    "sourceBytes": 43818,
+    "runtimeBytes": 43818,
+    "sha256": "6c51caf00afeefb9e958dae1f80a1616aa822bc5bd3c27bc30445ac7d18a404a"
+  },
+  "assets/hero_passport.webp": {
+    "url": "optimized/assets/hero_passport.webp",
+    "width": 620,
+    "height": 1100,
+    "runtimeWidth": 620,
+    "runtimeHeight": 1100,
+    "sourceBytes": 118998,
+    "runtimeBytes": 118998,
+    "sha256": "7dbcaee8e6dc49debfb96d017d74a268bdd3e3f9bc069d4adff070da67b83779"
+  },
+  "assets/labbg.webp": {
+    "url": "optimized/assets/labbg.webp",
+    "width": 800,
+    "height": 427,
+    "runtimeWidth": 800,
+    "runtimeHeight": 427,
+    "sourceBytes": 23920,
+    "runtimeBytes": 23920,
+    "sha256": "1b9c4d2ce04428956ab2950525d44d4a53be853d8b9e0a012897d79895859bf8"
+  },
+  "assets/labcar0.webp": {
+    "url": "optimized/assets/labcar0.webp",
+    "width": 760,
+    "height": 335,
+    "runtimeWidth": 760,
+    "runtimeHeight": 335,
+    "sourceBytes": 50486,
+    "runtimeBytes": 50486,
+    "sha256": "bde615b91127eb943ea74e009f4ffb158b2d3ec8961c154c19c1873a7bd107f0"
+  },
+  "assets/labcar60.webp": {
+    "url": "optimized/assets/labcar60.webp",
+    "width": 760,
+    "height": 335,
+    "runtimeWidth": 760,
+    "runtimeHeight": 335,
+    "sourceBytes": 41036,
+    "runtimeBytes": 41036,
+    "sha256": "b803c10a21fe412cec4d09c9234ff7a55e83f71f2cd7bd64c573fa643d8edff1"
+  },
+  "assets/labcar80.webp": {
+    "url": "optimized/assets/labcar80.webp",
+    "width": 760,
+    "height": 335,
+    "runtimeWidth": 760,
+    "runtimeHeight": 335,
+    "sourceBytes": 51438,
+    "runtimeBytes": 51438,
+    "sha256": "fba2a0d8e395c301708975900a5ab7df10e02357e0526d41b664f9f186091352"
+  },
+  "assets/labcar90.webp": {
+    "url": "optimized/assets/labcar90.webp",
+    "width": 760,
+    "height": 335,
+    "runtimeWidth": 760,
+    "runtimeHeight": 335,
+    "sourceBytes": 60138,
+    "runtimeBytes": 60138,
+    "sha256": "ba2bbc193aa80a1f5278e2629949adb46fc3651c5c05a8fb5e8b1e685da701fc"
+  },
+  "assets/learning-lab/priority-1/adult-seatbelt/belted.png": {
+    "url": "optimized/assets/learning-lab/priority-1/adult-seatbelt/belted.webp",
+    "width": 1536,
+    "height": 1024,
+    "runtimeWidth": 1024,
+    "runtimeHeight": 683,
+    "sourceBytes": 1833322,
+    "runtimeBytes": 91456,
+    "sha256": "e35aeb8c91d51a94e293bd3ad5154d7a934b6cd838244ff99795e74cf2c2be3c"
+  },
+  "assets/learning-lab/priority-1/adult-seatbelt/unbelted-forward.png": {
+    "url": "optimized/assets/learning-lab/priority-1/adult-seatbelt/unbelted-forward.webp",
+    "width": 1536,
+    "height": 1024,
+    "runtimeWidth": 1024,
+    "runtimeHeight": 683,
+    "sourceBytes": 1806250,
+    "runtimeBytes": 90994,
+    "sha256": "fcbedc50b74a2c3a1708a0b3150e43634f7a32f231c29e50f0602d5e4dc05df4"
+  },
+  "assets/learning-lab/priority-1/child-booster/correct-booster.png": {
+    "url": "optimized/assets/learning-lab/priority-1/child-booster/correct-booster.webp",
+    "width": 1536,
+    "height": 1024,
+    "runtimeWidth": 1024,
+    "runtimeHeight": 683,
+    "sourceBytes": 1890705,
+    "runtimeBytes": 81070,
+    "sha256": "1a651bbfad6760b953774876e0a410132e0120c12d45f0e401298628ceca969e"
+  },
+  "assets/learning-lab/priority-1/child-booster/no-booster.png": {
+    "url": "optimized/assets/learning-lab/priority-1/child-booster/no-booster.webp",
+    "width": 1536,
+    "height": 1024,
+    "runtimeWidth": 1024,
+    "runtimeHeight": 683,
+    "sourceBytes": 1980314,
+    "runtimeBytes": 86914,
+    "sha256": "e90c8c3b9fe50f285d96eda0c0bdaee0be2923bdbab052384ca22002586ca7cb"
+  },
+  "assets/learning-lab/priority-1/helmet-test/bicycle-helmet.png": {
+    "url": "optimized/assets/learning-lab/priority-1/helmet-test/bicycle-helmet.webp",
+    "width": 1536,
+    "height": 1024,
+    "runtimeWidth": 1024,
+    "runtimeHeight": 683,
+    "sourceBytes": 1666048,
+    "runtimeBytes": 64590,
+    "sha256": "67b69106b26afbc8c1afdfa91078e1e97ad90922b3f7eba4d289474678d33dc2"
+  },
+  "assets/learning-lab/priority-1/helmet-test/motorcycle-helmet.png": {
+    "url": "optimized/assets/learning-lab/priority-1/helmet-test/motorcycle-helmet.webp",
+    "width": 1536,
+    "height": 1024,
+    "runtimeWidth": 1024,
+    "runtimeHeight": 683,
+    "sourceBytes": 1748318,
+    "runtimeBytes": 67012,
+    "sha256": "05c4ae869777ced1aae2c9e17b22d7058a1524704ce35a5a40815a6fda6a7764"
+  },
+  "assets/learning-lab/priority-1/helmet-test/no-helmet.png": {
+    "url": "optimized/assets/learning-lab/priority-1/helmet-test/no-helmet.webp",
+    "width": 1536,
+    "height": 1024,
+    "runtimeWidth": 1024,
+    "runtimeHeight": 683,
+    "sourceBytes": 1507357,
+    "runtimeBytes": 49238,
+    "sha256": "9972ad1d60d74f4427b051078c25474614e957e203ecd213adf98a29a557a169"
+  },
+  "assets/learning-lab/priority-1/motorcycle-rider/everyday-clothes.png": {
+    "url": "optimized/assets/learning-lab/priority-1/motorcycle-rider/everyday-clothes.webp",
+    "width": 1024,
+    "height": 1536,
+    "runtimeWidth": 512,
+    "runtimeHeight": 768,
+    "sourceBytes": 1606680,
+    "runtimeBytes": 49908,
+    "sha256": "bc1e4b413cb53cade13057fc192489bd3dc396f74a8516277e7ba57a0ebcbaa6"
+  },
+  "assets/learning-lab/priority-1/motorcycle-rider/full-protective-gear.png": {
+    "url": "optimized/assets/learning-lab/priority-1/motorcycle-rider/full-protective-gear.webp",
+    "width": 1024,
+    "height": 1536,
+    "runtimeWidth": 512,
+    "runtimeHeight": 768,
+    "sourceBytes": 1733691,
+    "runtimeBytes": 51794,
+    "sha256": "c0f594bdd06b03c62ca134b2d29c2055f78fae57f982fd516ec4677e8364a856"
+  },
+  "assets/learning-lab/priority-1/pedestrians/older-man/standing.png": {
+    "url": "optimized/assets/learning-lab/priority-1/pedestrians/older-man/standing.webp",
+    "width": 1024,
+    "height": 1536,
+    "runtimeWidth": 512,
+    "runtimeHeight": 768,
+    "sourceBytes": 1742450,
+    "runtimeBytes": 62620,
+    "sha256": "1001f38c2dbd8a6c99ce83d133699cf0ef541b2fb06c29103a3cbebed3ac139b"
+  },
+  "assets/learning-lab/priority-1/pedestrians/older-man/walk-a.png": {
+    "url": "optimized/assets/learning-lab/priority-1/pedestrians/older-man/walk-a.webp",
+    "width": 1024,
+    "height": 1536,
+    "runtimeWidth": 512,
+    "runtimeHeight": 768,
+    "sourceBytes": 1784960,
+    "runtimeBytes": 61032,
+    "sha256": "963757b6f3132cb46e1a95b35ef3ee7af37b6cba09b6329a32810d70452df1d5"
+  },
+  "assets/learning-lab/priority-1/pedestrians/older-man/walk-b.png": {
+    "url": "optimized/assets/learning-lab/priority-1/pedestrians/older-man/walk-b.webp",
+    "width": 1024,
+    "height": 1536,
+    "runtimeWidth": 512,
+    "runtimeHeight": 768,
+    "sourceBytes": 1764569,
+    "runtimeBytes": 59892,
+    "sha256": "5e2063e4c914cc3d86f35247d978e482ac492c6b821b4cb612ed95d0d7b0c8ee"
+  },
+  "assets/learning-lab/priority-1/pedestrians/schoolgirl/standing.png": {
+    "url": "optimized/assets/learning-lab/priority-1/pedestrians/schoolgirl/standing.webp",
+    "width": 1024,
+    "height": 1536,
+    "runtimeWidth": 512,
+    "runtimeHeight": 768,
+    "sourceBytes": 1529838,
+    "runtimeBytes": 44800,
+    "sha256": "5e9a657dfa5fe7a29bec3579d9908fa5b8c7f1ae2579f100da7c4e94004d8498"
+  },
+  "assets/learning-lab/priority-1/pedestrians/schoolgirl/walk-a.png": {
+    "url": "optimized/assets/learning-lab/priority-1/pedestrians/schoolgirl/walk-a.webp",
+    "width": 1024,
+    "height": 1536,
+    "runtimeWidth": 512,
+    "runtimeHeight": 768,
+    "sourceBytes": 1658568,
+    "runtimeBytes": 51728,
+    "sha256": "027b09b1c45726d6d6d1635b0cb03bf49594adf275f87bd22bf9eebc56e0f59a"
+  },
+  "assets/learning-lab/priority-1/pedestrians/schoolgirl/walk-b.png": {
+    "url": "optimized/assets/learning-lab/priority-1/pedestrians/schoolgirl/walk-b.webp",
+    "width": 1024,
+    "height": 1536,
+    "runtimeWidth": 512,
+    "runtimeHeight": 768,
+    "sourceBytes": 1594243,
+    "runtimeBytes": 48070,
+    "sha256": "0bc3dc34cbf6455ed3e7be41e944994fe148cfb47994adebaae3363fed867451"
+  },
+  "assets/learning-lab/priority-1/pedestrians/shopper/standing.png": {
+    "url": "optimized/assets/learning-lab/priority-1/pedestrians/shopper/standing.webp",
+    "width": 1024,
+    "height": 1536,
+    "runtimeWidth": 512,
+    "runtimeHeight": 768,
+    "sourceBytes": 2184414,
+    "runtimeBytes": 101634,
+    "sha256": "442231c5c8ae80dc18a28094243226eb6ccf0647a452816668bd10e22c531d67"
+  },
+  "assets/learning-lab/priority-1/pedestrians/shopper/walk-a.png": {
+    "url": "optimized/assets/learning-lab/priority-1/pedestrians/shopper/walk-a.webp",
+    "width": 1024,
+    "height": 1536,
+    "runtimeWidth": 512,
+    "runtimeHeight": 768,
+    "sourceBytes": 2175395,
+    "runtimeBytes": 102424,
+    "sha256": "311e66a3ed8363def1b77bbe9eeb456a81d059aa4148360b5a8fffee4a6e1286"
+  },
+  "assets/learning-lab/priority-1/pedestrians/shopper/walk-b.png": {
+    "url": "optimized/assets/learning-lab/priority-1/pedestrians/shopper/walk-b.webp",
+    "width": 1024,
+    "height": 1536,
+    "runtimeWidth": 512,
+    "runtimeHeight": 768,
+    "sourceBytes": 2155483,
+    "runtimeBytes": 99410,
+    "sha256": "3cfaca98d67c61766eca7bd624a0bc383770006994a2d967bd1dc9ac953c840a"
+  },
+  "assets/learning-lab/priority-1/pedestrians/teen-phone/standing.png": {
+    "url": "optimized/assets/learning-lab/priority-1/pedestrians/teen-phone/standing.webp",
+    "width": 1024,
+    "height": 1536,
+    "runtimeWidth": 512,
+    "runtimeHeight": 768,
+    "sourceBytes": 1661431,
+    "runtimeBytes": 50350,
+    "sha256": "08176f7ee277c4bb0196e4645cb74dd7cea4ffd4bbf97db0e21e82de09f04315"
+  },
+  "assets/learning-lab/priority-1/pedestrians/teen-phone/walk-a.png": {
+    "url": "optimized/assets/learning-lab/priority-1/pedestrians/teen-phone/walk-a.webp",
+    "width": 1024,
+    "height": 1536,
+    "runtimeWidth": 512,
+    "runtimeHeight": 768,
+    "sourceBytes": 1714048,
+    "runtimeBytes": 52338,
+    "sha256": "c1ab3b5bd2a2a6215054b3a3c72b6ba406843e702e00d3ce18ebd7868a2af682"
+  },
+  "assets/learning-lab/priority-1/pedestrians/teen-phone/walk-b.png": {
+    "url": "optimized/assets/learning-lab/priority-1/pedestrians/teen-phone/walk-b.webp",
+    "width": 1024,
+    "height": 1536,
+    "runtimeWidth": 512,
+    "runtimeHeight": 768,
+    "sourceBytes": 1770964,
+    "runtimeBytes": 55354,
+    "sha256": "a15a1053d071dbbf58caaf466d75f4e56102fc5bb9372fae90aae7472bf17111"
+  },
+  "assets/learning-lab/priority-1/pedestrians/vendor/standing.png": {
+    "url": "optimized/assets/learning-lab/priority-1/pedestrians/vendor/standing.webp",
+    "width": 1024,
+    "height": 1536,
+    "runtimeWidth": 512,
+    "runtimeHeight": 768,
+    "sourceBytes": 2115586,
+    "runtimeBytes": 97848,
+    "sha256": "8fc3915b285a0e156e66354941b68a59be8e878837f4b76e7595b59cd7244b20"
+  },
+  "assets/learning-lab/priority-1/pedestrians/vendor/walk-a.png": {
+    "url": "optimized/assets/learning-lab/priority-1/pedestrians/vendor/walk-a.webp",
+    "width": 1024,
+    "height": 1536,
+    "runtimeWidth": 512,
+    "runtimeHeight": 768,
+    "sourceBytes": 2108151,
+    "runtimeBytes": 98112,
+    "sha256": "730e623c08e362a3fa9a97fc37e38c4bd31666d2099ed76d65bc3358646e5d1b"
+  },
+  "assets/learning-lab/priority-1/pedestrians/vendor/walk-b.png": {
+    "url": "optimized/assets/learning-lab/priority-1/pedestrians/vendor/walk-b.webp",
+    "width": 1024,
+    "height": 1536,
+    "runtimeWidth": 512,
+    "runtimeHeight": 768,
+    "sourceBytes": 2108610,
+    "runtimeBytes": 97970,
+    "sha256": "1d349bf605087a3b2ee78cf6849f06b4388613de5ad847d82da0b5f048693897"
+  },
+  "assets/learning-lab/priority-1/pedestrians/worker/standing.png": {
+    "url": "optimized/assets/learning-lab/priority-1/pedestrians/worker/standing.webp",
+    "width": 1024,
+    "height": 1536,
+    "runtimeWidth": 512,
+    "runtimeHeight": 768,
+    "sourceBytes": 1692756,
+    "runtimeBytes": 56242,
+    "sha256": "e81eacd027d0965d2acfff5e42aab875b7ce115fd7c6d3ddff29fbaf91351180"
+  },
+  "assets/learning-lab/priority-1/pedestrians/worker/walk-a.png": {
+    "url": "optimized/assets/learning-lab/priority-1/pedestrians/worker/walk-a.webp",
+    "width": 1024,
+    "height": 1536,
+    "runtimeWidth": 512,
+    "runtimeHeight": 768,
+    "sourceBytes": 1627787,
+    "runtimeBytes": 50160,
+    "sha256": "24ebb65a3ddf9edca294b95c8bd91d34666d4ec8295bb27ba67260a25123b638"
+  },
+  "assets/learning-lab/priority-1/pedestrians/worker/walk-b.png": {
+    "url": "optimized/assets/learning-lab/priority-1/pedestrians/worker/walk-b.webp",
+    "width": 1024,
+    "height": 1536,
+    "runtimeWidth": 512,
+    "runtimeHeight": 768,
+    "sourceBytes": 1678393,
+    "runtimeBytes": 51880,
+    "sha256": "44dfbcebda3bf16fd205fa44d454817fb95dde6e3d431627fb1753480d589fe0"
+  },
+  "assets/learning-lab/priority-1/vehicle/side-view-safety-features.png": {
+    "url": "optimized/assets/learning-lab/priority-1/vehicle/side-view-safety-features.webp",
+    "width": 1672,
+    "height": 941,
+    "runtimeWidth": 1024,
+    "runtimeHeight": 576,
+    "sourceBytes": 1274654,
+    "runtimeBytes": 81278,
+    "sha256": "62e03eac2395614412824c7ad4e938f0e307c0d09014fc32bcbf52f59d895e70"
+  },
+  "assets/learning-lab/priority-2/animals/grey-donkey.png": {
+    "url": "optimized/assets/learning-lab/priority-2/animals/grey-donkey.webp",
+    "width": 1536,
+    "height": 1024,
+    "runtimeWidth": 768,
+    "runtimeHeight": 512,
+    "sourceBytes": 2196775,
+    "runtimeBytes": 83692,
+    "sha256": "c940feead00eee7cf4fd40ed3b6ed203f1967528e651f6c9b4f5fff60025e35d"
+  },
+  "assets/learning-lab/priority-2/animals/nguni-cow.png": {
+    "url": "optimized/assets/learning-lab/priority-2/animals/nguni-cow.webp",
+    "width": 1536,
+    "height": 1024,
+    "runtimeWidth": 768,
+    "runtimeHeight": 512,
+    "sourceBytes": 2268183,
+    "runtimeBytes": 75756,
+    "sha256": "c49e23a5332323489d714834170716d84f5b3f9c16868e1299428deefe18253e"
+  },
+  "assets/learning-lab/priority-2/side-view/city-bus-open-door.png": {
+    "url": "optimized/assets/learning-lab/priority-2/side-view/city-bus-open-door.webp",
+    "width": 2048,
+    "height": 768,
+    "runtimeWidth": 1024,
+    "runtimeHeight": 384,
+    "sourceBytes": 1539763,
+    "runtimeBytes": 58696,
+    "sha256": "738b6087624a1925ce4acf7587a323d45ca0ae8fa52d2fc5e2a2db89f6082477"
+  },
+  "assets/learning-lab/priority-2/side-view/namibian-road-freight-truck.png": {
+    "url": "optimized/assets/learning-lab/priority-2/side-view/namibian-road-freight-truck.webp",
+    "width": 1672,
+    "height": 941,
+    "runtimeWidth": 1024,
+    "runtimeHeight": 576,
+    "sourceBytes": 1461330,
+    "runtimeBytes": 74610,
+    "sha256": "8870fd0b7f9d1d5cd94f8e2a918fa36e2aaf51128597134a60faa42cd6ee7ff7"
+  },
+  "assets/learning-lab/priority-2/top-down/cyclist-car-safe-pass.png": {
+    "url": "optimized/assets/learning-lab/priority-2/top-down/cyclist-car-safe-pass.webp",
+    "width": 1024,
+    "height": 1536,
+    "runtimeWidth": 512,
+    "runtimeHeight": 768,
+    "sourceBytes": 1623656,
+    "runtimeBytes": 47112,
+    "sha256": "8224e81b975a068bdbf72c4011f3afdb1c12119bab4be46e72ca46fb61497d1c"
+  },
+  "assets/learning-lab/priority-2/top-down/cyclist.png": {
+    "url": "optimized/assets/learning-lab/priority-2/top-down/cyclist.webp",
+    "width": 1024,
+    "height": 1536,
+    "runtimeWidth": 256,
+    "runtimeHeight": 384,
+    "sourceBytes": 1401360,
+    "runtimeBytes": 12330,
+    "sha256": "b8d93cf3a40e4df56f31da96a1e3b42e5b0013ab2062f27ca39244602b0c95ba"
+  },
+  "assets/learning-lab/priority-2/top-down/double-cab-bakkie.png": {
+    "url": "optimized/assets/learning-lab/priority-2/top-down/double-cab-bakkie.webp",
+    "width": 1024,
+    "height": 1536,
+    "runtimeWidth": 256,
+    "runtimeHeight": 384,
+    "sourceBytes": 1798459,
+    "runtimeBytes": 14846,
+    "sha256": "47b3ac3b969f8aa814bec923e8ec0a65147a129875c356bf1245181f8b594e80"
+  },
+  "assets/learning-lab/priority-2/top-down/fuel-tanker.png": {
+    "url": "optimized/assets/learning-lab/priority-2/top-down/fuel-tanker.webp",
+    "width": 1024,
+    "height": 1536,
+    "runtimeWidth": 256,
+    "runtimeHeight": 384,
+    "sourceBytes": 1423263,
+    "runtimeBytes": 10076,
+    "sha256": "52fb0a0fb7cbf89ecd1314967a219fd1dd846e9c44b28de34cc3b5cef3721bdc"
+  },
+  "assets/learning-lab/priority-2/top-down/minibus-taxi.png": {
+    "url": "optimized/assets/learning-lab/priority-2/top-down/minibus-taxi.webp",
+    "width": 1024,
+    "height": 1536,
+    "runtimeWidth": 256,
+    "runtimeHeight": 384,
+    "sourceBytes": 1452953,
+    "runtimeBytes": 10856,
+    "sha256": "c398e98b1d05814e9b95c2ce96fa1d87a379abcc5423fb1d8d69fc9474408347"
+  },
+  "assets/learning-lab/priority-2/top-down/pedestrian.png": {
+    "url": "optimized/assets/learning-lab/priority-2/top-down/pedestrian.webp",
+    "width": 1024,
+    "height": 1536,
+    "runtimeWidth": 256,
+    "runtimeHeight": 384,
+    "sourceBytes": 1762370,
+    "runtimeBytes": 17334,
+    "sha256": "6b314452ba13176912594e6b14bf0b5db10ecaae4566231c3980d1983a067eed"
+  },
+  "assets/learning-lab/priority-2/top-down/red-sedan.png": {
+    "url": "optimized/assets/learning-lab/priority-2/top-down/red-sedan.webp",
+    "width": 1024,
+    "height": 1536,
+    "runtimeWidth": 256,
+    "runtimeHeight": 384,
+    "sourceBytes": 1840574,
+    "runtimeBytes": 16716,
+    "sha256": "2015839d2b34df8da897c813b618dd409cc88830ed29c373afb3b864cfe6c66f"
+  },
+  "assets/learning-lab/priority-3/animals/grey-donkey-clean.png": {
+    "url": "optimized/assets/learning-lab/priority-3/animals/grey-donkey-clean.webp",
+    "width": 1536,
+    "height": 1024,
+    "runtimeWidth": 768,
+    "runtimeHeight": 512,
+    "sourceBytes": 2071891,
+    "runtimeBytes": 56202,
+    "sha256": "a09a8560f398dadf8f0e4c80a0f1d2219b81b14202460fadc83cf5d591ed9c0a"
+  },
+  "assets/learning-lab/priority-3/animals/grey-donkey.png": {
+    "url": "optimized/assets/learning-lab/priority-3/animals/grey-donkey.webp",
+    "width": 1536,
+    "height": 1024,
+    "runtimeWidth": 768,
+    "runtimeHeight": 512,
+    "sourceBytes": 2196775,
+    "runtimeBytes": 83692,
+    "sha256": "c940feead00eee7cf4fd40ed3b6ed203f1967528e651f6c9b4f5fff60025e35d"
+  },
+  "assets/learning-lab/priority-3/animals/kudu-leaping.png": {
+    "url": "optimized/assets/learning-lab/priority-3/animals/kudu-leaping.webp",
+    "width": 1536,
+    "height": 1024,
+    "runtimeWidth": 768,
+    "runtimeHeight": 512,
+    "sourceBytes": 1851830,
+    "runtimeBytes": 51952,
+    "sha256": "68bb6b254d242e87e1a540dbbf1671f187f9315f96b30c7666fa5c378aa9f975"
+  },
+  "assets/learning-lab/priority-3/animals/kudu-standing.png": {
+    "url": "optimized/assets/learning-lab/priority-3/animals/kudu-standing.webp",
+    "width": 1312,
+    "height": 1199,
+    "runtimeWidth": 656,
+    "runtimeHeight": 600,
+    "sourceBytes": 1264276,
+    "runtimeBytes": 56218,
+    "sha256": "b49b4a532cfe311579ff8cfead98a60b9d9ae75487f44873e81f3ed25a9b04c1"
+  },
+  "assets/learning-lab/priority-3/animals/nguni-cow.png": {
+    "url": "optimized/assets/learning-lab/priority-3/animals/nguni-cow.webp",
+    "width": 1536,
+    "height": 1024,
+    "runtimeWidth": 768,
+    "runtimeHeight": 512,
+    "sourceBytes": 2268183,
+    "runtimeBytes": 75756,
+    "sha256": "c49e23a5332323489d714834170716d84f5b3f9c16868e1299428deefe18253e"
+  },
+  "assets/learning-lab/priority-3/roads/wet-esc-bend.png": {
+    "url": "optimized/assets/learning-lab/priority-3/roads/wet-esc-bend.webp",
+    "width": 1254,
+    "height": 1254,
+    "runtimeWidth": 1024,
+    "runtimeHeight": 1024,
+    "sourceBytes": 3827134,
+    "runtimeBytes": 430494,
+    "sha256": "05948f10a06c83907c389b6911ce67f46f18d5a06830d9a03f0f5a267c6f7ece"
+  },
+  "assets/learning-lab/priority-3/scenery/acacia-tree.png": {
+    "url": "optimized/assets/learning-lab/priority-3/scenery/acacia-tree.webp",
+    "width": 1220,
+    "height": 1289,
+    "runtimeWidth": 727,
+    "runtimeHeight": 768,
+    "sourceBytes": 1584525,
+    "runtimeBytes": 134354,
+    "sha256": "7ea7e88cc3dcb9d45d86de87c50a9d41fe9e926560ffae4c0945f091ca3d9510"
+  },
+  "assets/learning-lab/priority-3/scenery/palm-tree.png": {
+    "url": "optimized/assets/learning-lab/priority-3/scenery/palm-tree.webp",
+    "width": 1024,
+    "height": 1536,
+    "runtimeWidth": 512,
+    "runtimeHeight": 768,
+    "sourceBytes": 2001871,
+    "runtimeBytes": 72562,
+    "sha256": "1f1f2d6dd5a2e374c7718314b4be695ff406a73eb8cfc91cdb79aa688b035ad5"
+  },
+  "assets/learning-lab/priority-3/scenery/savanna-bush.png": {
+    "url": "optimized/assets/learning-lab/priority-3/scenery/savanna-bush.webp",
+    "width": 1245,
+    "height": 1263,
+    "runtimeWidth": 757,
+    "runtimeHeight": 768,
+    "sourceBytes": 2013537,
+    "runtimeBytes": 185066,
+    "sha256": "a9275e4a7524ed3ca5855ef8a69447530c45691dd25b9c9bc8718e5d3524b255"
+  },
+  "assets/learning-lab/priority-3/scenery/street-lamp.png": {
+    "url": "optimized/assets/learning-lab/priority-3/scenery/street-lamp.webp",
+    "width": 1024,
+    "height": 1536,
+    "runtimeWidth": 512,
+    "runtimeHeight": 768,
+    "sourceBytes": 903580,
+    "runtimeBytes": 7478,
+    "sha256": "e9d5ce4a50164d76401aaa6a02ea92f2fc5ceeda88e447ff96fa965724ba20a2"
+  },
+  "assets/learning-lab/priority-3/top-down/blue-sedan.png": {
+    "url": "optimized/assets/learning-lab/priority-3/top-down/blue-sedan.webp",
+    "width": 1024,
+    "height": 1536,
+    "runtimeWidth": 256,
+    "runtimeHeight": 384,
+    "sourceBytes": 1882311,
+    "runtimeBytes": 21608,
+    "sha256": "d9c5ff3fa3b511e5ab7e9ea00768bdc04ce134f476b0562839e1943e2e28b7ed"
+  },
+  "assets/learning-lab/priority-3/top-down/cyclist-car-safe-pass.png": {
+    "url": "optimized/assets/learning-lab/priority-3/top-down/cyclist-car-safe-pass.webp",
+    "width": 1024,
+    "height": 1536,
+    "runtimeWidth": 512,
+    "runtimeHeight": 768,
+    "sourceBytes": 1623656,
+    "runtimeBytes": 47112,
+    "sha256": "8224e81b975a068bdbf72c4011f3afdb1c12119bab4be46e72ca46fb61497d1c"
+  },
+  "assets/learning-lab/priority-3/top-down/cyclist.png": {
+    "url": "optimized/assets/learning-lab/priority-3/top-down/cyclist.webp",
+    "width": 1024,
+    "height": 1536,
+    "runtimeWidth": 256,
+    "runtimeHeight": 384,
+    "sourceBytes": 1401360,
+    "runtimeBytes": 12330,
+    "sha256": "b8d93cf3a40e4df56f31da96a1e3b42e5b0013ab2062f27ca39244602b0c95ba"
+  },
+  "assets/learning-lab/priority-3/top-down/double-cab-bakkie.png": {
+    "url": "optimized/assets/learning-lab/priority-3/top-down/double-cab-bakkie.webp",
+    "width": 1024,
+    "height": 1536,
+    "runtimeWidth": 256,
+    "runtimeHeight": 384,
+    "sourceBytes": 1798459,
+    "runtimeBytes": 14846,
+    "sha256": "47b3ac3b969f8aa814bec923e8ec0a65147a129875c356bf1245181f8b594e80"
+  },
+  "assets/learning-lab/priority-3/top-down/fuel-tanker.png": {
+    "url": "optimized/assets/learning-lab/priority-3/top-down/fuel-tanker.webp",
+    "width": 1024,
+    "height": 1536,
+    "runtimeWidth": 256,
+    "runtimeHeight": 384,
+    "sourceBytes": 1423263,
+    "runtimeBytes": 10076,
+    "sha256": "52fb0a0fb7cbf89ecd1314967a219fd1dd846e9c44b28de34cc3b5cef3721bdc"
+  },
+  "assets/learning-lab/priority-3/top-down/minibus-taxi.png": {
+    "url": "optimized/assets/learning-lab/priority-3/top-down/minibus-taxi.webp",
+    "width": 1024,
+    "height": 1536,
+    "runtimeWidth": 256,
+    "runtimeHeight": 384,
+    "sourceBytes": 1452953,
+    "runtimeBytes": 10856,
+    "sha256": "c398e98b1d05814e9b95c2ce96fa1d87a379abcc5423fb1d8d69fc9474408347"
+  },
+  "assets/learning-lab/priority-3/top-down/motorcycle-rider.png": {
+    "url": "optimized/assets/learning-lab/priority-3/top-down/motorcycle-rider.webp",
+    "width": 1024,
+    "height": 1536,
+    "runtimeWidth": 256,
+    "runtimeHeight": 384,
+    "sourceBytes": 1772058,
+    "runtimeBytes": 21104,
+    "sha256": "c507cf4c9d8443ec54803019100ce972b6e76478cf7a8a237a5132c8f99bc256"
+  },
+  "assets/learning-lab/priority-3/top-down/pedestrian.png": {
+    "url": "optimized/assets/learning-lab/priority-3/top-down/pedestrian.webp",
+    "width": 1024,
+    "height": 1536,
+    "runtimeWidth": 256,
+    "runtimeHeight": 384,
+    "sourceBytes": 1762370,
+    "runtimeBytes": 17334,
+    "sha256": "6b314452ba13176912594e6b14bf0b5db10ecaae4566231c3980d1983a067eed"
+  },
+  "assets/learning-lab/priority-3/top-down/red-sedan.png": {
+    "url": "optimized/assets/learning-lab/priority-3/top-down/red-sedan.webp",
+    "width": 1024,
+    "height": 1536,
+    "runtimeWidth": 256,
+    "runtimeHeight": 384,
+    "sourceBytes": 1840574,
+    "runtimeBytes": 16716,
+    "sha256": "2015839d2b34df8da897c813b618dd409cc88830ed29c373afb3b864cfe6c66f"
+  },
+  "assets/map_bg.webp": {
+    "url": "optimized/assets/map_bg.webp",
+    "width": 941,
+    "height": 1672,
+    "runtimeWidth": 941,
+    "runtimeHeight": 1672,
+    "sourceBytes": 401292,
+    "runtimeBytes": 401292,
+    "sha256": "c8b948baafc85b09bb8b560912d886f7e27c6c60857da2771e81e7bb36cfb874"
+  },
+  "assets/post.webp": {
+    "url": "optimized/assets/post.webp",
+    "width": 60,
+    "height": 326,
+    "runtimeWidth": 60,
+    "runtimeHeight": 326,
+    "sourceBytes": 7262,
+    "runtimeBytes": 7262,
+    "sha256": "364f3b068cfc3b5dfff4a37137836bcd3c75677c043589fa83b227a526b6595b"
+  },
+  "assets/scn_acacia.webp": {
+    "url": "optimized/assets/scn_acacia.webp",
+    "width": 593,
+    "height": 560,
+    "runtimeWidth": 593,
+    "runtimeHeight": 560,
+    "sourceBytes": 103260,
+    "runtimeBytes": 103260,
+    "sha256": "81b470c6e54205dc8d13ceb68fb4587bad1f87516ca1b01375640792f1708aeb"
+  },
+  "assets/scn_b1map.webp": {
+    "url": "optimized/assets/scn_b1map.webp",
+    "width": 582,
+    "height": 900,
+    "runtimeWidth": 582,
+    "runtimeHeight": 900,
+    "sourceBytes": 170880,
+    "runtimeBytes": 170880,
+    "sha256": "610c6922a7e9133eeacd5eda8f50445901e7c1d9d44a07be929f7aedc2a5b8ac"
+  },
+  "assets/scn_bush.webp": {
+    "url": "optimized/assets/scn_bush.webp",
+    "width": 422,
+    "height": 360,
+    "runtimeWidth": 422,
+    "runtimeHeight": 360,
+    "sourceBytes": 76890,
+    "runtimeBytes": 76890,
+    "sha256": "683198eef06e2ac54eed85a6d2c84099779cc2490ff2d6cdeb65c50c438fbd7a"
+  },
+  "assets/scn_crossing.webp": {
+    "url": "optimized/assets/scn_crossing.webp",
+    "width": 1285,
+    "height": 440,
+    "runtimeWidth": 1285,
+    "runtimeHeight": 440,
+    "sourceBytes": 199298,
+    "runtimeBytes": 199298,
+    "sha256": "c99d7dedff5ee6c854023b68957538bb30fe4ba2074f12d88d81cd6da39ec09e"
+  },
+  "assets/scn_donkey.webp": {
+    "url": "optimized/assets/scn_donkey.webp",
+    "width": 514,
+    "height": 420,
+    "runtimeWidth": 514,
+    "runtimeHeight": 420,
+    "sourceBytes": 48042,
+    "runtimeBytes": 48042,
+    "sha256": "bfc9359a9914ff0472d623f772d5d692322ef398e76bdc14177fd9922323ef46"
+  },
+  "assets/scn_kudu.webp": {
+    "url": "optimized/assets/scn_kudu.webp",
+    "width": 496,
+    "height": 480,
+    "runtimeWidth": 496,
+    "runtimeHeight": 480,
+    "sourceBytes": 42682,
+    "runtimeBytes": 42682,
+    "sha256": "99d2350473756f5dde33abf2f723c142ea67963a1952f4f80a83a14f92d0df64"
+  },
+  "assets/scn_kudu_leap.webp": {
+    "url": "optimized/assets/scn_kudu_leap.webp",
+    "width": 730,
+    "height": 480,
+    "runtimeWidth": 730,
+    "runtimeHeight": 480,
+    "sourceBytes": 49552,
+    "runtimeBytes": 49552,
+    "sha256": "53d87be02b2edb9748a2ad6ef3ce9c23bf12696ad8a49969f80759b137e87c7f"
+  },
+  "assets/scn_lamp.webp": {
+    "url": "optimized/assets/scn_lamp.webp",
+    "width": 218,
+    "height": 600,
+    "runtimeWidth": 218,
+    "runtimeHeight": 600,
+    "sourceBytes": 6774,
+    "runtimeBytes": 6774,
+    "sha256": "b20fe90f65335055021e2cf7fb43b63732f1577abc870580370f5498a615685f"
+  },
+  "assets/scn_palm.webp": {
+    "url": "optimized/assets/scn_palm.webp",
+    "width": 354,
+    "height": 600,
+    "runtimeWidth": 354,
+    "runtimeHeight": 600,
+    "sourceBytes": 61900,
+    "runtimeBytes": 61900,
+    "sha256": "966b94ec481db372532d050d9bc83f00bc5244b6ba927bc20608280e71687399"
+  },
+  "assets/sky.webp": {
+    "url": "optimized/assets/sky.webp",
+    "width": 1008,
+    "height": 690,
+    "runtimeWidth": 1008,
+    "runtimeHeight": 690,
+    "sourceBytes": 35248,
+    "runtimeBytes": 35248,
+    "sha256": "506cd79d2ce8a278ed21f41cee3b9c3b6ae55b232efe8eaa34e49db008172c61"
+  },
+  "assets/spot_beer.webp": {
+    "url": "optimized/assets/spot_beer.webp",
+    "width": 264,
+    "height": 420,
+    "runtimeWidth": 264,
+    "runtimeHeight": 420,
+    "sourceBytes": 20610,
+    "runtimeBytes": 20610,
+    "sha256": "1fdb0e7be7f441776ab7c5a8a7d5ffbd76cb3c91b64a85386772cabef7ce2e36"
+  },
+  "assets/spot_meds.webp": {
+    "url": "optimized/assets/spot_meds.webp",
+    "width": 438,
+    "height": 420,
+    "runtimeWidth": 438,
+    "runtimeHeight": 420,
+    "sourceBytes": 44822,
+    "runtimeBytes": 44822,
+    "sha256": "8430b5a77cc51d2015fb66b98e046df2d7971370fa7ee37b81aac36c1aa83cec"
+  },
+  "assets/spot_phone.webp": {
+    "url": "optimized/assets/spot_phone.webp",
+    "width": 340,
+    "height": 420,
+    "runtimeWidth": 340,
+    "runtimeHeight": 420,
+    "sourceBytes": 19040,
+    "runtimeBytes": 19040,
+    "sha256": "3c9303db916154eb57bf0f8ef901b72a523b76b4c44844652e9b4c85cc2b1237"
+  },
+  "assets/spot_wheel.webp": {
+    "url": "optimized/assets/spot_wheel.webp",
+    "width": 427,
+    "height": 420,
+    "runtimeWidth": 427,
+    "runtimeHeight": 420,
+    "sourceBytes": 29680,
+    "runtimeBytes": 29680,
+    "sha256": "35e13ba646ff552b275aac007c7784ab819be21e9d68913c40c12de589d7e98b"
+  },
+  "assets/suv.webp": {
+    "url": "optimized/assets/suv.webp",
+    "width": 420,
+    "height": 388,
+    "runtimeWidth": 420,
+    "runtimeHeight": 388,
+    "sourceBytes": 36516,
+    "runtimeBytes": 36516,
+    "sha256": "29c738db83e736969a73ea85f1357cf2d71d4d7f8d9a981574cc49ba172fe0d5"
+  },
+  "assets/td_crossroads.webp": {
+    "url": "optimized/assets/td_crossroads.webp",
+    "width": 655,
+    "height": 640,
+    "runtimeWidth": 655,
+    "runtimeHeight": 640,
+    "sourceBytes": 91854,
+    "runtimeBytes": 91854,
+    "sha256": "7e51450a5b0e1f8a2f488b3c736d15a41a24d77d6c96d51aaf6df80a979f765b"
+  },
+  "assets/td_fence.webp": {
+    "url": "optimized/assets/td_fence.webp",
+    "width": 368,
+    "height": 800,
+    "runtimeWidth": 368,
+    "runtimeHeight": 800,
+    "sourceBytes": 78248,
+    "runtimeBytes": 78248,
+    "sha256": "742113c480860a447d39e249f2ec4bae8b3a9a34e7e5f8320f5df24626523079"
+  },
+  "assets/td_lighting.webp": {
+    "url": "optimized/assets/td_lighting.webp",
+    "width": 368,
+    "height": 800,
+    "runtimeWidth": 368,
+    "runtimeHeight": 800,
+    "sourceBytes": 58548,
+    "runtimeBytes": 58548,
+    "sha256": "eac2b652fd5b80c36ee67fbdb301fc155e890739047ba03a8f35ecd591e7618c"
+  },
+  "assets/td_refuge.webp": {
+    "url": "optimized/assets/td_refuge.webp",
+    "width": 368,
+    "height": 800,
+    "runtimeWidth": 368,
+    "runtimeHeight": 800,
+    "sourceBytes": 59982,
+    "runtimeBytes": 59982,
+    "sha256": "5e877b77d3d44b57c01a7d9453af02fa73e28669879fe17909506c786b259d69"
+  },
+  "assets/td_road.webp": {
+    "url": "optimized/assets/td_road.webp",
+    "width": 368,
+    "height": 800,
+    "runtimeWidth": 368,
+    "runtimeHeight": 800,
+    "sourceBytes": 83632,
+    "runtimeBytes": 83632,
+    "sha256": "90f2f07ed04cb4f485f03cc36790d4bd69598c716d99e612e628a6061b93e18c"
+  },
+  "assets/td_roundabout.webp": {
+    "url": "optimized/assets/td_roundabout.webp",
+    "width": 640,
+    "height": 640,
+    "runtimeWidth": 640,
+    "runtimeHeight": 640,
+    "sourceBytes": 54808,
+    "runtimeBytes": 54808,
+    "sha256": "eb82912aa981ebd208eba0d64a4b52c5ffc4e5f88059666e17e62576985745ea"
+  },
+  "assets/td_rumble.webp": {
+    "url": "optimized/assets/td_rumble.webp",
+    "width": 368,
+    "height": 800,
+    "runtimeWidth": 368,
+    "runtimeHeight": 800,
+    "sourceBytes": 70910,
+    "runtimeBytes": 70910,
+    "sha256": "20d20d9f055634903c332ade1abdf4005f409ec7d6fd69cffc9de4a733006e6c"
+  },
+  "assets/tl_green.webp": {
+    "url": "optimized/assets/tl_green.webp",
+    "width": 201,
+    "height": 420,
+    "runtimeWidth": 201,
+    "runtimeHeight": 420,
+    "sourceBytes": 20578,
+    "runtimeBytes": 20578,
+    "sha256": "1e4eea81902a49ea6c91a443f4fe2d7ba2784f6f223e017996f6e876e8c8ff67"
+  },
+  "assets/tl_off.webp": {
+    "url": "optimized/assets/tl_off.webp",
+    "width": 201,
+    "height": 420,
+    "runtimeWidth": 201,
+    "runtimeHeight": 420,
+    "sourceBytes": 15836,
+    "runtimeBytes": 15836,
+    "sha256": "26f80160bbb6b715a37968c5f1635b9f36dd6c1362626df58972fcf71cfa69a1"
+  },
+  "assets/tl_red.webp": {
+    "url": "optimized/assets/tl_red.webp",
+    "width": 201,
+    "height": 420,
+    "runtimeWidth": 201,
+    "runtimeHeight": 420,
+    "sourceBytes": 18246,
+    "runtimeBytes": 18246,
+    "sha256": "7840d9fb59cc82aba9e8cad2aafea608823343dde11450acd2f0141accccc5da"
+  },
+  "assets/tl_yellow.webp": {
+    "url": "optimized/assets/tl_yellow.webp",
+    "width": 201,
+    "height": 420,
+    "runtimeWidth": 201,
+    "runtimeHeight": 420,
+    "sourceBytes": 13002,
+    "runtimeBytes": 13002,
+    "sha256": "6936a751f1a20cb8bc7d68631b8327b044c0b8002f6121506c322d0083160e93"
+  },
+  "assets/truck.webp": {
+    "url": "optimized/assets/truck.webp",
+    "width": 380,
+    "height": 358,
+    "runtimeWidth": 380,
+    "runtimeHeight": 358,
+    "sourceBytes": 36544,
+    "runtimeBytes": 36544,
+    "sha256": "a826f67a732f97d34bdeaf578380eeb08a2c15e1e5daaeb43d89aeb4616e19b8"
+  },
+  "assets/veh_bakkie.webp": {
+    "url": "optimized/assets/veh_bakkie.webp",
+    "width": 347,
+    "height": 320,
+    "runtimeWidth": 347,
+    "runtimeHeight": 320,
+    "sourceBytes": 20924,
+    "runtimeBytes": 20924,
+    "sha256": "f4636ff1fff2bf941f33fd13e2d913435b982093996ebe88af86fce4b63434b2"
+  },
+  "assets/veh_sedan_blue.webp": {
+    "url": "optimized/assets/veh_sedan_blue.webp",
+    "width": 423,
+    "height": 320,
+    "runtimeWidth": 423,
+    "runtimeHeight": 320,
+    "sourceBytes": 23550,
+    "runtimeBytes": 23550,
+    "sha256": "0afdd8004161641994c0d59b956df74e67e9d29ffdab9a4db1754d3f8127086b"
+  },
+  "assets/veh_sedan_white.webp": {
+    "url": "optimized/assets/veh_sedan_white.webp",
+    "width": 399,
+    "height": 320,
+    "runtimeWidth": 399,
+    "runtimeHeight": 320,
+    "sourceBytes": 20322,
+    "runtimeBytes": 20322,
+    "sha256": "0f86a86c73ee6cc0f437e212044b1d2b392e2256db0ec915dcc2faf3e5a432a7"
+  },
+  "assets/veh_taxi.webp": {
+    "url": "optimized/assets/veh_taxi.webp",
+    "width": 315,
+    "height": 320,
+    "runtimeWidth": 315,
+    "runtimeHeight": 320,
+    "sourceBytes": 19570,
+    "runtimeBytes": 19570,
+    "sha256": "6b569b799a66c4ac3f4cce444e95e24e19c444cbbc2f3682dfd7fc66dc0758a7"
+  },
+  "assets/veh_truck.webp": {
+    "url": "optimized/assets/veh_truck.webp",
+    "width": 268,
+    "height": 320,
+    "runtimeWidth": 268,
+    "runtimeHeight": 320,
+    "sourceBytes": 16890,
+    "runtimeBytes": 16890,
+    "sha256": "e9a41362c68aa55711f6062f649bc3bce20004144ee65159b1ebf51135ca34a0"
+  }
+}

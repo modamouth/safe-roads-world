@@ -57,8 +57,8 @@ for (const width of [360, 390, 540]) test(`Priority 2 scenes at ${width}`, async
   expect(errors).toEqual([]); expect(warnings).toEqual([]); expect(failures).toEqual([]);
 });
 test('Priority 2 missing tanker and cyclist keep placeholders usable', async ({ page }) => {
-  await page.route('**/fuel-tanker.png', route => route.abort());
-  await page.route('**/cyclist.png', route => route.abort());
+  await page.route('**/fuel-tanker.webp', route => route.abort());
+  await page.route('**/cyclist.webp', route => route.abort());
   const errors = await boot(page);
   await expect.poll(() => page.evaluate(() => window.__srwGame?.scene.isActive('Title'))).toBe(true);
   await open(page, scenes.find(d => d.sc.art.kind === 'truck-lanes'));
