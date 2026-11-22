@@ -1,3 +1,6 @@
+import { crashImpact } from '../../services/crashFeedbackScene.js';
+import { stopCrashFeedback } from '../../services/crashFeedback.ts';
+import { Sfx } from '../../sfx.js';
 // Crash-test lab: a car with a crash-test dummy is driven into a barrier.
 // Uses the crash-lab photos (assets/labcar*.webp, labbg.webp) when they have
 // loaded; otherwise a drawn car. Laid out in a 540-wide frame scaled to the area.
@@ -106,6 +109,7 @@ export default function create(scene, parent, p, a) {
   const inst = {
     alt: null,
     setState(sv) {
+      stopCrashFeedback();
       const my = ++seq;
       const lvl = SEV[sv.level] ? sv.level : 'medium', sev = SEV[lvl], dmg = DAMAGE[lvl];
       scene.tweens.killTweensOf(st);
@@ -117,6 +121,9 @@ export default function create(scene, parent, p, a) {
       return new Promise(res => {
         const impact = () => {
           if (my !== seq) return res();
+          const impactSpeedKmh = Number.isFinite(Number(sv.kmh)) ? Number(sv.kmh) : DAMAGE[lvl];
+          crashImpact(scene, impactSpeedKmh);
+          Sfx.init(scene); Sfx.impact(Math.min(1, Math.max(0.15, impactSpeedKmh / 120)));
           if (!REDUCE_MOTION) {
             scene.cameras.main.shake(380, sev.shake);
             flash.setAlpha(0.7); scene.tweens.add({ targets: flash, alpha: 0, duration: 220 });
@@ -139,6 +146,6 @@ export default function create(scene, parent, p, a) {
     destroy() {}
   };
   const m = clipTo(scene, outer, a);
-  inst.destroy = () => { seq++; scene.tweens.killTweensOf(st); outer.destroy(); m.destroy(); };
+  inst.destroy = () => { stopCrashFeedback(); seq++; scene.tweens.killTweensOf(st); outer.destroy(); m.destroy(); };
   return inst;
 }

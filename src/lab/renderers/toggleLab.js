@@ -25,7 +25,14 @@ export default async function toggleLab(ctx, sc) {
   const seg = segmented(scene, layer, sc.states.map(s => ({ id: s.id, label: ctx.text(s.label) })), segY, s => show(s.id), initial);
 
   const cont = ctx.primary(t('lab.continue'), () => ctx.next());
-  const update = () => cont.setEnabled(!sc.requireAll || sc.states.every(s => seen.has(s.id)));
+  let impactLocked = false;
+  const update = () => cont.setEnabled(!impactLocked && (!sc.requireAll || sc.states.every(s => seen.has(s.id))));
+  const lock = value => {
+    if (!cont.scene || seg.buttons.some(b => !b.scene)) return;
+    impactLocked = value; seg.buttons.forEach(b => b.setEnabled(!value)); update();
+  };
+  scene.events.on('crash-impact-lock', lock);
+  scene.events.once('shutdown', () => scene.events.off('crash-impact-lock', lock));
   if (sc.requireAll) para(scene, layer, t('toggle.tryAll'), segY + 44, { size: TYPE.tiny, color: INK.faint });
 
   // Picking a state while another is still animating replaces it; the older one's result is ignored.

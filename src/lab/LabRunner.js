@@ -1,3 +1,5 @@
+import { bindCrashFeedback } from '../services/crashFeedbackScene.js';
+import { stopCrashFeedback } from '../services/crashFeedback.ts';
 // ---------------------------------------------------------------------------
 // Learning Lab engine: one Phaser scene that plays any experience from its
 // content file (content/learning-lab/<slug>/en.json).
@@ -38,6 +40,7 @@ export default class LabRunner extends Phaser.Scene {
 
   create(data) {
     setupCam(this);
+    bindCrashFeedback(this);
     Sfx.init(this);
     this.cameras.main.fadeIn(220, 8, 17, 30);
     this.artVisit = {}; this.exitLab = false;
@@ -65,6 +68,7 @@ export default class LabRunner extends Phaser.Scene {
   // --- navigation ----------------------------------------------------------------
   go(key, data) {
     if (this.leaving) return; this.leaving = true;
+    stopCrashFeedback();
     this.exitLab = key !== 'LabRunner';
     if (this.exitLab) forgetExperience();
     this.cameras.main.fadeOut(200, 8, 17, 30);

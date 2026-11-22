@@ -15,7 +15,7 @@ function star(g, x, y, ro, ri) {
 export const ICONS = ['back', 'close', 'lock', 'city', 'lab', 'taxi', 'highway', 'gravel', 'truck', 'school',
   'map', 'passport', 'badge', 'star', 'play', 'check', 'speed', 'info',
   'car_speed', 'pedestrian', 'motorcycle', 'bicycle', 'heavy', 'car_shield', 'conditions', 'child_seat',
-  'rules', 'treatment', 'alcohol', 'fatigue', 'more', 'steering', 'walker', 'blind_spot', 'truck_brake'];
+  'rules', 'treatment', 'alcohol', 'fatigue', 'more', 'steering', 'walker', 'blind_spot', 'truck_brake', 'home', 'animal'];
 
 export function drawIcon(g, name, x, y, s, color, alpha) {
   const a = alpha == null ? 1 : alpha, h = s / 2, lw = Math.max(2, s * 0.1);
@@ -230,6 +230,18 @@ function drawOutline(g, name, x, y, h, lw, color, a) {
       return true;
     case 'more':
       dot(-0.5, 0, 0.13); dot(0, 0, 0.13); dot(0.5, 0, 0.13);
+      return true;
+    case 'home': // house with a door
+      poly([-0.78, -0.02], [0, -0.78], [0.78, -0.02]);
+      line([-0.6, -0.16], [-0.6, 0.78], [0.6, 0.78], [0.6, -0.16]);
+      box(-0.18, 0.3, 0.36, 0.48, 0.04);
+      return true;
+    case 'animal': // kudu head: spiral horns over a long face
+      line([-0.12, -0.3], [-0.34, -0.6], [-0.18, -0.78], [-0.42, -0.98]);
+      line([0.12, -0.3], [0.34, -0.6], [0.18, -0.78], [0.42, -0.98]);
+      poly([-0.24, -0.3], [0.24, -0.3], [0.16, 0.5], [0.0, 0.72], [-0.16, 0.5]);
+      line([-0.24, -0.24], [-0.58, -0.36]); line([0.24, -0.24], [0.58, -0.36]);
+      dot(-0.1, -0.08, 0.05); dot(0.1, -0.08, 0.05);
       return true;
   }
   return false;

@@ -22,7 +22,12 @@ export const ZONES = [
     cta: { title: 'Road Safety Learning Lab', button: 'Enter Lab', showExperiences: true }
   },
   { id: 'taxi', label: 'Taxi Rank', icon: 'taxi', x: 0.65, y: 0.36, status: 'locked' },
-  { id: 'b1', label: 'B1 Highway', icon: 'highway', x: 0.37, y: 0.31, status: 'locked' },
+  {
+    id: 'b1', label: 'B1 Highway', tag: 'The Journey Home', icon: 'highway',
+    x: 0.37, y: 0.31, status: 'playable', scene: 'Journey', labelSide: 'above',
+    blurb: 'Drive home from Windhoek to Tsumeb. Watch your speed, your gap and your tiredness.',
+    cta: { title: 'The Journey Home', button: 'Hit the road' }
+  },
   { id: 'gravel', label: 'Gravel Roads', icon: 'gravel', x: 0.45, y: 0.21, status: 'locked' },
   { id: 'logistics', label: 'Logistics Corridor', icon: 'truck', x: 0.72, y: 0.15, status: 'locked' },
   { id: 'school', label: 'School Safety', icon: 'school', x: 0.5, y: 0.5, status: 'locked', onMap: false }
