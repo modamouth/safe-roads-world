@@ -71,6 +71,13 @@ src/
     Lab.js               Speed: crash-lab replay (real photos, or drawn fallback)
     Reveal.js            Speed: answer reveal + animated risk chart
     Passport.js          Badge + Passport stub (WhatsApp save is a no-op)
+    Journey.js           The Journey Home: route, Passport stamps, pre-trip check
+    JourneyDrive.js      The Journey Home: one leg (HUD, pedals, debrief)
+  journey/
+    route.js             Legs, speed zones, hazards, stamps, checks, tips (data)
+    sim.js               Driving simulation for one leg (pure; unit tested)
+    road.js              Perspective road renderer for the drive
+    progress.js          Journey progress saved on the device
 public/
   assets/                9 WebP images (road scene + crash lab), ~335 KB total,
                          plus the optional art slots below if supplied
@@ -97,6 +104,23 @@ To add a Learning Lab experience, add an entry to `EXPERIENCES` in
 soon". A playable one needs `status: 'playable'`, a `scene`, `minutes` and a
 `reset()` that clears its session state. All entries appear in the `LabMenu`
 grid (2 columns). The Map's Lab card shows the first three, then a "More" chip.
+
+## The Journey Home (B1 Highway zone)
+
+A multi-leg drive home up the B1: Windhoek → Okahandja → Otjiwarongo → Otavi →
+Tsumeb. Before leg 1 the player does (or skips) a pre-trip check; skipped checks
+have a cost on the road (soft tyres, a dim headlight, phone messages, an
+unbuckled passenger). Each leg is about two minutes of driving with PETROL and
+BRAKE (arrows/WASD on a keyboard); the car keeps its lane unless the driver
+drifts. The HUD shows the speed limit, km/h, fatigue, the gap to the vehicle
+ahead, a safety score out of 100, the journey Passport (9 stamps) and vehicle
+health. Fatigue and vehicle health carry from leg to leg, so resting at the
+night leg's rest area is what gets you home safely.
+
+- Tune legs (zones, hazards, curves, fatigue rates) in `src/journey/route.js`.
+- `npm test` drives every leg with a careful autopilot and with reckless drivers
+  (`tests/journey-sim.test.js`); keep it passing after tuning.
+- In dev, `?autopilot=1` lets the careful driver play the leg for you.
 
 ## Pedestrian safety (Learning Lab)
 

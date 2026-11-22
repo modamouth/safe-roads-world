@@ -5,6 +5,8 @@ import { drawIcon } from '../icons.js';
 import { describe } from '../a11y.js';
 import { EXPERIENCES, experienceProgress, labProgress } from '../experiences.js';
 import { t } from '../lab/content.js';
+import { journey } from '../journey/progress.js';
+import { STAMPS as JOURNEY_STAMPS } from '../journey/route.js';
 import { Sfx } from '../sfx.js';
 
 // Passport: one stamp per Learning Lab experience (a partial ring while some
@@ -43,6 +45,10 @@ export default class Passport extends Phaser.Scene {
       T(this, x, y + 60, e.label, 13, pr.complete ? '#FFFFFF' : '#9AA6B5', { fontStyle: pr.complete ? 'bold' : 'normal', wordWrap: { width: cell - 6 }, align: 'center' });
       lines.push(e.label + ': ' + (pr.complete ? t('menu.done').replace('✓ ', '') : t('menu.progress', { n: pr.done, of: pr.of })));
     });
+    // The Journey Home keeps its own stamps; link to it under the Lab grid.
+    const js = 'The Journey Home: ' + journey.stampCount() + ' of ' + JOURNEY_STAMPS.length + ' stamps';
+    button(this, W / 2, 628, 380, 48, js + '  \u203A', () => this.go('Journey'), { size: 17, fill: C.navy2, fillA: 0.9, stroke: C.yellow, r: 24 });
+    lines.push(js);
     describe(t('passport.title'), [lp.done ? t('passport.stamps', { n: lp.done, of: lp.of }) : t('passport.empty')].concat(lines));
 
     this.toast = T(this, W / 2, 680, '', 16, '#B9C6D6', { fontStyle: 'normal', wordWrap: { width: 440 }, align: 'center' }).setAlpha(0);
