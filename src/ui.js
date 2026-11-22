@@ -1,3 +1,5 @@
+import { crashFeedback } from './services/crashFeedback.ts';
+import { openFeedbackSettings } from './services/feedbackSettings.js';
 import Phaser from 'phaser';
 import { W, H, Z, COLORS as C, FONT } from './config.js';
 import { Sfx } from './sfx.js';
@@ -92,6 +94,14 @@ export function soundToggle(scene) {
     b.setLabel(Sfx.muted ? 'Sound off' : 'Sound on');
   }, { size: 16, fillA: 0.12, color: '#DDE6F0', r: 20, hitH: 66 });
   b.setDepth(2000);
+  // Keep the existing sound shortcut; supported devices also expose feedback settings.
+  if (crashFeedback.isSupported()) {
+    const settings = button(scene, W - 155, 44, 36, 40, '⋯', () => openFeedbackSettings(scene),
+      { size: 22, fillA: 0.12, hitW: 44, a11y: 'Sound & feedback settings' }).setDepth(2000);
+    settings.on('destroy', () => scene.events.off('resume', refresh));
+    const refresh = () => b.setLabel(Sfx.muted ? 'Sound off' : 'Sound on');
+    scene.events.on('resume', refresh);
+  }
   return b;
 }
 

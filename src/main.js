@@ -1,3 +1,4 @@
+import { initializeCrashFeedback, crashFeedback } from './services/crashFeedback.ts';
 import Phaser from 'phaser';
 import { GW, GH } from './config.js';
 import Boot from './scenes/Boot.js';
@@ -8,6 +9,7 @@ import LabMenu from './scenes/LabMenu.js';
 import LabRunner from './lab/LabRunner.js';
 import Passport from './scenes/Passport.js';
 
+const cleanupFeedback = initializeCrashFeedback();
 const game = new Phaser.Game({
   type: Phaser.AUTO,
   parent: 'game',
@@ -20,5 +22,7 @@ const game = new Phaser.Game({
   scene: [Boot, Title, MapScene, CityRunStub, LabMenu, LabRunner, Passport]
 });
 
+game.events.once('destroy', cleanupFeedback);
+
 // Dev builds expose the game for debugging and end-to-end tests; production builds don't.
-if (import.meta.env.DEV) window.__srwGame = game;
+if (import.meta.env.DEV) { window.__srwGame = game; window.__srwCrashFeedback = crashFeedback; }

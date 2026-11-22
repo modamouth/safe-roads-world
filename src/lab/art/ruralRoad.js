@@ -1,3 +1,5 @@
+import { crashImpact } from '../../services/crashFeedbackScene.js';
+import { stopCrashFeedback } from '../../services/crashFeedback.ts';
 import { sourceBounds } from '../../imageAssets.js';
 import Phaser from 'phaser';
 // Chase view down a Namibian rural road, drawn in perspective (no video).
@@ -249,6 +251,7 @@ export default function create(scene, parent, p, a, ctx) {
       return inst.stopTest(s.kmh, look.seeM, s.reactionS || p.reactionS, s.decel || p.decel, vars);
     },
     stopTest(kmh, seeM, reactionS, decel, vars) {
+      stopCrashFeedback();
       const s = stopping(kmh, reactionS, decel), ok = s.total <= seeM;
       const hit = ok ? 0 : impactKmh(kmh, seeM, reactionS, decel);
       Object.assign(vars, { kmh, seeM: Math.round(seeM), stopM: Math.round(s.total), gapM: Math.round(seeM - s.total), hitKmh: Math.round(hit) });
@@ -269,6 +272,7 @@ export default function create(scene, parent, p, a, ctx) {
       });
     },
     play(id, vars) {
+      stopCrashFeedback();
       if (!swerveMode || !animal) return Promise.resolve();
       const kmh = Number(vars.speed || p.kmh || 100);
       Object.assign(vars, { kmh });
@@ -294,6 +298,7 @@ export default function create(scene, parent, p, a, ctx) {
       deb.update(dt);
       if (run && run.swerve) {
         const r = run;
+        if (r.crashed) { draw(); return; } // Hold controls/world until the impact settles.
         r.t += dt;
         // the kudu leaps out from the verge and across the road
         const k = clamp((r.t - 0.15) / 1.5, 0, 1);
@@ -311,7 +316,13 @@ export default function create(scene, parent, p, a, ctx) {
           car.angle = Math.sin(ks * Math.PI) * 6;
           oncoming.wz -= r.vOnc * dt;
           const gap = ahead(oncoming.wz - st.pos);
-          if (ks >= 1 && (ctx && ctx.skipSensitive ? gap <= 16 : gap <= 0.6)) { if (!(ctx && ctx.skipSensitive)) collide(r); finishSwerve(); }
+          if (ks >= 1 && (ctx && ctx.skipSensitive ? gap <= 16 : gap <= 0.6)) {
+            if (ctx && ctx.skipSensitive) finishSwerve();
+            else {
+              collide(r);
+              scene.time.delayedCall(600, () => { if (run === r) finishSwerve(); });
+            }
+          }
         }
         st.pos += r.v * dt;
         draw();
@@ -357,7 +368,10 @@ export default function create(scene, parent, p, a, ctx) {
   // A short vehicle-only impact cue; no animal injury animation.
   function collideCow(r) {
     if (r.impacted || run !== r) return;
-    r.impacted = true; st.phase = 'impact'; st.kmh = 0;
+    const impactSpeedKmh = r.hitKmh; // Residual speed, before the car is stopped.
+    r.impacted = true;
+    crashImpact(scene, impactSpeedKmh);
+    st.phase = 'impact'; st.kmh = 0;
     r.vars.collided = true; r.vars.currentKmh = 0;
     const strength = clamp(r.hitKmh / 120, 0.15, 1);
     Sfx.init(scene); Sfx.impact(strength);
@@ -378,6 +392,10 @@ export default function create(scene, parent, p, a, ctx) {
   }
   // Head-on impact with the oncoming vehicle (restored from the original Speed drive).
   function collide(r) {
+    if (r.crashed || run !== r) return;
+    const impactSpeedKmh = r.v * 3.6; // Simulation velocity is m/s here.
+    r.crashed = true;
+    crashImpact(scene, impactSpeedKmh);
     // Severity follows the speed the player chose: 80 -> 0.33, 100 -> 0.67, 120 -> 1.
     const k = clamp((r.kmh - 60) / 60, 0.2, 1), x = car.x, y = car.y - car.displayHeight * 0.45;
     Sfx.init(scene); Sfx.impact(k);
@@ -391,7 +409,6 @@ export default function create(scene, parent, p, a, ctx) {
       const sm = scene.add.image(x + (Math.random() - 0.5) * 120, y + Math.random() * 30, 'glow').setDepth(940).setTint(0x3A3A3A).setAlpha(0.55).setScale(0.3);
       scene.tweens.add({ targets: sm, y: sm.y - 120 - Math.random() * 90, x: sm.x + (Math.random() - 0.5) * 60, scale: 1.3 + Math.random() * 1.4, alpha: 0, duration: 1400 + Math.random() * 900, delay: i * 60, onComplete: () => sm.destroy() });
     }
-    r.crashed = true;
   }
   function finishSwerve() {
     const r = run; if (!r) return;
@@ -428,6 +445,6 @@ export default function create(scene, parent, p, a, ctx) {
     r.res();
   }
   const m = clipTo(scene, c, a);
-  inst.destroy = () => { run = null; scene.tweens.killTweensOf(car); scene.tweens.killTweensOf(impactFx); c.destroy(); m.destroy(); };
+  inst.destroy = () => { stopCrashFeedback(); run = null; scene.tweens.killTweensOf(car); scene.tweens.killTweensOf(impactFx); c.destroy(); m.destroy(); };
   return inst;
 }

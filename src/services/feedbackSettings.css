@@ -1,0 +1,16 @@
+#feedback-settings {
+  box-sizing: border-box;
+  width: min(90vw, 380px);
+  padding: 24px;
+  color: #fff;
+  background: #12293f;
+  border: 2px solid #1fa3b5;
+  border-radius: 20px;
+  font: 18px "Avenir Next", "Segoe UI", sans-serif;
+}
+#feedback-settings::backdrop { background: rgb(5 8 13 / 75%); }
+#feedback-settings h2 { margin: 0 0 20px; font-size: 24px; }
+#feedback-settings label { display: flex; gap: 12px; align-items: center; min-height: 52px; cursor: pointer; }
+#feedback-settings input { width: 24px; height: 24px; accent-color: #ffcb2b; }
+#feedback-settings button { width: 100%; min-height: 48px; margin-top: 20px; border: 0; border-radius: 14px; background: #ffcb2b; color: #0b1b2e; font: inherit; font-weight: bold; cursor: pointer; }
+#feedback-settings :focus-visible { outline: 3px solid white; outline-offset: 4px; }

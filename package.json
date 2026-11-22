@@ -16,7 +16,7 @@
     "test": "vitest run",
     "test:e2e": "playwright test",
     "lint": "eslint .",
-    "typecheck": "tsc -p jsconfig.json",
+    "typecheck": "tsc -p jsconfig.json && tsc -p tsconfig.feedback.json",
     "ci": "npm run lint && npm run typecheck && npm test && npm run build && npm run test:e2e",
     "optimize:images": "python3 scripts/optimize-images.py"
   },
