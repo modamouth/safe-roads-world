@@ -74,6 +74,15 @@ describe('City Safety Run', () => {
     expect(d.lines[0]).toMatch(/fast/);
   });
 
+  it('4: once your light is green, cross traffic not yet in the junction waits at its own line', () => {
+    const sim = freshSim(3), L = sim.ents.lights[0];
+    L.state = 'green';
+    sim.ents.cross.push({ s: L.s + 7, x: 9, v: -10, key: 'taxi', light: L.id }, { s: L.s + 7, x: 1, v: -10, key: 'sedan', light: L.id });
+    for (let n = 0; n < 60; n++) sim.step(DT, { throttle: 0, brake: 1, steer: 0 });
+    const [waiting, clearing] = sim.ents.cross;
+    expect(Math.abs(waiting.x)).toBeGreaterThan(ROAD.EDGE + 3);
+    expect(clearing.x).toBeLessThan(-15);
+  });
   it('a retry starts just before the failed encounter, with fresh traffic, and keeps the first-attempt score', () => {
     const run = createCityRun();
     expect(play(run, 0, except(1, floorIt(45))).fails[0].id).toBe('crossing');

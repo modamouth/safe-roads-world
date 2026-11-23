@@ -21,8 +21,10 @@ const TIME_WORD = { day: 'Afternoon', dusk: 'Dusk', night: 'Night' };
 const MAP = { x: 20, y: 176, w: 244, h: 410, crop: { x: 0.16, y: 0.33, w: 0.6, h: 0.66 } };
 const STOP = name => B1_ROUTE_STOPS.find(s => s.label === name);
 const ON_MAP = { Windhoek: STOP('Windhoek'), Okahandja: STOP('Okahandja'), Otjiwarongo: STOP('Otjiwarongo'), Otavi: { x: 0.452, y: 0.455 }, Tsumeb: STOP('Tsumeb') };
-// Where the route's towns sit on the illustrated B2 map (fractions of the image).
+// Where the route's towns sit on the illustrated B2 map (fractions of the image). With the
+// labelled map they are its painted pins; on the plain base, the painted towns themselves.
 const B2_ON_MAP = { Windhoek: [0.904, 0.656], Karibib: [0.569, 0.291], Arandis: [0.283, 0.515], Swakopmund: [0.132, 0.685] };
+const B2_BASE = [['Windhoek', 0.845, 0.7, 'stop'], ['Okahandja', 0.8, 0.3, 'via'], ['Karibib', 0.575, 0.355, 'stop'], ['Usakos', 0.47, 0.33, 'via'], ['Arandis', 0.35, 0.565, 'stop'], ['Swakopmund', 0.185, 0.74, 'stop']];
 let tipIndex = 0;
 
 export default class Journey extends Phaser.Scene {
@@ -32,8 +34,8 @@ export default class Journey extends Phaser.Scene {
 
   preload() {
     this.load.setPath(import.meta.env.BASE_URL);
-    const map = this.r.id === 'b2' ? A.routeB2 : A.route;
-    if (!this.textures.exists(map.key)) loadImage(this, map.key, map.path);
+    const maps = this.r.id === 'b2' ? [A.routeB2Base, A.routeB2] : [A.route];
+    maps.forEach(map => { if (!this.textures.exists(map.key)) loadImage(this, map.key, map.path); });
     this.load.on('loaderror', () => {});
   }
 
@@ -140,7 +142,8 @@ export default class Journey extends Phaser.Scene {
   coastRoute(run, towns) {
     const here = !run ? 0 : run.complete ? towns.length - 1 : run.leg;
     const area = { x: 20, y: 172, w: W - 40, h: 300 };
-    if (this.textures.exists(A.routeB2.key)) this.illustratedCoastMap(area, towns, here);
+    if (this.textures.exists(A.routeB2Base.key)) this.illustratedCoastMap(area, towns, here, true);
+    else if (this.textures.exists(A.routeB2.key)) this.illustratedCoastMap(area, towns, here);
     else drawCoastMap(this, area, { towns, here });
     const y0 = 486, gap = 42, g = this.add.graphics();
     this.r.legs.forEach((leg, i) => {
@@ -157,15 +160,41 @@ export default class Journey extends Phaser.Scene {
   }
 
   // The illustrated B2 map (towns, labels and route are painted on); mark where you are.
-  illustratedCoastMap(a, towns, here) {
-    const img = this.add.image(0, 0, A.routeB2.key).setOrigin(0);
+  illustratedCoastMap(a, towns, here, base) {
+    const img = this.add.image(0, 0, base ? A.routeB2Base.key : A.routeB2.key).setOrigin(0);
     const k = Math.min(a.w / img.width, a.h / img.height), w = img.width * k, h = img.height * k, x = a.x + (a.w - w) / 2, y = a.y + (a.h - h) / 2;
     img.setScale(k).setPosition(x, y);
     const mask = this.make.graphics({}, false); mask.fillStyle(0xFFFFFF); mask.fillRoundedRect(x, y, w, h, 16);
     img.setMask(mask.createGeometryMask());
     const frame = this.add.graphics(); frame.lineStyle(2, 0xFFFFFF, 0.25); frame.strokeRoundedRect(x, y, w, h, 16);
+    if (base) return this.drawB2Route(x, y, w, h, towns, here);
     const p = B2_ON_MAP[towns[here]], cx = x + w * p[0], cy = y + h * p[1];
     const ring = this.add.circle(cx, cy, 13).setStrokeStyle(3, 0xFFFFFF, 1);
+    if (!REDUCE_MOTION) this.tweens.add({ targets: ring, scale: 1.7, alpha: 0, duration: 1100, repeat: -1 });
+  }
+
+  // The route over the plain map: a smooth road through the towns, driven stretches in
+  // yellow, stops with labels, and a ring where the next leg starts.
+  drawB2Route(x, y, w, h, towns, here) {
+    const pt = ([, fx, fy]) => new Phaser.Math.Vector2(x + w * fx, y + h * fy);
+    const at = name => B2_BASE.findIndex(t => t[0] === name), reached = at(towns[here]);
+    const curve = new Phaser.Curves.Spline(B2_BASE.map(pt)), n = 120, pts = curve.getPoints(n);
+    // Where each town falls along the curve (for the driven part).
+    const tOf = i => { const target = pt(B2_BASE[i]); let best = 0; pts.forEach((p, k) => { if (p.distance(target) < pts[best].distance(target)) best = k; }); return best; };
+    const g = this.add.graphics();
+    g.lineStyle(8, 0x2B2A2E, 0.85); g.strokePoints(pts, false);
+    g.lineStyle(3, 0xFFFFFF, 0.9); g.strokePoints(pts, false);
+    if (reached > 0) { g.lineStyle(5, C.yellow, 1); g.strokePoints(pts.slice(0, tOf(reached) + 1), false); }
+    B2_BASE.forEach(([name, , , kind], i) => {
+      const p = pt(B2_BASE[i]), stop = kind === 'stop', done = i <= reached, end = i === B2_BASE.length - 1;
+      g.fillStyle(done ? C.yellow : 0xFFFFFF, 1); g.fillCircle(p.x, p.y, stop ? (end ? 8 : 6.5) : 3.5);
+      g.lineStyle(stop ? 2.5 : 1.5, 0x2B2A2E, 1); g.strokeCircle(p.x, p.y, stop ? (end ? 8 : 6.5) : 3.5);
+      const below = name === 'Windhoek' || name === 'Swakopmund' || name === 'Arandis';
+      this.add.text(p.x + (name === 'Swakopmund' ? 10 : 0), p.y + (below ? 16 : -15), name, { fontFamily: FONT, fontSize: stop ? '13px' : '10px', color: '#0B1B2E', fontStyle: stop ? 'bold' : 'normal',
+        backgroundColor: stop ? '#FFFFFFE6' : '#FFFFFFB3', padding: { x: 4, y: 1 }, resolution: 2 }).setOrigin(name === 'Swakopmund' ? 0 : 0.5, 0.5);
+    });
+    this.add.text(x + 10, y + 10, 'B2', { fontFamily: FONT, fontSize: '14px', color: '#FFFFFF', fontStyle: 'bold', backgroundColor: '#1E6B45', padding: { x: 6, y: 2 }, resolution: 2 });
+    const p = pt(B2_BASE[reached]), ring = this.add.circle(p.x, p.y, 13).setStrokeStyle(3, 0xFFFFFF, 1);
     if (!REDUCE_MOTION) this.tweens.add({ targets: ring, scale: 1.7, alpha: 0, duration: 1100, repeat: -1 });
   }
 

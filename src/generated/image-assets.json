@@ -979,6 +979,16 @@
     "runtimeBytes": 89704,
     "sha256": "e9ab8a7a7ae0fdc8b576e1f5017ef13d3a768272fe14d3e59935d97f4139d60f"
   },
+  "assets/learning-lab/priority-3/vehicles/rear-player-suv.png": {
+    "url": "optimized/assets/learning-lab/priority-3/vehicles/rear-player-suv.webp",
+    "width": 982,
+    "height": 969,
+    "runtimeWidth": 982,
+    "runtimeHeight": 969,
+    "sourceBytes": 1056518,
+    "runtimeBytes": 112092,
+    "sha256": "b3c82fc319df6b3debc9cf7b526908bcf7c1c5ca64aa56c3cb1648aebede2b77"
+  },
   "assets/learning-lab/priority-3/vehicles/side-bakkie.png": {
     "url": "optimized/assets/learning-lab/priority-3/vehicles/side-bakkie.webp",
     "width": 1024,

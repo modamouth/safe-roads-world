@@ -10,7 +10,8 @@ import { resumeExperience } from '../lab/session.js';
 // Photo assets live in /public/assets and are loaded by URL (not embedded),
 // Runtime WebP derivatives are regenerated with npm run optimize:images.
 const PHOTO_KEYS = {
-  suv: 'assets/suv.webp',
+  // The player's car from behind (straight on, so it doesn't look as if it is turning).
+  suv: 'assets/learning-lab/priority-3/vehicles/rear-player-suv.png',
   sky: 'assets/sky.webp'
 };
 

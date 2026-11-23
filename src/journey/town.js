@@ -5,7 +5,8 @@
 // as roadside sprites, set back behind the verge on both sides.
 //
 //   townTextures(scene)          bake the facade textures (once per game)
-//   townLayout(leg)              [{ s, x, key, w }] where each building stands
+//   townLayout(leg)              [{ s, x, key, w, kind, n }] where each building stands
+//   townArt(scene, b)            the illustrated building for it ({ key, ground, w }), if loaded
 //   townRanges(leg)              [[from, to]] the town sections of a leg
 // ---------------------------------------------------------------------------
 import { rng, ROAD } from './sim.js';
@@ -27,6 +28,21 @@ const VARIANTS = [
   ...[0, 1, 2].map(i => ({ key: 'jh_bld_office' + i, kind: 'office', w: 14, floors: 2 + i % 2, wall: [0xEDE6D6, 0xD8D2C4, 0xE6CDB0][i], name: ['OFFICES', 'BANK', 'MEDICAL CENTRE'][i] }))
 ];
 const BY_KIND = kind => VARIANTS.filter(v => v.kind === kind);
+
+// The illustrated buildings (lab/assets.js `town`): width in metres, and where the ground
+// line sits (a fraction of the image height, measured from the art). Drawn facades stand in
+// until they load.
+const TOWN_ART = {
+  shop: [['town_shop_a', 0.909], ['town_shop_b', 0.925], ['town_shop_c', 0.948], ['town_shop_d', 0.951]].map(([key, ground]) => ({ key, ground, w: 11.5 })),
+  office: [['town_office_a', 0.979, 15], ['town_office_b', 0.983, 15.5]].map(([key, ground, w]) => ({ key, ground, w })),
+  house: [['town_house_a', 0.975], ['town_house_b', 0.977]].map(([key, ground]) => ({ key, ground, w: 11.5 })),
+  stall: [{ key: 'town_stall_a', ground: 0.977, w: 6.5 }],
+  fuel: [{ key: 'town_fuel_station', ground: 0.971, w: 16 }]
+};
+export function townArt(scene, b) {
+  const list = TOWN_ART[b.kind] || [], art = list[b.n % list.length];
+  return art && scene.textures.exists(art.key) ? art : null;
+}
 const HEIGHT = { shop: 5, house: 5, stall: 4, fuel: 6, office: 12 };
 
 /** Draw one facade into a texture. Coordinates are metres, origin bottom-left. */
@@ -126,8 +142,8 @@ export function townLayout(leg) {
         let kind = city ? (roll < 0.4 ? 'office' : roll < 0.8 ? 'shop' : 'house') : roll < 0.45 ? 'shop' : roll < 0.75 ? 'house' : roll < 0.92 ? 'stall' : 'fuel';
         if (kind === 'fuel' && fuelDone) kind = 'shop';
         if (kind === 'fuel') fuelDone = true;
-        const options = BY_KIND(kind), v = options[Math.floor(r() * options.length)];
-        out.push({ s: Math.round(s), x: side * (SET_BACK + v.w / 2 + r() * 2), key: v.key, w: v.w });
+        const options = BY_KIND(kind), n = Math.floor(r() * 4), v = options[n % options.length];
+        out.push({ s: Math.round(s), x: side * (SET_BACK + v.w / 2 + r() * 2), key: v.key, w: v.w, kind, n });
       }
     });
   });

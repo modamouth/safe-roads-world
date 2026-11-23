@@ -29,18 +29,27 @@ export const LEARNING_LAB_ASSETS = {
   },
   childSeat: { firm: asset('childseat_firm', true), loose: asset('childseat_loose', true), harnessLoose: asset('childseat_slack', true) },
   animals: { kudu: { key: 'scn_kudu', path: 'assets/learning-lab/priority-3/animals/kudu-standing.png' }, kuduLeaping: { key: 'scn_kudu_leap', path: 'assets/learning-lab/priority-3/animals/kudu-leaping.png' }, donkey: { key: 'scn_donkey', path: 'assets/learning-lab/priority-3/animals/grey-donkey-clean.png', bounds: [192, 0, 1438, 1018] }, cow: { key: 'lab-nguni-cow', path: 'assets/learning-lab/priority-2/animals/nguni-cow.png' },
+    // Desert antelope: four frames on one canvas and ground line (standing, trot, leap, trot).
+    oryx: Object.fromEntries([['standing', 'standing'], ['runA', 'run-a'], ['runB', 'run-b'], ['leap', 'leap']].map(([k, f]) => [k, { key: 'scn_oryx_' + f, path: 'assets/learning-lab/priority-3/animals/oryx-' + f + '.png' }])),
+    springbok: Object.fromEntries([['standing', 'standing'], ['runA', 'run-a'], ['runB', 'run-b'], ['leap', 'leap']].map(([k, f]) => [k, { key: 'scn_springbok_' + f, path: 'assets/learning-lab/priority-3/animals/springbok-' + f + '.png' }])),
     warthog: Object.fromEntries([['standing', 'standing'], ['runA', 'run-a'], ['runB', 'run-b'], ['leap', 'leap']].map(([k, f]) => [k, { key: 'scn_warthog_' + f, path: 'assets/learning-lab/priority-3/animals/warthog-' + f + '.png' }])) },
   scenery: { acacia: { key: 'scn_acacia', path: 'assets/learning-lab/priority-3/scenery/acacia-tree.png' }, bush: { key: 'scn_bush', path: 'assets/learning-lab/priority-3/scenery/savanna-bush.png' }, palm: { key: 'scn_palm', path: 'assets/learning-lab/priority-3/scenery/palm-tree.png' }, lamp: { key: 'scn_lamp', path: 'assets/learning-lab/priority-3/scenery/street-lamp.png' }, post: asset('post', true) },
   escRoad: { key: 'lab-esc-wet-road', path: 'assets/learning-lab/priority-3/roads/wet-esc-bend.png' },
   roads: { base: asset('td_road'), rumble: asset('td_rumble'), refuge: asset('td_refuge'), lighting: asset('td_lighting'), fence: asset('td_fence'), crossroads: asset('td_crossroads'), roundabout: asset('td_roundabout') },
   trafficLight: { off: asset('tl_off'), red: asset('tl_red'), yellow: asset('tl_yellow'), green: asset('tl_green') },
   cards: { cityBus: { key: 'lab-city-bus-open-door', path: 'assets/learning-lab/priority-2/side-view/city-bus-open-door.png' }, freightTruck: { key: 'lab-freight-truck-side', path: 'assets/learning-lab/priority-2/side-view/namibian-road-freight-truck.png' }, alcohol: asset('spot_beer'), medicine: asset('spot_meds'), phone: asset('spot_phone'), wheel: asset('spot_wheel') },
-  crossing: asset('scn_crossing'), route: asset('scn_b1map'), routeB2: { key: 'scn_b2map', path: 'assets/scn_b2map.png' },
+  crossing: asset('scn_crossing'), route: asset('scn_b1map'), routeB2: { key: 'scn_b2map', path: 'assets/scn_b2map.png' }, routeB2Base: { key: 'scn_b2map_base', path: 'assets/scn_b2map_base.png' },
   crash: { background: asset('labbg', true), car: asset('labcar0', true), car60: asset('labcar60', true), car80: asset('labcar80', true), car90: asset('labcar90', true) },
   oncomingTruck: asset('truck', true),
   // Front views for oncoming traffic and rear views for vehicles ahead (The Journey Home).
-  vehicles: Object.fromEntries(['front-minibus-taxi', 'front-white-sedan', 'front-truck', 'front-bus', 'front-police-bakkie', 'rear-fuel-tanker', 'rear-box-trailer']
-    .map(name => [name, { key: 'veh_' + name.replaceAll('-', '_'), path: 'assets/learning-lab/priority-3/vehicles/' + name + '.png' }]))
+  vehicles: Object.fromEntries(['front-minibus-taxi', 'front-minibus-taxi-plain', 'front-white-sedan', 'front-truck', 'front-bus', 'front-police-bakkie', 'rear-fuel-tanker', 'rear-box-trailer']
+    .map(name => [name, { key: 'veh_' + name.replaceAll('-', '_'), path: 'assets/learning-lab/priority-3/vehicles/' + name + '.png' }])),
+  // Side views (facing right) for traffic crossing in front of you at a junction.
+  sideViews: Object.fromEntries(['side-minibus-taxi', 'side-bakkie', 'side-sedan', 'side-truck']
+    .map(name => [name, { key: 'veh_' + name.replaceAll('-', '_'), path: 'assets/learning-lab/priority-3/vehicles/' + name + '.png' }])),
+  // Town buildings, front-on, standing on the bottom of their canvas.
+  town: Object.fromEntries(['shop-a', 'shop-b', 'shop-c', 'shop-d', 'office-a', 'office-b', 'house-a', 'house-b', 'stall-a', 'fuel-station']
+    .map(name => [name, { key: 'town_' + name.replaceAll('-', '_'), path: 'assets/learning-lab/priority-3/town/' + name + '.png' }]))
 };
 const A = LEARNING_LAB_ASSETS;
 const values = Object.values;

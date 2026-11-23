@@ -1,5 +1,5 @@
 import Phaser from 'phaser';
-import { W, H, COLORS as C, track } from '../config.js';
+import { W, COLORS as C, track } from '../config.js';
 import { setupCam, duskBg, T, button, brand, soundToggle } from '../ui.js';
 import { drawIcon } from '../icons.js';
 import { describe } from '../a11y.js';

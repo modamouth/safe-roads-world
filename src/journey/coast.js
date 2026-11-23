@@ -40,8 +40,9 @@ export const COAST_LEGS = [
     ],
     curves: [[700, 950, -0.001], [1900, 2150, 0.0012], [2700, 2950, -0.0008]],
     leads: [{ at: 500, kmh: 80, until: 1050, key: 'veh_bakkie' }],
-    // Little livestock out here: just a kudu in the bush before the desert begins.
-    animals: [{ at: 700, kind: 'kudu', side: 1 }],
+    // Little livestock out here: a kudu in the bush before the desert, then desert game:
+    // an oryx on the gravel plains, and springbok after the dust storm.
+    animals: [{ at: 700, kind: 'kudu', side: 1 }, { at: 1900, kind: 'oryx', side: -1 }, { at: 3330, kind: 'springbok', side: 1 }],
     dust: [[2300, 3200, 70]], sand: [[2450, 3100, 7]],
     potholes: [], rest: 3800, oncoming: 380, phone: [40],
     crossings: [{ at: 160, who: 'worker', from: -1 }, { at: 1300, who: 'shopper', from: 1 }, { at: 4290, who: 'teen-phone', from: 1 }]

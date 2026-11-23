@@ -17,7 +17,7 @@ import { journeyFor } from '../journey/progress.js';
 // The Journey Home: drive one leg. Hold PETROL and BRAKE; steer only when you
 // drift (the car keeps its lane otherwise). The HUD mirrors the original brief:
 // limit, km/h, fatigue, gap, safety /100, passport n/9, vehicle %.
-const ART = [A.animals.kudu, A.animals.kuduLeaping, A.animals.cow, A.animals.donkey, ...Object.values(A.animals.warthog), ...Object.values(A.vehicles), A.scenery.acacia, A.scenery.bush, A.scenery.lamp, A.scenery.post, A.oncomingTruck];
+const ART = [A.animals.kudu, A.animals.kuduLeaping, A.animals.cow, A.animals.donkey, ...Object.values(A.animals.warthog), ...Object.values(A.vehicles), ...Object.values(A.town), A.scenery.acacia, A.scenery.bush, A.scenery.lamp, A.scenery.post, A.oncomingTruck];
 const GAP_TEXT = { clear: 'Clear', safe: null, close: null, danger: 'Too close' };
 const GAP_COL = { clear: '#FFFFFF', safe: '#7BE0A6', close: '#FFCB2B', danger: '#FF8A8D' };
 const ALERTS = {
@@ -28,7 +28,7 @@ const ALERTS = {
   rumble: () => ['Off the edge of the road!', C.orange],
   drift: () => ['You are drifting: steer back into your lane', C.orange],
   microsleep: e => ['Microsleep: ' + e.metres + ' m with your eyes closed', C.red],
-  animal: e => [e.kind === 'warthog' ? (e.group > 1 ? 'Warthogs! Slow down: more are following' : 'Warthog running across!') : e.kind === 'kudu' ? 'Kudu on the road!' : e.kind === 'cattle' ? 'Cattle on the road!' : 'Donkey on the road!', C.red],
+  animal: e => [e.kind === 'oryx' ? 'Oryx crossing!' : e.kind === 'springbok' ? 'Springbok bounding across!' : e.kind === 'warthog' ? (e.group > 1 ? 'Warthogs! Slow down: more are following' : 'Warthog running across!') : e.kind === 'kudu' ? 'Kudu on the road!' : e.kind === 'cattle' ? 'Cattle on the road!' : 'Donkey on the road!', C.red],
   animalPassed: () => ['Well spotted. Animals can step out at any time', C.green],
   pothole: e => ['Pothole at ' + e.kmh + ' km/h: slow down on damaged roads', C.orange],
   pedestrian: e => [e.late ? 'Someone stepped onto the crossing!' : 'Pedestrian crossing: stop and let them cross', e.late ? C.red : C.orange],
@@ -78,6 +78,9 @@ export default class JourneyDrive extends Phaser.Scene {
   preload() {
     this.load.setPath(import.meta.env.BASE_URL);
     const people = peopleOf(this.r.legs[this.legIndex]).flatMap(who => Object.values(A.pedestrians[who]));
+    // Desert antelope only where a leg has them.
+    const kinds = new Set(this.r.legs[this.legIndex].animals.map(a => a.kind));
+    people.push(...['oryx', 'springbok'].filter(k => kinds.has(k)).flatMap(k => Object.values(A.animals[k])));
     [...ART, ...people].forEach(a => { if (!this.textures.exists(a.key)) loadImage(this, a.key, a.path); });
     this.load.on('loaderror', () => {});
   }

@@ -1,9 +1,9 @@
 {
-  "images": 138,
-  "sourceBytes": 137707110,
-  "runtimeBytes": 10046032,
-  "sourceDecodedBytes": 543295836,
-  "runtimeDecodedBytes": 203084048,
+  "images": 139,
+  "sourceBytes": 138763628,
+  "runtimeBytes": 10158124,
+  "sourceDecodedBytes": 547102068,
+  "runtimeDecodedBytes": 206890280,
   "skipped": [
     {
       "path": "assets/learning-lab/priority-3/scenery/road-marker-post.png",

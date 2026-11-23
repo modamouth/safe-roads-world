@@ -419,3 +419,15 @@ describe('overtaking a slow truck', () => {
     expect(sim.log.penalties.lane).toBeGreaterThan(0);
   });
 });
+
+describe('animals', () => {
+  it('only an animal ahead of the car steps out; one already passed stays put', () => {
+    const leg = { ...LEGS[1], warthogs: null };
+    const sim = createLegSim(leg, { checks: ALL_CHECKS }), kudu = sim.ents.animals.find(a => a.kind === 'kudu');
+    sim.st.s = kudu.at + 30; sim.st.v = 20;
+    const events = [];
+    for (let i = 0; i < 30; i++) events.push(...sim.step(DT, { throttle: 1, brake: 0, steer: 0 }));
+    expect(kudu.state).toBe('waiting');
+    expect(events.some(e => e.type === 'animal')).toBe(false);
+  });
+});
