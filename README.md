@@ -116,6 +116,13 @@ drifts. The HUD shows the speed limit, km/h, fatigue, the gap to the vehicle
 ahead, a safety score out of 100, the journey Passport (9 stamps) and vehicle
 health. Fatigue and vehicle health carry from leg to leg, so resting at the
 night leg's rest area is what gets you home safely.
+Each town has a zebra crossing: people step out as you approach, and you must
+stop and wait until they are across (oncoming traffic and vehicles ahead wait too).
+Leg 1 also has a taxi parked on the shoulder that pulls out without indicating,
+people walking on the road edge (give a metre of space or slow to 40 km/h), and
+Stop/Go roadworks where oncoming traffic uses your lane until the flagman shows GO.
+On the daytime and dusk legs, warthogs dash across the open road at random spots
+(different every drive), often a family in a line: slow down when the first appears.
 
 - Tune legs (zones, hazards, curves, fatigue rates) in `src/journey/route.js`.
 - `npm test` drives every leg with a careful autopilot and with reckless drivers

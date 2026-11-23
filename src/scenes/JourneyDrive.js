@@ -8,7 +8,7 @@ import { Sfx } from '../sfx.js';
 import { LEARNING_LAB_ASSETS as A } from '../lab/assets.js';
 import { animationSeconds } from '../lab/core/time.js';
 import { bindCrashFeedback, crashImpact } from '../services/crashFeedbackScene.js';
-import { LEGS, STAMPS } from '../journey/route.js';
+import { LEGS, STAMPS, peopleOf } from '../journey/route.js';
 import { createLegSim, autopilot } from '../journey/sim.js';
 import { createRoad } from '../journey/road.js';
 import { journey } from '../journey/progress.js';
@@ -16,7 +16,7 @@ import { journey } from '../journey/progress.js';
 // The Journey Home: drive one leg. Hold PETROL and BRAKE; steer only when you
 // drift (the car keeps its lane otherwise). The HUD mirrors the original brief:
 // limit, km/h, fatigue, gap, safety /100, passport n/9, vehicle %.
-const ART = [A.animals.kudu, A.animals.kuduLeaping, A.animals.cow, A.animals.donkey, A.scenery.acacia, A.scenery.bush, A.scenery.lamp, A.scenery.post, A.oncomingTruck];
+const ART = [A.animals.kudu, A.animals.kuduLeaping, A.animals.cow, A.animals.donkey, ...Object.values(A.animals.warthog), ...Object.values(A.vehicles), A.scenery.acacia, A.scenery.bush, A.scenery.lamp, A.scenery.post, A.oncomingTruck];
 const GAP_TEXT = { clear: 'Clear', safe: null, close: null, danger: 'Too close' };
 const GAP_COL = { clear: '#FFFFFF', safe: '#7BE0A6', close: '#FFCB2B', danger: '#FF8A8D' };
 const ALERTS = {
@@ -27,15 +27,30 @@ const ALERTS = {
   rumble: () => ['Off the edge of the road!', C.orange],
   drift: () => ['You are drifting: steer back into your lane', C.orange],
   microsleep: e => ['Microsleep: ' + e.metres + ' m with your eyes closed', C.red],
-  animal: e => [e.kind === 'kudu' ? 'Kudu on the road!' : e.kind === 'cattle' ? 'Cattle on the road!' : 'Donkey on the road!', C.red],
+  animal: e => [e.kind === 'warthog' ? (e.group > 1 ? 'Warthogs! Slow down: more are following' : 'Warthog running across!') : e.kind === 'kudu' ? 'Kudu on the road!' : e.kind === 'cattle' ? 'Cattle on the road!' : 'Donkey on the road!', C.red],
   animalPassed: () => ['Well spotted. Animals can step out at any time', C.green],
-  pothole: e => ['Pothole at ' + e.kmh + ' km/h: slow down on damaged roads', C.orange]
+  pothole: e => ['Pothole at ' + e.kmh + ' km/h: slow down on damaged roads', C.orange],
+  pedestrian: e => [e.late ? 'Someone stepped onto the crossing!' : 'Pedestrian crossing: stop and let them cross', e.late ? C.red : C.orange],
+  noYield: () => ['Stop for people on a zebra crossing', C.red],
+  yielded: () => ['Thanks for stopping at the crossing', C.green],
+  taxiParked: () => ['Taxi stopped ahead: it may pull out', C.orange],
+  taxiPullOut: () => ['The taxi is pulling out without indicating!', C.red],
+  walker: () => ['Person walking on the road edge: slow down and move over', C.orange],
+  closePass: () => ['Too close! Give people on the road at least a metre', C.red],
+  walkerPassed: () => ['Good: you gave them space', C.green],
+  stopGo: () => ['Stop/Go roadworks: stop at the flagman', C.orange],
+  go: () => ['GO: follow your lane through the roadworks', C.green],
+  ranStop: () => ['You drove past a STOP board!', C.red]
 };
 const OVER_COPY = {
   rear: r => 'You ran into the vehicle ahead at ' + r.kmh + ' km/h faster than it. A 3-second gap gives you time to react and stop.',
   headon: r => 'You crossed into the oncoming lane and hit another vehicle. Stay left, and only overtake where you can see the road is clear.',
+  warthog: r => 'You hit a warthog at ' + r.kmh + ' km/h. Warthogs dart out of the grass, often a family in a line: when one crosses, slow down, because more usually follow.',
   kudu: r => 'You hit a kudu at ' + r.kmh + ' km/h. At dusk and at night, slow down where game warning signs are up.',
   animal: r => 'You hit an animal at ' + r.kmh + ' km/h. On unfenced roads, slow down and be ready to stop.',
+  convoy: () => 'You drove past the STOP board and met the oncoming traffic coming through your lane. At Stop/Go roadworks, wait at the line until the flagman shows GO.',
+  taxi: r => 'A taxi pulled out in front of you and you hit it at ' + r.kmh + ' km/h. When a taxi is stopped at the roadside, slow down and be ready for it to pull out.',
+  pedestrian: r => 'You hit a person at ' + r.kmh + ' km/h. Near people, on crossings or walking on the road edge, slow down and give them space.',
   runoff: r => 'You left the road at ' + r.kmh + ' km/h. Tiredness and distraction both pull you off the road.',
   vehicle: () => 'Your car is too damaged to carry on. Potholes and collisions add up.',
   safety: () => 'Your safety score reached zero. Every risky choice costs points.'
@@ -48,7 +63,8 @@ export default class JourneyDrive extends Phaser.Scene {
 
   preload() {
     this.load.setPath(import.meta.env.BASE_URL);
-    ART.forEach(a => { if (!this.textures.exists(a.key)) loadImage(this, a.key, a.path); });
+    const people = peopleOf(LEGS[this.legIndex]).flatMap(who => Object.values(A.pedestrians[who]));
+    [...ART, ...people].forEach(a => { if (!this.textures.exists(a.key)) loadImage(this, a.key, a.path); });
     this.load.on('loaderror', () => {});
   }
 
@@ -62,7 +78,8 @@ export default class JourneyDrive extends Phaser.Scene {
 
     const run = journey.run() || { fatigue: 0, vehicle: 100, checks: {} };
     this.leg = LEGS[this.legIndex];
-    this.sim = createLegSim(this.leg, { fatigue: run.fatigue, vehicle: run.vehicle, checks: run.checks });
+    // Warthogs turn up in different places each drive.
+    this.sim = createLegSim(this.leg, { fatigue: run.fatigue, vehicle: run.vehicle, checks: run.checks }, { wildSeed: Math.floor(Math.random() * 2 ** 32) });
     this.road = createRoad(this, { leg: this.leg, sim: this.sim, lights: !!run.checks.lights });
     this.auto = import.meta.env.DEV && new URLSearchParams(window.location.search).get('autopilot') === '1';
 
