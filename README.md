@@ -3,14 +3,14 @@
 PromoPlays' Safe Roads World prototype. A world shell (Title screen and
 Mission Map) leads to two places:
 
-- **Windhoek City: City Safety Run**: a placeholder screen for now. The
-  mission itself is a separate task.
+- **Windhoek City: City Safety Run**: a two-minute drive through the city
+  centre with four scored encounters (see below).
 - **Road Safety Learning Lab**: a menu of Lab experiences. One exists today,
   the Speed check: a prediction question, a pseudo-3D drive down the B1 at
   dusk, a kudu-swerve into an oncoming vehicle, a crash-lab replay at
   60/80/90 km/h, an animated risk chart, and the Passport screen.
 
-Flow: `Boot → Title → Map → CityRunStub` or `Map → LabMenu → Predict → Drive → Lab → Reveal → Passport`.
+Flow: `Boot → Title → Map → CityRun → results → Passport` or `Map → LabMenu → Predict → Drive → Lab → Reveal → Passport`.
 
 Built with [Phaser 3](https://phaser.io/) and [Vite](https://vitejs.dev/).
 Copy and tuning changes need no asset build. After changing source artwork,
@@ -64,7 +64,10 @@ src/
     Boot.js              Loads photo assets (+ optional art), builds placeholders
     Title.js             Logo, Start Journey, How to play overlay
     Map.js               Mission Map: zone nodes, road path, bottom card, nav
-    CityRunStub.js       Placeholder for City Safety Run
+    CityRun.js           City Safety Run: HUD, indicator, mirror, results (extends JourneyDrive)
+  city/
+    mission.js           City Safety Run: route, encounters, scoring judge, retries (pure; unit tested)
+    progress.js          City Safety Run progress and the City Safe Driver stamp
     LabMenu.js           Learning Lab menu, built from experiences.js
     Predict.js           Speed: "Before we begin" prediction gate
     Drive.js             Speed: accelerate, kudu, swerve, oncoming impact
@@ -123,11 +126,54 @@ people walking on the road edge (give a metre of space or slow to 40 km/h), and
 Stop/Go roadworks where oncoming traffic uses your lane until the flagman shows GO.
 On the daytime and dusk legs, warthogs dash across the open road at random spots
 (different every drive), often a family in a line: slow down when the first appears.
+Towns are lined with buildings drawn in code (`src/journey/town.js`): shops with
+verandas, walled houses, container stalls, a fuel station, and office blocks in Windhoek.
+Rest areas are lay-bys with slip lanes, a kerbed island, marked parking bays and concrete
+picnic tables; resting parks you in a bay and you merge back through the exit.
+Each of legs 1–3 has an overtaking scene behind a slow truck: oncoming traffic is timed so
+the first chance is unsafe (and leg 2 adds a solid line through a blind bend). A clean
+overtake needs a broken line, no oncoming vehicle within 2 s, and 12 m of space before you pull in.
 
 - Tune legs (zones, hazards, curves, fatigue rates) in `src/journey/route.js`.
 - `npm test` drives every leg with a careful autopilot and with reckless drivers
   (`tests/journey-sim.test.js`); keep it passing after tuning.
 - In dev, `?autopilot=1` lets the careful driver play the leg for you.
+
+## Windhoek City: City Safety Run
+
+Mission Map → **Windhoek City** → **Play mission** opens `CityRun`. A behind-the-car
+drive (the Journey renderer and simulation) on a fictional CBD street at 60 km/h,
+with four encounters in order, each scored out of 25 (no time bonus):
+
+1. **Pull out into traffic**: parked in a kerbside bay with a bakkie coming up behind
+   (shown in the rear-view mirror). Indicate (SIGNAL, or E), wait for it to pass, then
+   PETROL: the car pulls into the lane. Pulling out in front of it is a fail.
+2. **Pedestrian crossing**: a pedestrian walks to the zebra crossing; ease off, stop
+   before it while she crosses, and wait until she is across.
+3. **Taxi stop**: a Quantum taxi ahead indicates, slows and stops at the kerb. Slow as
+   soon as it signals and keep a safe gap.
+4. **Traffic light**: a red light and stop line ahead; stop behind the line, and go on
+   green once the cross traffic has cleared the junction.
+
+A failed encounter explains what happened and retries from just before it (fresh
+traffic); the first-attempt score is kept and retries are practice. The results show
+the total, the breakdown, a tip, and a link to the Learning Lab activity for the weakest
+encounter. **City Safe Driver** is awarded once, when all four are safe first time in
+one run. Progress is saved under `srw.city.v1`. Tune the route and scoring in
+`src/city/mission.js`; `tests/city-run.test.js` drives it with a careful driver and with
+drivers who fail each encounter. In dev, `?autopilot=1` drives it for you.
+
+Artwork: the rear-view taxi and bakkie, the front-view bakkie in the mirror, oncoming
+front views, the schoolgirl, traffic lights (`tl_red`/`tl_yellow`/`tl_green`), street
+lamps and the side-view hatchback for cross traffic are existing art. Drawn in code, in
+place of art (replace by adding these and loading them by key):
+
+| Drawn now | Wanted asset (key) | Orientation |
+|---|---|---|
+| Shop and office facades (`src/journey/town.js`) | `city_facade_*`, Windhoek CBD shopfronts and office blocks | Front-on, transparent background, ground at the bottom |
+| Kerbs, pavement, parking bay, junction | (fine drawn) | n/a |
+| Rear-view mirror frame and the SIGNAL button icon | (fine drawn) | n/a |
+| Cross traffic: one white hatchback (`lab-vehicle-side-view-safety-features`) | `veh_side_*`, more side views (taxi, bakkie, sedan) | Side view, facing right; flipped for the other direction |
 
 ## Pedestrian safety (Learning Lab)
 
@@ -222,8 +268,6 @@ branch before relying on it.
 ## Known rough edges
 
 - The Passport screen doesn't persist anything between sessions.
-- City Safety Run is a placeholder screen. The only playable content is the
-  Speed experience in the Learning Lab.
 - Session points (`state.points`) start at 0, and nothing awards points yet.
   The Map's points chip will show them once a mission or experience adds to
   `state.points`.

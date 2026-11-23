@@ -9,7 +9,11 @@
 //   leads     slower vehicles ahead in our lane: { at, kmh, until, key, stopAt?, waitS?, parked? }
 //             `until` is where it turns off; `stopAt` where it stops suddenly in lane;
 //             `parked: { pullOutM }` waits on the shoulder (a taxi loading passengers) and
-//             pulls out without indicating when we are pullOutM metres away
+//             pulls out without indicating when we are pullOutM metres away;
+//             `activate` is where we must be before it sets off (default: 450 m before `at`);
+//             `overtake: { plan }` makes it an overtaking scene: when we close up behind it,
+//             oncoming vehicles arrive per plan ([metres ahead of the truck, key]) and the road
+//             is otherwise kept clear until we are past
 //   animals   { at, kind: 'kudu' | 'cattle' | 'donkey', side: -1 | 1, dwellS? }
 //   warthogs  { every: [min, max] } metres: warthogs (often a family in a line) dash across
 //             the open road at random spots, away from towns and the other hazards
@@ -51,11 +55,13 @@ export const LEGS = [
     leads: [
       { at: 140, kmh: 50, until: 700, key: 'veh_taxi', stopAt: 420, waitS: 3 },
       { at: 1000, kmh: 60, until: 1450, key: 'veh_taxi', parked: { pullOutM: 60 } },
-      { at: 1500, kmh: 95, until: 1900, key: 'veh_bakkie' }
+      { at: 1500, kmh: 95, until: 1900, key: 'veh_bakkie' },
+      // Out of the roadworks behind a slow truck: two cars come the other way, then the road clears.
+      { at: 2330, kmh: 60, until: 2760, key: 'veh_truck', activate: 2280, overtake: { plan: [[380, 'veh_sedan_white'], [500, 'veh_bakkie']] } }
     ],
     animals: [], potholes: [], rest: null, oncoming: 260, phone: [18, 55],
     crossings: [{ at: 260, who: 'shopper', from: 1 }, { at: 3060, who: 'schoolgirl', from: -1 }],
-    walkers: [{ at: 1250, who: 'worker' }, { at: 2700, who: 'vendor' }],
+    walkers: [{ at: 1250, who: 'worker' }, { at: 2840, who: 'vendor' }],
     warthogs: { every: [300, 550] },
     stopGo: { at: 2100, length: 160 }
   },
@@ -67,14 +73,17 @@ export const LEGS = [
       { at: 0, limit: 60, sign: 'town:Okahandja' }, { at: 300, limit: 120 },
       { at: 500, limit: 120, noOvertake: true }, { at: 1400, limit: 120 },
       { at: 1600, limit: 80, sign: 'roadworks' }, { at: 1750, limit: 60, noOvertake: true }, { at: 2100, limit: 120 },
+      // A blind bend: solid line, no overtaking, then a clear straight.
+      { at: 2380, limit: 120, noOvertake: true }, { at: 2720, limit: 120 },
       { at: 3950, limit: 60, sign: 'town:Otjiwarongo' }
     ],
     curves: [[700, 1100, -0.0012], [2400, 2700, 0.0014], [3300, 3600, -0.0008]],
     leads: [
       { at: 560, kmh: 75, until: 1380, key: 'veh_rear_fuel_tanker' },
-      { at: 1820, kmh: 50, until: 2080, key: 'veh_sedan_blue' }
+      { at: 1820, kmh: 50, until: 2080, key: 'veh_sedan_blue' },
+      { at: 2200, kmh: 65, until: 3120, key: 'veh_truck', activate: 2120, overtake: { plan: [[450, 'veh_taxi'], [600, 'veh_sedan_white']] } }
     ],
-    animals: [{ at: 2850, kind: 'kudu', side: -1 }],
+    animals: [{ at: 3620, kind: 'kudu', side: -1 }],
     potholes: [], rest: 3300, oncoming: 340, phone: [35],
     crossings: [{ at: 180, who: 'vendor', from: -1 }, { at: 4080, who: 'older-man', from: 1, speed: 0.9 }],
     warthogs: { every: [500, 900] }
@@ -88,8 +97,9 @@ export const LEGS = [
       { at: 3800, limit: 60, sign: 'town:Otavi' }
     ],
     curves: [[600, 900, 0.001], [2000, 2400, -0.0013], [3000, 3300, 0.0011]],
-    leads: [{ at: 2350, kmh: 85, until: 2800, key: 'veh_rear_box_trailer' }],
-    animals: [{ at: 1250, kind: 'donkey', side: 1, verge: true }, { at: 3150, kind: 'cattle', side: -1, dwellS: 5 }],
+    // At night you only see the oncoming bus's headlights: judge the gap before you pull out.
+    leads: [{ at: 2350, kmh: 75, until: 3120, key: 'veh_rear_box_trailer', activate: 2200, overtake: { plan: [[520, 'veh_bus']] } }],
+    animals: [{ at: 1250, kind: 'donkey', side: 1, verge: true }, { at: 3400, kind: 'cattle', side: -1, dwellS: 5 }],
     potholes: [], rest: 1800, oncoming: 420, phone: [30],
     // At Otavi a teenager on their phone steps out without looking.
     crossings: [{ at: 170, who: 'worker', from: 1 }, { at: 3900, who: 'teen-phone', from: -1, trigger: 45 }]

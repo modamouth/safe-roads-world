@@ -50,8 +50,10 @@ export default class MapScene extends Phaser.Scene {
   drawPath() {
     const road = this.add.graphics().setDepth(10), dots = this.add.graphics().setDepth(11);
     for (let i = 1; i < MAP_ZONES.length; i++) {
-      const a = px(MAP_ZONES[i - 1]), b = px(MAP_ZONES[i]);
-      const lit = MAP_ZONES[i - 1].status === 'playable' && MAP_ZONES[i].status === 'playable';
+      // A zone can branch off another node (`link`) instead of following the previous one.
+      const from = MAP_ZONES[i].link ? zoneById(MAP_ZONES[i].link) : MAP_ZONES[i - 1];
+      const a = px(from), b = px(MAP_ZONES[i]);
+      const lit = from.status === 'playable' && MAP_ZONES[i].status === 'playable';
       const nx = -(b.y - a.y), ny = b.x - a.x, len = Math.hypot(nx, ny) || 1, bend = (i % 2 ? 1 : -1) * 34;
       const curve = new Phaser.Curves.QuadraticBezier(
         new Phaser.Math.Vector2(a.x, a.y),
@@ -190,13 +192,13 @@ export default class MapScene extends Phaser.Scene {
 
   openZone(z) {
     if (z.id === 'lab') track('lab_enter', { from: 'map_card' });
-    this.go(z.scene);
+    this.go(z.scene, z.data);
   }
 
-  go(key) {
+  go(key, data) {
     if (this.leaving) return; this.leaving = true;
     this.cameras.main.fadeOut(220, 8, 17, 30);
-    this.cameras.main.once('camerafadeoutcomplete', () => this.scene.start(key));
+    this.cameras.main.once('camerafadeoutcomplete', () => this.scene.start(key, data));
   }
 
   // --- chrome --------------------------------------------------------------

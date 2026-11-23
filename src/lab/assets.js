@@ -35,7 +35,7 @@ export const LEARNING_LAB_ASSETS = {
   roads: { base: asset('td_road'), rumble: asset('td_rumble'), refuge: asset('td_refuge'), lighting: asset('td_lighting'), fence: asset('td_fence'), crossroads: asset('td_crossroads'), roundabout: asset('td_roundabout') },
   trafficLight: { off: asset('tl_off'), red: asset('tl_red'), yellow: asset('tl_yellow'), green: asset('tl_green') },
   cards: { cityBus: { key: 'lab-city-bus-open-door', path: 'assets/learning-lab/priority-2/side-view/city-bus-open-door.png' }, freightTruck: { key: 'lab-freight-truck-side', path: 'assets/learning-lab/priority-2/side-view/namibian-road-freight-truck.png' }, alcohol: asset('spot_beer'), medicine: asset('spot_meds'), phone: asset('spot_phone'), wheel: asset('spot_wheel') },
-  crossing: asset('scn_crossing'), route: asset('scn_b1map'),
+  crossing: asset('scn_crossing'), route: asset('scn_b1map'), routeB2: { key: 'scn_b2map', path: 'assets/scn_b2map.png' },
   crash: { background: asset('labbg', true), car: asset('labcar0', true), car60: asset('labcar60', true), car80: asset('labcar80', true), car90: asset('labcar90', true) },
   oncomingTruck: asset('truck', true),
   // Front views for oncoming traffic and rear views for vehicles ahead (The Journey Home).
@@ -49,7 +49,7 @@ const BY_KIND = {
   'child-seat': [...values(A.childSeat), ...values(A.booster)],
   'car-features': [A.vehicle, ...values(A.adultBelt), A.topDown.redSedan, A.escRoad],
   'rider-gear': values(A.rider), 'head-impact': values(A.helmet),
-  'rural-road': [...values(A.animals).filter(a => a.key), A.scenery.acacia, A.scenery.bush, A.scenery.post, A.oncomingTruck],
+  'rural-road': [A.animals.kudu, A.animals.kuduLeaping, A.animals.donkey, A.animals.cow, A.scenery.acacia, A.scenery.bush, A.scenery.post, A.oncomingTruck],
   'city-drive': [A.scenery.palm, A.scenery.lamp, ...values(A.pedestrians).flatMap(values)],
   'road-treatment': values(A.roads), 'trip-map': [A.route],
   'water-crossing': [A.crossing], 'crash-lab': values(A.crash),

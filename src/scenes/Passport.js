@@ -5,8 +5,10 @@ import { drawIcon } from '../icons.js';
 import { describe } from '../a11y.js';
 import { EXPERIENCES, experienceProgress, labProgress } from '../experiences.js';
 import { t } from '../lab/content.js';
-import { journey } from '../journey/progress.js';
-import { STAMPS as JOURNEY_STAMPS } from '../journey/route.js';
+import { journeyFor } from '../journey/progress.js';
+import { ROUTES } from '../journey/routes.js';
+import { city } from '../city/progress.js';
+import { CITY_STAMP } from '../city/mission.js';
 import { Sfx } from '../sfx.js';
 
 // Passport: one stamp per Learning Lab experience (a partial ring while some
@@ -45,29 +47,37 @@ export default class Passport extends Phaser.Scene {
       T(this, x, y + 60, e.label, 13, pr.complete ? '#FFFFFF' : '#9AA6B5', { fontStyle: pr.complete ? 'bold' : 'normal', wordWrap: { width: cell - 6 }, align: 'center' });
       lines.push(e.label + ': ' + (pr.complete ? t('menu.done').replace('✓ ', '') : t('menu.progress', { n: pr.done, of: pr.of })));
     });
-    // The Journey Home keeps its own stamps; link to it under the Lab grid.
-    const js = 'The Journey Home: ' + journey.stampCount() + ' of ' + JOURNEY_STAMPS.length + ' stamps';
-    button(this, W / 2, 628, 380, 48, js + '  \u203A', () => this.go('Journey'), { size: 17, fill: C.navy2, fillA: 0.9, stroke: C.yellow, r: 24 });
-    lines.push(js);
+    // Each journey keeps its own stamps; link to them under the Lab grid.
+    Object.values(ROUTES).forEach((r, i) => {
+      const n = journeyFor(r.id).stampCount() + '/' + r.stamps.length;
+      button(this, W / 2 + (i ? 123 : -123), 628, 236, 48, r.title.replace('The ', '') + ' ' + n + '  \u203A', () => this.go('Journey', { route: r.id }),
+        { size: 15, fill: C.navy2, fillA: 0.9, stroke: C.yellow, r: 24, a11y: r.title + ': ' + n + ' stamps' });
+      lines.push(r.title + ': ' + n + ' stamps');
+    });
+    // City Safety Run: the City Safe Driver stamp and the best score.
+    const cs = city.has(CITY_STAMP.id), best = city.best();
+    const ct = 'City Safety Run: ' + CITY_STAMP.label + (cs ? ' \u2713' : ' (not yet)') + (best != null ? '  ·  best ' + best : '');
+    button(this, W / 2, 684, 482, 44, ct + '  \u203A', () => this.go('CityRun'), { size: 15, fill: C.navy2, fillA: 0.9, stroke: cs ? C.yellow : 0xFFFFFF, r: 22, a11y: ct });
+    lines.push(ct);
     describe(t('passport.title'), [lp.done ? t('passport.stamps', { n: lp.done, of: lp.of }) : t('passport.empty')].concat(lines));
 
-    this.toast = T(this, W / 2, 680, '', 16, '#B9C6D6', { fontStyle: 'normal', wordWrap: { width: 440 }, align: 'center' }).setAlpha(0);
+    this.toast = T(this, W / 2, 722, '', 16, '#B9C6D6', { fontStyle: 'normal', wordWrap: { width: 440 }, align: 'center' }).setAlpha(0);
     if (lp.done) {
-      button(this, W / 2, 740, 380, 64, t('passport.save'), () => {
+      button(this, W / 2, 770, 380, 56, t('passport.save'), () => {
         track('save_click');
         this.toast.setText(t('passport.saveStub'));
         this.tweens.add({ targets: this.toast, alpha: 1, duration: 200 });
       }, { size: 21, fill: C.yellow, fillA: 1, color: '#0B1B2E' });
     }
-    button(this, 150, 828, 230, 60, t('passport.toLab'), () => this.go('LabMenu'), { size: 20, stroke: 0xFFFFFF, hitH: 64 });
-    button(this, 390, 828, 230, 60, t('passport.map'), () => { track('map_nav', { from: 'passport', to: 'map' }); this.go('Map'); },
+    button(this, 150, 842, 230, 60, t('passport.toLab'), () => this.go('LabMenu'), { size: 20, stroke: 0xFFFFFF, hitH: 64 });
+    button(this, 390, 842, 230, 60, t('passport.map'), () => { track('map_nav', { from: 'passport', to: 'map' }); this.go('Map'); },
       { size: 20, stroke: 0xFFFFFF, hitH: 64 });
     T(this, W / 2, 912, t('passport.saved'), 14, '#9AA6B5', { fontStyle: 'normal' });
   }
 
-  go(key) {
+  go(key, data) {
     if (this.leaving) return; this.leaving = true;
     this.cameras.main.fadeOut(220, 8, 17, 30);
-    this.cameras.main.once('camerafadeoutcomplete', () => this.scene.start(key));
+    this.cameras.main.once('camerafadeoutcomplete', () => this.scene.start(key, data));
   }
 }
