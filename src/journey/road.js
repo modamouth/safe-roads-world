@@ -15,14 +15,37 @@ import { viewBounds } from '../ui.js';
 import { sourceBounds } from '../imageAssets.js';
 import { LEARNING_LAB_ASSETS as A } from '../lab/assets.js';
 import { PARKED_VEHICLES } from '../worldArt.js';
+import { pedestrianSet, setPedestrianPose } from '../lab/art/pedestrianArt.js';
 import { ROAD, buildRoadShape, zoneAt } from './sim.js';
+import { TAXI_RIDERS } from './route.js';
 
 const CAMH = 5, Z_R = 22, CAR_LEN = 4.5, CAR_W = 1.85;
 export const HORIZON = 360, CAR_Y = 812;
 const SKY = { day: [0x6FA8DC, 0xD9ECF7], dusk: [0x253A6B, 0xF2A65A], night: [0x03060E, 0x141E33] };
 const HAZE = { clear: 0xE6D7BE, rain: 0x7D8996 };
 const VERGE = { day: [0xD6A04A, 0xCB9542], dusk: [0xB9813F, 0xAE7738], night: [0xB9813F, 0xAE7738] };
-const WIDTHS = Object.fromEntries(PARKED_VEHICLES.map(p => [p.key, p.w]));
+// The Khomas highland around Windhoek: dry khaki grass with patches of brown soil,
+// thorn bush, gravel shoulders and rocky hills, rather than sand.
+const LAND = {
+  savanna: { verge: VERGE, soil: null, shoulder: 0xC8A98C, haze: 0xE6D7BE, hills: [0x8C7A60], bushes: 26, tufts: 0 },
+  highland: {
+    verge: { day: [0xB3A468, 0xA89A60], dusk: [0x8E7E4E, 0x857648], night: [0x8E7E4E, 0x857648] },
+    soil: 0x9A7A55, shoulder: 0xA99C86, haze: 0xDCD9C8, hills: [0x8F9289, 0x6E6B4F], bushes: 15, tufts: 11
+  }
+};
+// Tail lights sit lower on trucks: fraction of the image height up from the ground.
+const TAIL_Y = { veh_rear_fuel_tanker: 0.25, veh_rear_box_trailer: 0.25 };
+const WIDTHS = Object.assign(Object.fromEntries(PARKED_VEHICLES.map(p => [p.key, p.w])), { veh_rear_fuel_tanker: 2.5, veh_rear_box_trailer: 2.6 });
+// Oncoming traffic, front views: texture, width across the mirrors (m), and where the
+// headlights are (hx: from the centre, hy: up from the ground, both as a fraction of the image).
+const FRONTS = {
+  veh_taxi: { tex: 'veh_front_minibus_taxi', w: 2.1, hx: 0.38, hy: 0.36 },
+  veh_sedan_white: { tex: 'veh_front_white_sedan', w: 1.95, hx: 0.35, hy: 0.45 },
+  veh_truck: { tex: 'veh_front_truck', w: 2.9, hx: 0.35, hy: 0.22 },
+  veh_bus: { tex: 'veh_front_bus', w: 3.1, hx: 0.35, hy: 0.17 },
+  veh_police: { tex: 'veh_front_police_bakkie', w: 2.05, hx: 0.33, hy: 0.5 },
+  veh_bakkie: { tex: 'img_truck', w: 2.0, hx: 0.36, hy: 0.4 }
+};
 
 /** Drawn front-view car for oncoming traffic when no artwork is loaded. */
 function frontTexture(scene) {
@@ -47,6 +70,57 @@ function cowTexture(scene) {
   g.fillEllipse(118, 40, 30, 26); g.fillStyle(0xE8E2D6, 1); g.fillTriangle(110, 30, 102, 18, 114, 28); g.fillTriangle(126, 28, 134, 16, 122, 30);
   g.generateTexture('jh_cow', 140, 108); g.destroy();
   return 'jh_cow';
+}
+
+/** Simple standing figure when the illustrated pedestrians aren't loaded. */
+function personTexture(scene) {
+  if (scene.textures.exists('jh_person')) return 'jh_person';
+  const g = scene.make.graphics({ x: 0, y: 0, add: false });
+  g.fillStyle(0x2F3B4C, 1); g.fillCircle(20, 12, 10); g.fillRoundedRect(8, 24, 24, 38, 8);
+  g.fillStyle(0x1E2733, 1); g.fillRect(10, 58, 8, 38); g.fillRect(22, 58, 8, 38);
+  g.generateTexture('jh_person', 40, 96); g.destroy();
+  return 'jh_person';
+}
+
+/** A clump of dry grass for the highland verges. */
+function tuftTexture(scene) {
+  if (scene.textures.exists('jh_tuft')) return 'jh_tuft';
+  const g = scene.make.graphics({ x: 0, y: 0, add: false });
+  [[0xC9B877, 4], [0xB8A262, 12], [0xD8C98A, 20], [0xA89458, 28], [0xC4B06C, 36]].forEach(([col, x], i) => {
+    g.lineStyle(3, col, 1);
+    g.beginPath(); g.moveTo(20, 30); g.lineTo(x, 4 + (i % 2) * 6); g.strokePath();
+    g.beginPath(); g.moveTo(20 + (i - 2) * 2, 30); g.lineTo(x + 3, 10 + (i % 3) * 4); g.strokePath();
+  });
+  g.generateTexture('jh_tuft', 40, 32); g.destroy();
+  return 'jh_tuft';
+}
+
+/** A traffic cone, about 0.75 m tall. */
+function coneTexture(scene) {
+  if (scene.textures.exists('jh_cone')) return 'jh_cone';
+  const g = scene.make.graphics({ x: 0, y: 0, add: false });
+  g.fillStyle(0x2A2A2A, 1); g.fillRect(0, 50, 40, 6);
+  g.fillStyle(0xF26A1B, 1); g.fillTriangle(20, 0, 36, 50, 4, 50);
+  g.fillStyle(0xFFFFFF, 1); g.fillTriangle(20, 14, 27, 30, 13, 30);
+  g.generateTexture('jh_cone', 40, 56); g.destroy();
+  return 'jh_cone';
+}
+
+/** The flagman's Stop/Go board on its pole; `setGo(true)` turns it round to GO. */
+function stopGoBoard(scene) {
+  const c = scene.add.container(0, 0), g = scene.add.graphics(), M = 60, y = -1.6 * M - 26;
+  const txt = (str, col) => scene.add.text(0, y, str, { fontFamily: 'Arial, sans-serif', fontSize: '17px', color: col, fontStyle: 'bold', resolution: QUALITY.textRes }).setOrigin(0.5);
+  const stop = txt('STOP', '#FFFFFF'), go = txt('GO', '#FFFFFF').setVisible(false);
+  c.add([g, stop, go]);
+  c.setGo = on => {
+    g.clear();
+    g.fillStyle(0x6B6B6B, 1); g.fillRect(-2, -1.6 * M, 4, 1.6 * M);
+    g.fillStyle(on ? 0x1E9E52 : 0xD93A3F, 1); g.fillCircle(0, y, 28); g.lineStyle(3, 0xFFFFFF, 1); g.strokeCircle(0, y, 25);
+    stop.setVisible(!on); go.setVisible(on);
+  };
+  c.setGo(false);
+  c.metres = 1 / M;
+  return c;
 }
 
 /** A roadside sign as a container drawn at 60 px per metre, standing on its post's foot (0, 0). */
@@ -88,6 +162,7 @@ export function createRoad(scene, o) {
   const HY = HORIZON, VPX = W / 2, F = (CAR_Y - HY) * Z_R / CAMH;
   const shape = buildRoadShape(leg);
   const time = leg.time, night = time === 'night', rain = leg.weather === 'rain';
+  const land = LAND[leg.land] || LAND.savanna, haze = rain ? HAZE.rain : land.haze;
   const seeM = night ? (o.lights === false ? 60 : 105) : rain ? 220 : 500;
   const ART = k => scene.textures.exists(k);
 
@@ -109,7 +184,11 @@ export function createRoad(scene, o) {
   const tree = ART('scn_acacia') ? 'scn_acacia' : 'acacia', shrub = ART('scn_bush') ? 'scn_bush' : 'bush', post = ART('img_post') ? 'img_post' : 'post';
   const deco = (tex, s, xm, size, tint, flip) => { const im = add(tex, s, xm, size, 'h', { decor: true }); if (im) { im.baseTint = tint; if (flip) im.setFlipX(true); decor.push(im); } };
   for (let s = 30; s < SPAN; s += 38 / dens) { deco(tree, s, -9 - (s * 7) % 7, 7, tree === 'acacia' ? 0x8A7A5E : 0xFFFFFF); deco(tree, s + 19, 10 + (s * 3) % 6, 7, tree === 'acacia' ? 0x8A7A5E : 0xFFFFFF, true); }
-  for (let s = 12; s < SPAN; s += 26 / dens) { deco(shrub, s, -5.4 - (s % 3), 1.6, shrub === 'bush' ? 0x9A8A5E : 0xFFFFFF); deco(shrub, s + 11, 5.6 + (s % 4), 1.6, shrub === 'bush' ? 0x9A8A5E : 0xFFFFFF, true); }
+  for (let s = 12; s < SPAN; s += land.bushes / dens) { deco(shrub, s, -5.4 - (s % 3), 1.6, shrub === 'bush' ? 0x9A8A5E : 0xFFFFFF); deco(shrub, s + 11, 5.6 + (s % 4), 1.6, shrub === 'bush' ? 0x9A8A5E : 0xFFFFFF, true); }
+  if (land.tufts) {
+    const tuft = tuftTexture(scene);
+    for (let s = 5; s < SPAN; s += land.tufts / dens) { deco(tuft, s, -ROAD.EDGE - 1.4 - (s * 13) % 6, 0.5, 0xFFFFFF); deco(tuft, s + 6, ROAD.EDGE + 1.4 + (s * 7) % 6, 0.5, 0xFFFFFF, true); }
+  }
   for (let s = 10; s < SPAN; s += 32) { deco(post, s, -ROAD.EDGE - 0.7, 1.1, 0xFFFFFF); deco(post, s + 16, ROAD.EDGE + 0.7, 1.1, 0xFFFFFF, post === 'img_post'); }
 
   // Street lamps through towns (the first and last 60 km/h zones).
@@ -135,13 +214,19 @@ export function createRoad(scene, o) {
   });
   if (leg.rest != null) { sign('rest', leg.rest - 400, 'Rest 400 m'); sign('rest', leg.rest - 40, 'Rest area'); }
   leg.animals.forEach(an => { if (!an.verge) sign('warn', an.at - 260, an.kind === 'kudu' ? 'Kudu' : 'Livestock'); });
+  ents.crossings.forEach(p => sign('warn', p.s - 120, 'Pedestrians'));
+  const sg = ents.stopGo;
+  if (sg) sign('warn', sg.at - 120, 'Stop/Go');
 
   // Vehicles and animals from the simulation.
   const vehKey = k => (ART(k) ? k : 'carRear');
   const leadIms = ents.leads.map(l => add(vehKey(l.key), l.s, l.x, WIDTHS[l.key] || CAR_W, 'w', { ent: l, kind: 'lead' }));
   leadIms.forEach((im, i) => { if (im && im.texture.key === 'carRear') im.baseTint = [0x6D8FC7, 0xD8D2C4, 0xC75A4A][i % 3]; });
   const oncomingPool = [];
+  // Warthog frames share one canvas, so the feet stay put when they swap; the leap is mid-air.
+  const HOG = A.animals.warthog, HOG_RUN = [HOG.runA, HOG.leap, HOG.runB, HOG.leap].map(f => f.key), HOG_GROUND = 912 / 941;
   const animalTex = an => {
+    if (an.kind === 'warthog') return ART(HOG.standing.key) ? HOG.standing.key : cowTexture(scene);
     if (an.kind === 'kudu') return ART('scn_kudu') ? 'scn_kudu' : 'kudu';
     if (an.kind === 'cattle') return ART(A.animals.cow.key) ? A.animals.cow.key : cowTexture(scene);
     if (ART(A.animals.donkey.key)) {
@@ -153,12 +238,35 @@ export function createRoad(scene, o) {
     return cowTexture(scene);
   };
   const animalIms = ents.animals.map(an => {
-    const key = animalTex(an), im = add(key, an.s, an.x, an.kind === 'kudu' ? (key === 'scn_kudu' ? 2.6 : 2.8) : an.kind === 'cattle' ? 2.3 : 1.4,
-      an.kind === 'kudu' && key !== 'scn_kudu' ? 'w' : an.kind === 'cattle' ? 'w' : 'h', { ent: an, kind: 'animal' });
+    const hog = an.kind === 'warthog';
+    const key = animalTex(an), im = add(key, an.s, an.x, hog ? (an.young ? 1.15 : 1.75) : an.kind === 'kudu' ? (key === 'scn_kudu' ? 2.6 : 2.8) : an.kind === 'cattle' ? 2.3 : 1.4,
+      hog || (an.kind === 'kudu' && key !== 'scn_kudu') || an.kind === 'cattle' ? 'w' : 'h', { ent: an, kind: 'animal' });
+    if (im && hog && key === HOG.standing.key) im.setOrigin(0.5, HOG_GROUND);
     if (im && key === A.animals.donkey.key) im.setFrame('animal');
     if (im && an.kind === 'kudu' && key === 'scn_kudu') im.referenceHeight = im.height;
     return im;
   });
+
+  // People: at the zebra crossings, walking on the road edge, waiting for a taxi, the flagman.
+  // The art walks to the right; flip it for people heading right-to-left.
+  const person = (who, s, x, extra) => {
+    const poses = pedestrianSet(scene, who);
+    const im = add(poses ? poses[0].key : personTexture(scene), s, x, who === 'schoolgirl' ? 1.45 : 1.7, 'h', Object.assign({ kind: 'ped', poses }, extra));
+    if (im && poses) setPedestrianPose(im, poses[0]);
+    return im;
+  };
+  const pedIms = ents.crossings.map(p => { const im = person(p.who, p.s, p.x, { ent: p }); if (im) im.setFlipX(p.from > 0); return im; });
+  const walkerIms = ents.walkers.map(w => person(w.who, w.s, w.x, { ent: w }));
+  ents.leads.filter(l => l.parked).forEach(l => TAXI_RIDERS.forEach((who, i) => person(who, l.at + 1.5 + i * 2.2, -ROAD.EDGE - 2 - i * 0.5, { taxi: l })));
+  let board = null;
+  if (sg) {
+    person('worker', sg.at + 1, -ROAD.EDGE - 1.3);
+    board = stopGoBoard(scene);
+    Object.assign(board, { ws: sg.at + 1, xm: -ROAD.EDGE - 0.7, sizeM: 1, isSign: true, baseTint: 0xFFFFFF });
+    board.setVisible(false); c.add(board); sprites.push(board);
+    // Cones along the centre line where the oncoming lane is closed.
+    for (let s = sg.at + 14; s <= sg.at + sg.length; s += 7) add(coneTexture(scene), s, 0.3, 0.75, 'h');
+  }
 
   const glowLayer = scene.add.graphics(); c.add(glowLayer);
   const lights = [];
@@ -190,7 +298,7 @@ export function createRoad(scene, o) {
     if (rain) return clamp(1 - (d - seeM * 0.7) / (seeM * 0.6), 0.1, 1);
     return 1;
   };
-  const dark = night ? 0x04060B : HAZE[leg.weather];
+  const dark = night ? 0x04060B : haze;
 
   function drawSky() {
     sky.clear();
@@ -202,24 +310,31 @@ export function createRoad(scene, o) {
 
   function drawHills(cs) {
     hills.clear();
-    const shift = -shape.heading(cs) * F * 0.25, col = night ? 0x0A111D : time === 'dusk' ? 0x3B2E3A : 0x8C7A60;
-    hills.fillStyle(col, rain ? 0.5 : 0.85);
-    const span = 220;
-    for (let i = -2; i < Math.ceil(a.w / span) + 3; i++) {
-      const x = a.x + (((i * span + shift) % (span * 6)) + span * 6) % (span * 6) - span, h = 18 + ((i * 37) % 5 + 5) % 5 * 6;
-      hills.fillTriangle(x, HY + 1, x + span * 0.55, HY - h, x + span * 1.2, HY + 1);
-    }
+    // By day the highland has a pale far ridge behind rocky olive hills; otherwise one row of hills.
+    const layers = night ? [0x0A111D] : time === 'dusk' ? [0x3B2E3A] : land.hills;
+    layers.forEach((col, li) => {
+      const far = layers.length > 1 && li === 0, span = far ? 300 : 220, rocky = layers.length > 1;
+      const shift = -shape.heading(cs) * F * (far ? 0.15 : 0.25);
+      hills.fillStyle(col, rain ? 0.5 : far ? 0.9 : 0.95);
+      for (let i = -2; i < Math.ceil(a.w / span) + 3; i++) {
+        const x = a.x + (((i * span + shift) % (span * 6)) + span * 6) % (span * 6) - span;
+        const h = (far ? 40 : 18) + ((i * 37) % 5 + 5) % 5 * (far ? 9 : 6);
+        if (!rocky) { hills.fillTriangle(x, HY + 1, x + span * 0.55, HY - h, x + span * 1.2, HY + 1); continue; }
+        hills.fillPoints([{ x, y: HY + 1 }, { x: x + span * 0.25, y: HY - h * 0.55 }, { x: x + span * 0.4, y: HY - h * 0.7 }, { x: x + span * 0.55, y: HY - h },
+          { x: x + span * 0.72, y: HY - h * 0.62 }, { x: x + span * 0.9, y: HY - h * 0.75 }, { x: x + span * 1.2, y: HY + 1 }], true);
+      }
+    });
   }
 
   function drawRoad(cs, camX) {
     const g = road; g.clear(); marks.clear();
-    const bottom = a.y + a.h, vc = VERGE[time], L = a.x - 4, R = a.x + a.w + 4;
+    const bottom = a.y + a.h, vc = land.verge[time], L = a.x - 4, R = a.x + a.w + 4;
     // Rows get taller towards the bottom of the screen, where the road changes slowly.
     for (let y = HY + 1; y < bottom;) {
       const step = y - HY < 140 ? 2 : y - HY < 320 || QUALITY.density < 1 ? 3 : 4;
       const z = F * CAMH / (y + step / 2 - HY), k = F / z, ws = cs + z, d = ahead(z);
       const vv = vis(d), fog = clamp((z - 40) / 500, 0, 1) * (rain ? 0.7 : 0.4);
-      const shade = col0 => lerpColor(lerpColor(col0, HAZE[leg.weather], fog), dark, 1 - vv);
+      const shade = col0 => lerpColor(lerpColor(col0, haze, fog), dark, 1 - vv);
       const cx = VPX + (shape.rel(cs, z) - camX) * k;
       const X = m => clamp(cx + m * k, L, R);
       const fill = (x0, x1, col) => { if (x1 > x0) { g.fillStyle(col, 1); g.fillRect(x0, y, x1 - x0, step + 1); } };
@@ -227,13 +342,28 @@ export function createRoad(scene, o) {
       // Side by side, never on top of each other: verge | shoulder | tar | shoulder | verge.
       const restBay = leg.rest != null && ws > leg.rest - 50 && ws < leg.rest + 110;
       const sL = X(-ROAD.EDGE - (restBay ? 4 : 1)), tL = X(-ROAD.EDGE - 0.15), tR = X(ROAD.EDGE + 0.15), sR = X(ROAD.EDGE + 1);
-      const verge = shade(Math.floor(ws / 14) & 1 ? vc[0] : vc[1]), vergeCol = night ? lerpColor(verge, 0x04060B, 0.75) : verge;
-      const shoulder = shade(0xC8A98C);
-      fill(L, sL, vergeCol); fill(sL, tL, shoulder);
+      const tone = col => { const v = shade(col); return night ? lerpColor(v, 0x04060B, 0.75) : v; };
+      const verge = tone(Math.floor(ws / 14) & 1 ? vc[0] : vc[1]), shoulder = shade(land.shoulder);
+      fill(L, sL, verge); fill(sL, tL, shoulder);
       fill(tL, tR, shade(lerpColor(Math.floor(ws / 8) & 1 ? 0x403E41 : 0x484547, 0x22262C, rain ? 0.35 : 0)));
-      fill(tR, sR, shoulder); fill(sR, R, vergeCol);
+      fill(tR, sR, shoulder); fill(sR, R, verge);
+      // Patches of bare soil through the grass, a few metres out and different on each side.
+      if (land.soil) {
+        const patch = Math.floor(ws / 17), soil = tone(land.soil);
+        if ((patch * 7) % 9 === 0) { const m = 3 + (patch * 5) % 6; fill(X(-ROAD.EDGE - m - 5), X(-ROAD.EDGE - m), soil); }
+        if ((patch * 7 + 4) % 9 === 0) { const m = 3 + (patch * 3) % 7; fill(X(ROAD.EDGE + m), X(ROAD.EDGE + m + 5), soil); }
+      }
       line(-ROAD.EDGE + 0.05, -ROAD.EDGE + 0.2, 0xFFCB2B); line(ROAD.EDGE - 0.2, ROAD.EDGE - 0.05, 0xFFCB2B);
-      if (zoneAt(leg, ws).noOvertake) { line(-0.2, -0.06, 0xF2F2F2); line(0.06, 0.2, 0xF2F2F2); }
+      // Zebra crossing: this row spans [cs + zNear, cs + zFar], which can be metres wide far away.
+      const zFar = F * CAMH / (y - HY), zNear = F * CAMH / (y + step - HY);
+      const zebra = ents.crossings.some(p => cs + zNear < p.s + 2.2 && cs + zFar > p.s - 2.2);
+      const band = (s0, s1) => cs + zNear < s1 && cs + zFar > s0;
+      const works = sg && band(sg.at + 12, sg.at + sg.length + 4);
+      if (works) fill(X(0.15), X(ROAD.EDGE - 0.25), shade(0x8A6B4A));
+      if (sg && band(sg.at - 0.4, sg.at + 0.2)) line(-ROAD.EDGE + 0.2, -0.15, 0xF4F4F4);
+      if (zebra) for (let m = -ROAD.EDGE + 0.35; m < ROAD.EDGE - 0.3; m += 0.9) line(m, m + 0.5, 0xF4F4F4);
+      else if (works) line(-0.07, 0.07, 0xF2F2F2);
+      else if (zoneAt(leg, ws).noOvertake) { line(-0.2, -0.06, 0xF2F2F2); line(0.06, 0.2, 0xF2F2F2); }
       else if ((((ws % 12) + 12) % 12) < 4) line(-0.07, 0.07, 0xF2F2F2);
       // Rain reflections of the lights at night.
       if (rain && night && (y % 9 < step)) { g.fillStyle(0xFFF2B0, 0.04 * vv); g.fillRect(tL, y, tR - tL, 1); }
@@ -275,24 +405,36 @@ export function createRoad(scene, o) {
       if (!im) return;
       const an = im.ent; im.ws = an.s; im.xm = an.x; im.hop = an.hop || 0;
       if (an.kind === 'kudu' && ART('scn_kudu_leap')) im.setTexture(im.hop > 0.15 ? 'scn_kudu_leap' : 'scn_kudu');
+      if (an.kind === 'warthog' && ART(HOG.standing.key)) {
+        const running = an.runT > 0 && Math.abs(an.x) < 16 && !REDUCE_MOTION;
+        im.setTexture(running ? HOG_RUN[Math.floor(an.runT / 0.09) % 4] : HOG.standing.key);
+        im.setVisible(Math.abs(an.x) < 16);
+      }
       im.setFlipX(an.side > 0);
     });
+    const walking = (im, on, t) => { if (im.poses) setPedestrianPose(im, im.poses[on && !REDUCE_MOTION ? 1 + Math.floor(t / 0.35) % 2 : 0]); };
+    pedIms.forEach(im => { if (im) { im.xm = im.ent.x; walking(im, im.ent.state === 'crossing', im.ent.walkT); } });
+    walkerIms.forEach(im => { if (im) { im.ws = im.ent.s; walking(im, im.ent.state !== 'hit', im.ent.walkT); } });
+    if (board) board.setGo(sg.phase === 'go');
     // Oncoming vehicles reuse a small pool of images.
     ents.oncoming.forEach((on, i) => {
       let im = oncomingPool[i];
       if (!im) { im = scene.add.image(0, 0, frontTexture(scene)).setOrigin(0.5, 1); Object.assign(im, { by: 'w', baseTint: 0xFFFFFF }); c.add(im); oncomingPool.push(im); }
-      const truck = on.key === 'veh_truck' && ART('img_truck');
-      if (im.texture.key !== (truck ? 'img_truck' : 'jh_front')) im.setTexture(truck ? 'img_truck' : 'jh_front');
-      Object.assign(im, { ws: on.s, xm: on.x, sizeM: truck ? 2.5 : 1.85, ent: on });
+      // Front-view artwork where it loaded; otherwise the drawn car.
+      const f = FRONTS[on.key] && ART(FRONTS[on.key].tex) ? FRONTS[on.key] : { tex: frontTexture(scene), w: 1.85, hx: 0.36, hy: 0.4 };
+      if (im.texture.key !== f.tex) im.setTexture(f.tex);
+      Object.assign(im, { ws: on.s, xm: on.x, sizeM: f.w, ent: on, front: f });
     });
     oncomingPool.forEach((im, i) => { if (i >= ents.oncoming.length) im.setVisible(false); });
 
     [...sprites, ...oncomingPool.slice(0, ents.oncoming.length)].forEach(im => {
-      if (im.ent && im.ent.gone) return;
+      if (im.ent && (im.ent.gone || (im.kind === 'ped' && im.ent.state === 'hit'))) { im.setVisible(false); return; }
+      // Passengers climb in when their taxi pulls away.
+      if (im.taxi && im.taxi.phase !== 'parked') { im.setVisible(false); return; }
       const p = project(im, cs, camX);
       if (!p) return;
       const isAnimal = im.kind === 'animal', isVeh = im.kind === 'lead' || oncomingPool.includes(im);
-      const lit = isAnimal || isVeh || im.isSign || Math.abs(im.xm) < 6;
+      const lit = isAnimal || isVeh || im.isSign || im.kind === 'ped' || Math.abs(im.xm) < 6;
       const dim = night && !lit ? Math.max(0.75, 1 - p.vv) : 1 - p.vv;
       if (!im.isSign) im.setTint(lerpColor(im.baseTint, dark, dim));
       im.setAlpha(clamp(1.25 - p.z / 620, 0.2, 1));
@@ -307,16 +449,16 @@ export function createRoad(scene, o) {
       // Lights: oncoming headlights, tail lights ahead, lamps at night.
       if (night || rain) {
         if (oncomingPool.includes(im)) {
-          const hx = im.displayWidth * 0.36, hy = p.y - im.displayHeight * 0.4, sc = clamp(p.k * 0.05, 0.08, 1.6);
+          const hx = im.displayWidth * im.front.hx, hy = p.y - im.displayHeight * im.front.hy, sc = clamp(p.k * 0.05, 0.08, 1.6);
           lightAt(p.x - hx, hy, sc, 0.9, 0xFFF6D8); lightAt(p.x + hx, hy, sc, 0.9, 0xFFF6D8);
         } else if (im.kind === 'lead') {
-          const hx = im.displayWidth * 0.38, hy = p.y - im.displayHeight * 0.45, sc = clamp(p.k * (im.ent.braking ? 0.03 : 0.018), 0.05, 0.8);
+          const hx = im.displayWidth * 0.38, hy = p.y - im.displayHeight * (TAIL_Y[im.texture.key] || 0.45), sc = clamp(p.k * (im.ent.braking ? 0.03 : 0.018), 0.05, 0.8);
           lightAt(p.x - hx, hy, sc, im.ent.braking ? 1 : 0.7, 0xFF3030); lightAt(p.x + hx, hy, sc, im.ent.braking ? 1 : 0.7, 0xFF3030);
         } else if (lamps.includes(im) && im.texture.key === 'scn_lamp') {
           lightAt(p.x + im.displayWidth * 0.3, p.y - im.displayHeight * 0.96, clamp(p.k * 0.06, 0.1, 1.4), 0.8, 0xFFD58A);
         }
       } else if (im.kind === 'lead' && im.ent.braking) {
-        const hx = im.displayWidth * 0.38, hy = p.y - im.displayHeight * 0.45;
+        const hx = im.displayWidth * 0.38, hy = p.y - im.displayHeight * (TAIL_Y[im.texture.key] || 0.45);
         glowLayer.fillStyle(0xFF2A2A, 1); glowLayer.fillCircle(p.x - hx, hy, Math.max(2, p.k * 0.12)); glowLayer.fillCircle(p.x + hx, hy, Math.max(2, p.k * 0.12));
       }
     });

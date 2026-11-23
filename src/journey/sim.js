@@ -8,7 +8,7 @@
 //
 //   const sim = createLegSim(leg, { fatigue, vehicle, checks });
 //   const events = sim.step(dt, { throttle, brake, steer });   // each frame
-//   sim.st   live state for the HUD and renderer;  sim.ents  vehicles, animals, potholes
+//   sim.st   live state for the HUD and renderer;  sim.ents  vehicles, animals, potholes, pedestrians
 //   sim.result()   summary for the debrief, including the stamps earned
 // ---------------------------------------------------------------------------
 import { MESSAGES } from './route.js';
@@ -18,7 +18,13 @@ export const GAP_SAFE = 3, GAP_CLOSE = 2;       // seconds
 export const GAP_RANGE = 160;                   // metres: beyond this the road ahead reads "Clear"
 export const TOWN_BREAK = 10;                   // fatigue relieved by stopping in town between legs
 export const REST_RELIEF = 70;                  // fatigue removed by a rest stop
-const SERIOUS = { headon: 0, animal: 50, kudu: 40, rear: 35, runoff: 60 };
+// Oncoming traffic on the B1: mostly taxis, cars and bakkies, with trucks, the odd bus and police.
+const ONCOMING_MIX = ['veh_taxi', 'veh_taxi', 'veh_sedan_white', 'veh_sedan_white', 'veh_bakkie', 'veh_bakkie', 'veh_truck', 'veh_truck', 'veh_bus', 'veh_police'];
+const SERIOUS = { headon: 0, animal: 50, kudu: 40, rear: 35, runoff: 60, pedestrian: 15, taxi: 35, convoy: 0, warthog: 70 };
+const KERB = ROAD.EDGE + 1;                     // where pedestrians wait and finish, from the centre
+const SHOULDER = -(ROAD.EDGE + 0.7);            // a vehicle parked on our shoulder
+const WALK_X = -(ROAD.EDGE - 0.2);              // people walking on the edge of the tar
+const GIVE_SPACE = 1, PASS_SLOW = 40;            // metres of space to a walker, or pass at this km/h or less
 
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 const lerp = (a, b, k) => a + (b - a) * k;
@@ -66,6 +72,28 @@ export function buildRoadShape(leg, extra = 800) {
   return { rel: (s, z) => at(offset, s + z) - at(offset, s) - at(heading, s) * z, heading: s => at(heading, s), curvature: curv };
 }
 
+/**
+ * Where warthogs dash across this leg: open road only (80 km/h and up), clear of
+ * the other hazards. Often a family runs in a line, the young a second or so behind.
+ * Each one starts running when we are `tt` seconds away, so the first is usually
+ * across in time and the danger is the ones behind it.
+ */
+export function warthogSpots(leg, seed) {
+  if (!leg.warthogs) return [];
+  const r = rng(seed), [lo, hi] = leg.warthogs.every, out = [];
+  const busy = [
+    ...(leg.crossings || []).map(c => [c.at, c.at]), ...(leg.walkers || []).map(w => [w.at, w.at + 150]),
+    ...leg.leads.filter(l => l.parked || l.stopAt).map(l => [l.at, l.stopAt || l.at]), ...leg.animals.map(a => [a.at, a.at]),
+    ...(leg.stopGo ? [[leg.stopGo.at - 300, leg.stopGo.at + leg.stopGo.length]] : []), ...(leg.rest != null ? [[leg.rest - 400, leg.rest + 100]] : [])
+  ];
+  for (let s = 300 + r() * hi; s < leg.length - 250; s += lo + r() * (hi - lo)) {
+    if (limitAt(leg, s) < 80 || busy.some(([a, b]) => s > a - 120 && s < b + 120)) continue;
+    const side = r() < 0.5 ? -1 : 1, young = r() < 0.55 ? 1 + Math.floor(r() * 3) : 0, tt = 2.6 + r() * 0.8;
+    for (let i = 0; i <= young; i++) out.push({ at: Math.round(s) + i * 1.5, kind: 'warthog', side, tt, behind: i ? i * (2.5 + r() * 1.2) : 0, young: i > 0, group: young + 1 });
+  }
+  return out;
+}
+
 export function createLegSim(leg, carry = {}, opts = {}) {
   const checks = carry.checks || {}, rand = rng(opts.seed != null ? opts.seed : hash(leg.id));
   const decel = leg.weather === 'rain' ? 5.5 : 7.5;
@@ -82,19 +110,25 @@ export function createLegSim(leg, carry = {}, opts = {}) {
   };
   const log = {
     speedingS: 0, closeS: 0, laneS: 0, tiredS: 0, collisions: 0, phoneReads: 0, phoneIgnored: 0,
-    rested: false, restedTired: false, animalsPassed: 0, animalsHit: 0, hadLead: false, potholes: 0,
+    rested: false, restedTired: false, animalsPassed: 0, animalsHit: 0, hadLead: false, potholes: 0, yielded: 0, noYield: 0,
+    walkersPassed: 0, closePasses: 0, ranStop: 0, waitedAtStop: false,
     penalties: {}
   };
   const lose = (key, n) => { if (n <= 0) return; st.safety -= n; log.penalties[key] = (log.penalties[key] || 0) + n; };
   if (!checks.belts) lose('belts', 10);
 
   const ents = {
-    leads: leg.leads.map((l, i) => ({ ...l, id: 'lead' + i, s: l.at, v: l.kmh / 3.6, x: ROAD.LANE, active: false, phase: 'cruise', wait: 0, gone: false })),
+    leads: leg.leads.map((l, i) => ({ ...l, id: 'lead' + i, s: l.at, v: l.parked ? 0 : l.kmh / 3.6, x: l.parked ? SHOULDER : ROAD.LANE, active: false, phase: l.parked ? 'parked' : 'cruise', wait: 0, gone: false })),
     oncoming: [],
-    animals: leg.animals.map((a, i) => ({ ...a, id: 'animal' + i, s: a.at, x: a.side * (ROAD.EDGE + (a.verge ? 1.4 : 2.2)), state: 'waiting', dwell: 0, hop: 0 })),
+    animals: [...leg.animals, ...warthogSpots(leg, opts.wildSeed != null ? opts.wildSeed : hash(leg.id + ':warthogs'))]
+      .map((a, i) => ({ ...a, id: 'animal' + i, s: a.at, x: a.side * (ROAD.EDGE + (a.verge ? 1.4 : 2.2) + (a.behind || 0)), state: 'waiting', dwell: 0, hop: 0, runT: 0 })),
     potholes: [],
+    crossings: (leg.crossings || []).map((c, i) => ({ ...c, id: 'ped' + i, s: c.at, x: c.from * KERB, speed: c.speed || 1.3, state: 'waiting', walkT: 0, passed: false })),
+    walkers: (leg.walkers || []).map((w, i) => ({ ...w, id: 'walker' + i, s: w.at, x: WALK_X, speed: w.speed || 1.2, walkT: 0, state: 'walking', warned: false })),
+    stopGo: leg.stopGo ? { ...leg.stopGo, phase: 'idle', t: 0, waited: 0 } : null,
     rest: leg.rest
   };
+  const sg = ents.stopGo;
   (leg.potholes || []).forEach(([from, to, count]) => {
     for (let i = 0; i < count; i++) ents.potholes.push({ s: lerp(from, to, (i + rand()) / count), x: ROAD.LANE + (rand() - 0.5) * 2.4, r: 0.35 + rand() * 0.25, hit: false });
   });
@@ -102,6 +136,14 @@ export function createLegSim(leg, carry = {}, opts = {}) {
   const drift = { v: 0, until: 0, next: 0 }, sleep = { until: 0, next: 0 }, distract = { until: 0 };
   let held = { throttle: 0, brake: 0, steer: 0 }, nextOncoming = leg.oncoming ? 120 : Infinity, phoneIdx = 0, restUsed = false;
   const flags = { speeding: false, rumble: false, close: false, overLine: false };
+
+  // Somebody is walking on the crossing at `s`: traffic in either direction waits for them.
+  const crossingBusy = (from, to) => ents.crossings.some(p => p.state === 'crossing' && p.s > from && p.s < to);
+  // A vehicle in our lane whose front is at `front` waits at the Stop/Go line while the board shows STOP.
+  const stopBoard = front => !!sg && sg.phase !== 'go' && front < sg.at && sg.at - front < 25;
+  const mustWait = l => crossingBusy(l.s + 4.5, l.s + 14) || stopBoard(l.s + 4.5);
+  // Through the Stop/Go section the convoy uses our lane; it is back in its own lane by the stop line.
+  const convoyX = s => (s >= sg.at + 20 ? ROAD.LANE : s <= sg.at + 5 ? ROAD.ONCOMING : lerp(ROAD.ONCOMING, ROAD.LANE, (s - sg.at - 5) / 15));
 
   function crash(kind, kmh, events) {
     const serious = kmh >= SERIOUS[kind];
@@ -166,6 +208,25 @@ export function createLegSim(leg, carry = {}, opts = {}) {
     }
     if (f >= 70 && v > 1) { lose('tired', 0.4 * dt); log.tiredS += dt; }
 
+    // --- Stop/Go roadworks -------------------------------------------------
+    // STOP while an oncoming convoy comes through in our lane; GO once it is out
+    // and we have stopped at the line (or after a long wait).
+    if (sg) {
+      const d = sg.at - st.s;
+      if (sg.phase === 'idle' && d < 250) {
+        sg.phase = 'stop';
+        ['veh_truck', 'veh_bakkie', 'veh_sedan_white', 'veh_taxi'].forEach((key, i) => ents.oncoming.push({ s: sg.at + 90 + i * 22, v: 50 / 3.6, x: ROAD.LANE, key, convoy: true }));
+        events.push({ type: 'stopGo' });
+      }
+      if (sg.phase === 'stop' && prevS < sg.at && st.s >= sg.at) { log.ranStop++; lose('stopgo', 20); events.push({ type: 'ranStop' }); }
+      if (sg.phase === 'stop') {
+        sg.t += dt;
+        if (v < 0.5 && d > 0 && d < 60) { sg.waited += dt; log.waitedAtStop = true; }
+        const cleared = !ents.oncoming.some(o => o.convoy && o.s > sg.at - 10);
+        if (cleared && (sg.waited >= 1.5 || sg.t >= 25 || d < 0)) { sg.phase = 'go'; events.push({ type: 'go' }); }
+      }
+    }
+
     // --- vehicles ahead in our lane ---------------------------------------
     let near = null;
     ents.leads.forEach(l => {
@@ -173,18 +234,35 @@ export function createLegSim(leg, carry = {}, opts = {}) {
       if (!l.active && st.s > l.at - 450) l.active = true;
       if (!l.active) return;
       if (l.phase === 'cruise' && l.stopAt && !l.stopped && l.s >= l.stopAt) { l.phase = 'stopping'; l.stopped = true; events.push({ type: 'leadBrake', id: l.id }); }
-      if (l.phase === 'stopping') { l.v = Math.max(0, l.v - 6.5 * dt); if (!l.v) { l.phase = 'waiting'; l.wait = l.waitS || 3; } }
+      if (l.phase === 'parked') {
+        // Loading passengers on the shoulder; it pulls out, without indicating, as we get close.
+        // Too close to pull out safely in front of us? It waits until we are past.
+        const d = l.s - st.s;
+        if (!l.warned && d > 0 && d < 150) { l.warned = true; events.push({ type: 'taxiParked' }); }
+        if ((d < l.parked.pullOutM && d > 20) || d < -8) { l.phase = 'pullingOut'; l.outT = st.t; if (d > 0) events.push({ type: 'taxiPullOut' }); }
+      }
+      if (l.phase === 'parked') l.v = 0;
+      else if (l.phase === 'pullingOut') {
+        l.x = Math.min(ROAD.LANE, l.x + 1.2 * dt); l.v = Math.min(l.kmh / 3.6, l.v + 2 * dt);
+        if (l.x >= ROAD.LANE) l.phase = 'cruise';
+      } else if (l.phase === 'stopping') { l.v = Math.max(0, l.v - 6.5 * dt); if (!l.v) { l.phase = 'waiting'; l.wait = l.waitS || 3; } }
       else if (l.phase === 'waiting') { l.wait -= dt; if (l.wait <= 0) l.phase = 'cruise'; }
+      else if (mustWait(l)) l.v = Math.max(0, l.v - 6.5 * dt);
       else l.v = Math.min(l.kmh / 3.6, l.v + 1.6 * dt);
-      l.braking = l.phase === 'stopping';
+      l.braking = l.phase === 'stopping' || (l.phase === 'cruise' && mustWait(l));
       if (l.s >= l.until) { l.x -= 1.6 * dt; if (l.x < -ROAD.EDGE - 2.5) l.gone = true; }
       const before = l.s - prevS;
       l.s += l.v * dt;
       if (Math.abs(l.x - st.x) >= 1.8) return;
-      const dist = l.s - st.s;
+      const dist = l.s - st.s, pulledOut = l.outT != null && st.t - l.outT < 8;
       if (dist <= 0 && before > 0) {
-        crash('rear', Math.max(0, (v - l.v) * 3.6), events);
+        crash(pulledOut ? 'taxi' : 'rear', Math.max(0, (v - l.v) * 3.6), events);
         st.v = l.v * 0.6; st.s = l.s - 0.5;
+      } else if (l.phase === 'pullingOut' && !l.swiped && dist < 0 && dist > -9) {
+        // It pulled out into the side of us.
+        l.swiped = true;
+        crash('taxi', Math.max(10, kmh * 0.5), events);
+        st.v *= 0.6;
       }
       if (dist > -0.5 && (!near || dist < near.dist)) near = { l, dist: Math.max(0, dist) };
     });
@@ -199,40 +277,82 @@ export function createLegSim(leg, carry = {}, opts = {}) {
     flags.close = st.gap.state === 'danger';
 
     // --- oncoming traffic --------------------------------------------------
-    if (st.s >= nextOncoming && st.s < leg.length - 150) {
-      ents.oncoming.push({ s: st.s + 650, v: (80 + rand() * 30) / 3.6, x: ROAD.ONCOMING, key: ['veh_sedan_white', 'veh_bakkie', 'veh_truck', 'veh_taxi'][Math.floor(rand() * 4)] });
+    // No ordinary oncoming traffic is sent into the Stop/Go section (its lane is closed).
+    const nearWorks = sg && st.s > sg.at - 700 && st.s < sg.at + sg.length;
+    if (st.s >= nextOncoming && st.s < leg.length - 150 && !nearWorks) {
+      ents.oncoming.push({ s: st.s + 650, v: (80 + rand() * 30) / 3.6, x: ROAD.ONCOMING, key: ONCOMING_MIX[Math.floor(rand() * ONCOMING_MIX.length)] });
       nextOncoming = st.s + leg.oncoming * (0.6 + rand() * 0.8);
     }
     ents.oncoming = ents.oncoming.filter(o => {
       const before = o.s - prevS;
-      o.s -= o.v * dt;
-      if (Math.abs(o.x - st.x) < 1.8 && o.s - st.s <= 0 && before > 0) crash('headon', kmh + o.v * 3.6, events);
+      if (!crossingBusy(o.s - 14, o.s - 4.5)) o.s -= o.v * dt;
+      if (o.convoy) o.x = convoyX(o.s);
+      if (Math.abs(o.x - st.x) < 1.8 && o.s - st.s <= 0 && before > 0) crash(o.convoy ? 'convoy' : 'headon', kmh + o.v * 3.6, events);
       return o.s > st.s - 40;
     });
 
     // --- animals -----------------------------------------------------------
     ents.animals.forEach(an => {
       if (an.state === 'hit' || an.state === 'done') return;
-      // A kudu bolts late, from close by; cattle and donkeys amble out from further off.
-      const trigger = an.kind === 'kudu' ? 45 : an.kind === 'cattle' ? 140 : 110;
-      if (an.state === 'waiting' && !an.verge && an.s - st.s < trigger) { an.state = 'crossing'; events.push({ type: 'animal', kind: an.kind }); }
+      // A kudu bolts late, from close by; cattle and donkeys amble out from further off;
+      // warthogs dash out a few seconds ahead of us, whatever our speed.
+      const trigger = an.kind === 'warthog' ? Math.max(30, v * an.tt) : an.kind === 'kudu' ? 45 : an.kind === 'cattle' ? 140 : 110;
+      if (an.state === 'waiting' && !an.verge && an.s - st.s < trigger) {
+        an.state = 'crossing';
+        if (!an.young) events.push({ type: 'animal', kind: an.kind, group: an.group || 1 });
+      }
+      const sp = an.kind === 'warthog' ? 4.5 : an.kind === 'kudu' ? 3.5 : an.kind === 'cattle' ? 1.1 : 0.9, dir = -an.side;
+      if (an.kind === 'warthog' && (an.state === 'crossing' || (an.state === 'clear' && Math.abs(an.x) < 16))) an.runT += dt;
+      if (an.kind === 'warthog' && an.state === 'clear' && Math.abs(an.x) < 16) an.x += dir * sp * dt;
       if (an.state === 'crossing') {
-        const sp = an.kind === 'kudu' ? 3.5 : an.kind === 'cattle' ? 1.1 : 0.9, dir = -an.side, before = an.x;
+        const before = an.x;
         an.x += dir * sp * dt;
         if (an.kind === 'kudu') an.hop = Math.abs(Math.sin(an.x * 0.9)) * 0.5;
         if (an.dwellS && !an.dwelt && (before - ROAD.LANE) * (an.x - ROAD.LANE) <= 0) { an.state = 'dwell'; an.dwell = an.dwellS; an.dwelt = true; }
         if (Math.abs(an.x) > ROAD.EDGE + 2.5 && Math.sign(an.x) === dir) { an.state = 'clear'; an.hop = 0; }
       } else if (an.state === 'dwell') { an.dwell -= dt; if (an.dwell <= 0) an.state = 'crossing'; }
       if (prevS < an.s && st.s >= an.s) {
-        if (Math.abs(an.x - st.x) < 1.6) {
+        if (Math.abs(an.x - st.x) < (an.kind !== 'warthog' ? 1.6 : an.young ? 1.1 : 1.3)) {
           an.state = 'hit'; log.animalsHit++;
-          crash(an.kind === 'kudu' ? 'kudu' : 'animal', kmh, events);
-          st.v *= 0.3;
+          crash(an.kind === 'kudu' || an.kind === 'warthog' ? an.kind : 'animal', kmh, events);
+          st.v *= an.kind === 'warthog' ? 0.6 : 0.3;
         } else {
-          an.state = 'done';
-          if (!an.verge || Math.abs(an.x - st.x) < 4) { log.animalsPassed++; events.push({ type: 'animalPassed', kind: an.kind }); }
+          an.state = an.kind === 'warthog' && an.state === 'clear' ? 'clear' : 'done';
+          if (!an.verge || Math.abs(an.x - st.x) < 4) { log.animalsPassed++; if (!an.young) events.push({ type: 'animalPassed', kind: an.kind }); }
         }
       }
+    });
+
+    // --- pedestrian crossings in town ---------------------------------------
+    // They step out as we approach; we must stop and wait until they are across.
+    ents.crossings.forEach(p => {
+      const d = p.s - st.s;
+      if (p.state === 'waiting' && d > 0 && d < (p.trigger || 90)) { p.state = 'crossing'; events.push({ type: 'pedestrian', late: d < 60 }); }
+      if (p.state === 'crossing') {
+        p.x -= p.from * p.speed * dt; p.walkT += dt;
+        if (p.x * -p.from >= KERB) { p.x = -p.from * KERB; p.state = 'across'; }
+      }
+      if (p.passed || !(prevS < p.s && st.s >= p.s)) return;
+      p.passed = true;
+      const onRoad = p.state === 'crossing' && Math.abs(p.x) < ROAD.EDGE + 0.3;
+      if (onRoad && Math.abs(p.x - st.x) < 1.3) { p.state = 'hit'; crash('pedestrian', kmh, events); st.v *= 0.3; }
+      else if (onRoad) { log.noYield++; lose('crossing', 15); events.push({ type: 'noYield' }); }
+      else if (p.state === 'across') { log.yielded++; events.push({ type: 'yielded' }); }
+    });
+
+    // --- people walking on the road edge ------------------------------------
+    // Give them at least a metre, or slow right down to pass.
+    ents.walkers.forEach(w => {
+      if (w.state !== 'walking') return;
+      const before = w.s - prevS;
+      w.s += w.speed * dt; w.walkT += dt;
+      const d = w.s - st.s;
+      if (!w.warned && d > 0 && d < 150) { w.warned = true; events.push({ type: 'walker' }); }
+      if (!(before > 0 && d <= 0)) return;
+      const space = (st.x - ROAD.CAR_HALF) - w.x;
+      if (space < 0.25) { w.state = 'hit'; crash('pedestrian', kmh, events); st.v *= 0.3; }
+      else if (space < GIVE_SPACE && kmh > PASS_SLOW) { w.state = 'passed'; log.closePasses++; lose('walker', 8); events.push({ type: 'closePass' }); }
+      else { w.state = 'passed'; log.walkersPassed++; events.push({ type: 'walkerPassed' }); }
     });
 
     // --- potholes ----------------------------------------------------------
@@ -356,7 +476,10 @@ const ISSUE_COPY = {
   tired: 'Driving very tired cost {n} points. Rest before fatigue gets high.',
   phone: 'Reading your phone cost {n} points. Each look took your eyes off the road.',
   belts: 'An unbuckled passenger cost {n} points.',
-  pothole: 'Hitting potholes fast cost {n} points. Slow down on damaged roads.'
+  pothole: 'Hitting potholes fast cost {n} points. Slow down on damaged roads.',
+  crossing: 'Driving over a crossing with someone on it cost {n} points. Stop and wait until they are across.',
+  walker: 'Passing people on the road edge too close and too fast cost {n} points. Slow down and move over.',
+  stopgo: 'Driving past a STOP board cost {n} points. Wait at the line until the flagman shows GO.'
 };
 
 /** Debrief lines, biggest cost first. */
@@ -368,7 +491,8 @@ export function issues(r) {
 
 /**
  * A careful driver, used by tests and the ?autopilot=1 dev switch: keeps to the
- * limit, a 3-second gap, slows for animals and potholes, rests when tired.
+ * limit, a 3-second gap, slows for animals, potholes, crossings, parked taxis and
+ * Stop/Go boards, moves over for people on the road edge, rests when tired.
  */
 export function autopilot(sim) {
   const { st, ents, leg } = sim, kmh = st.v * 3.6;
@@ -386,15 +510,35 @@ export function autopilot(sim) {
   ents.animals.forEach(an => {
     const d = an.s - st.s;
     if (d < 0 || an.state === 'done' || an.state === 'hit') return;
-    if (an.state === 'waiting' && d < 320 && !an.verge) target = Math.min(target, 60);
-    if ((an.state === 'crossing' || an.state === 'dwell') && Math.abs(an.x) < ROAD.EDGE + 1.5 && d < 150) target = Math.min(target, d < 45 ? 0 : 30);
+    if (an.state === 'waiting' && d < 320 && !an.verge && an.kind !== 'warthog') target = Math.min(target, 60);
+    // Where there's one warthog there are often more: stay slow until the whole family is across.
+    if (an.kind === 'warthog' && an.state === 'crossing' && d < 150) target = Math.min(target, d < 60 ? 0 : 40);
+    else if ((an.state === 'crossing' || an.state === 'dwell') && Math.abs(an.x) < ROAD.EDGE + 1.5 && d < 150) target = Math.min(target, d < 45 ? 0 : 30);
   });
-  if (leg.rest != null && st.fatigue >= 30 && st.restAhead != null) target = Math.min(target, st.restAhead > 200 ? 60 : st.restAhead > 40 ? 25 : 12);
-  if (st.canRest && st.fatigue >= 30) sim.rest();
+  ents.crossings.forEach(p => {
+    const d = p.s - st.s;
+    if (d < 0 || p.passed) return;
+    if (d < 160) target = Math.min(target, 35);
+    if (p.state === 'crossing' && d < 60) target = Math.min(target, d < 30 ? 0 : 15);
+  });
+  ents.leads.forEach(l => { const d = l.s - st.s; if (l.phase === 'parked' && d > 0 && d < 160) target = Math.min(target, 35); });
+  let laneX = ROAD.LANE;
+  ents.walkers.forEach(w => {
+    const d = w.s - st.s;
+    if (w.state !== 'walking' || d < -2) return;
+    if (d < 160) target = Math.min(target, 80);
+    if (d < 60) laneX = -1.0;
+  });
+  const sg = ents.stopGo;
+  if (sg && sg.phase !== 'go' && st.s < sg.at && sg.at - st.s < 320) { const d = sg.at - st.s; target = Math.min(target, d > 50 ? 40 : d > 22 ? 25 : 0); }
+  // Rest when getting tired, and always on a night leg: tiredness builds fastest then.
+  const wantRest = st.fatigue >= 30 || (leg.time === 'night' && st.fatigue >= 10);
+  if (leg.rest != null && wantRest && st.restAhead != null) target = Math.min(target, st.restAhead > 200 ? 60 : st.restAhead > 40 ? 25 : 12);
+  if (st.canRest && wantRest) sim.rest();
   if (st.phone) sim.ignorePhone();
   const throttle = kmh < target - 1 ? 1 : 0;
   const brake = kmh > target + 3 ? clamp((kmh - target) / 20, 0.3, 1) : 0;
-  const d = ROAD.LANE - st.x;
+  const d = laneX - st.x;
   const steer = Math.abs(d) > 0.12 ? clamp(d * 1.5, -1, 1) : 0;
   return { throttle, brake, steer };
 }

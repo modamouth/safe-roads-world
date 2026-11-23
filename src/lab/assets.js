@@ -28,7 +28,8 @@ export const LEARNING_LAB_ASSETS = {
     safePass: { key: 'lab-td-cyclist-car-safe-pass', path: 'assets/learning-lab/priority-2/top-down/cyclist-car-safe-pass.png', bounds: [40, 134, 1024, 1382] }
   },
   childSeat: { firm: asset('childseat_firm', true), loose: asset('childseat_loose', true), harnessLoose: asset('childseat_slack', true) },
-  animals: { kudu: { key: 'scn_kudu', path: 'assets/learning-lab/priority-3/animals/kudu-standing.png' }, kuduLeaping: { key: 'scn_kudu_leap', path: 'assets/learning-lab/priority-3/animals/kudu-leaping.png' }, donkey: { key: 'scn_donkey', path: 'assets/learning-lab/priority-3/animals/grey-donkey-clean.png', bounds: [192, 0, 1438, 1018] }, cow: { key: 'lab-nguni-cow', path: 'assets/learning-lab/priority-2/animals/nguni-cow.png' } },
+  animals: { kudu: { key: 'scn_kudu', path: 'assets/learning-lab/priority-3/animals/kudu-standing.png' }, kuduLeaping: { key: 'scn_kudu_leap', path: 'assets/learning-lab/priority-3/animals/kudu-leaping.png' }, donkey: { key: 'scn_donkey', path: 'assets/learning-lab/priority-3/animals/grey-donkey-clean.png', bounds: [192, 0, 1438, 1018] }, cow: { key: 'lab-nguni-cow', path: 'assets/learning-lab/priority-2/animals/nguni-cow.png' },
+    warthog: Object.fromEntries([['standing', 'standing'], ['runA', 'run-a'], ['runB', 'run-b'], ['leap', 'leap']].map(([k, f]) => [k, { key: 'scn_warthog_' + f, path: 'assets/learning-lab/priority-3/animals/warthog-' + f + '.png' }])) },
   scenery: { acacia: { key: 'scn_acacia', path: 'assets/learning-lab/priority-3/scenery/acacia-tree.png' }, bush: { key: 'scn_bush', path: 'assets/learning-lab/priority-3/scenery/savanna-bush.png' }, palm: { key: 'scn_palm', path: 'assets/learning-lab/priority-3/scenery/palm-tree.png' }, lamp: { key: 'scn_lamp', path: 'assets/learning-lab/priority-3/scenery/street-lamp.png' }, post: asset('post', true) },
   escRoad: { key: 'lab-esc-wet-road', path: 'assets/learning-lab/priority-3/roads/wet-esc-bend.png' },
   roads: { base: asset('td_road'), rumble: asset('td_rumble'), refuge: asset('td_refuge'), lighting: asset('td_lighting'), fence: asset('td_fence'), crossroads: asset('td_crossroads'), roundabout: asset('td_roundabout') },
@@ -36,7 +37,10 @@ export const LEARNING_LAB_ASSETS = {
   cards: { cityBus: { key: 'lab-city-bus-open-door', path: 'assets/learning-lab/priority-2/side-view/city-bus-open-door.png' }, freightTruck: { key: 'lab-freight-truck-side', path: 'assets/learning-lab/priority-2/side-view/namibian-road-freight-truck.png' }, alcohol: asset('spot_beer'), medicine: asset('spot_meds'), phone: asset('spot_phone'), wheel: asset('spot_wheel') },
   crossing: asset('scn_crossing'), route: asset('scn_b1map'),
   crash: { background: asset('labbg', true), car: asset('labcar0', true), car60: asset('labcar60', true), car80: asset('labcar80', true), car90: asset('labcar90', true) },
-  oncomingTruck: asset('truck', true)
+  oncomingTruck: asset('truck', true),
+  // Front views for oncoming traffic and rear views for vehicles ahead (The Journey Home).
+  vehicles: Object.fromEntries(['front-minibus-taxi', 'front-white-sedan', 'front-truck', 'front-bus', 'front-police-bakkie', 'rear-fuel-tanker', 'rear-box-trailer']
+    .map(name => [name, { key: 'veh_' + name.replaceAll('-', '_'), path: 'assets/learning-lab/priority-3/vehicles/' + name + '.png' }]))
 };
 const A = LEARNING_LAB_ASSETS;
 const values = Object.values;
@@ -45,7 +49,7 @@ const BY_KIND = {
   'child-seat': [...values(A.childSeat), ...values(A.booster)],
   'car-features': [A.vehicle, ...values(A.adultBelt), A.topDown.redSedan, A.escRoad],
   'rider-gear': values(A.rider), 'head-impact': values(A.helmet),
-  'rural-road': [...values(A.animals), A.scenery.acacia, A.scenery.bush, A.scenery.post, A.oncomingTruck],
+  'rural-road': [...values(A.animals).filter(a => a.key), A.scenery.acacia, A.scenery.bush, A.scenery.post, A.oncomingTruck],
   'city-drive': [A.scenery.palm, A.scenery.lamp, ...values(A.pedestrians).flatMap(values)],
   'road-treatment': values(A.roads), 'trip-map': [A.route],
   'water-crossing': [A.crossing], 'crash-lab': values(A.crash),

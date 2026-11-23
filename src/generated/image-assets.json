@@ -539,6 +539,46 @@
     "runtimeBytes": 75756,
     "sha256": "c49e23a5332323489d714834170716d84f5b3f9c16868e1299428deefe18253e"
   },
+  "assets/learning-lab/priority-3/animals/warthog-leap.png": {
+    "url": "optimized/assets/learning-lab/priority-3/animals/warthog-leap.webp",
+    "width": 1671,
+    "height": 941,
+    "runtimeWidth": 836,
+    "runtimeHeight": 470,
+    "sourceBytes": 1605330,
+    "runtimeBytes": 94172,
+    "sha256": "13fd99a31c30ddc77f1b36e53a79f96b7d8e92a1843950e64119779b03b290c0"
+  },
+  "assets/learning-lab/priority-3/animals/warthog-run-a.png": {
+    "url": "optimized/assets/learning-lab/priority-3/animals/warthog-run-a.webp",
+    "width": 1671,
+    "height": 941,
+    "runtimeWidth": 836,
+    "runtimeHeight": 470,
+    "sourceBytes": 1596287,
+    "runtimeBytes": 93244,
+    "sha256": "c3d785b81e2a7d814671f74314a9680df19d4bb9f8c8ea29b9fd67f683893a1f"
+  },
+  "assets/learning-lab/priority-3/animals/warthog-run-b.png": {
+    "url": "optimized/assets/learning-lab/priority-3/animals/warthog-run-b.webp",
+    "width": 1672,
+    "height": 941,
+    "runtimeWidth": 836,
+    "runtimeHeight": 470,
+    "sourceBytes": 1839420,
+    "runtimeBytes": 112638,
+    "sha256": "2be42df579b5a1ac7663b5c43b7c8389cbd6b175bc62a1d8f863b782b143b79b"
+  },
+  "assets/learning-lab/priority-3/animals/warthog-standing.png": {
+    "url": "optimized/assets/learning-lab/priority-3/animals/warthog-standing.webp",
+    "width": 1672,
+    "height": 941,
+    "runtimeWidth": 836,
+    "runtimeHeight": 470,
+    "sourceBytes": 1571425,
+    "runtimeBytes": 90028,
+    "sha256": "7c2f2d3f4a044c199c9b80624a2150c41860feea37b5443bc10a98ac2eb52865"
+  },
   "assets/learning-lab/priority-3/roads/wet-esc-bend.png": {
     "url": "optimized/assets/learning-lab/priority-3/roads/wet-esc-bend.webp",
     "width": 1254,
@@ -678,6 +718,76 @@
     "sourceBytes": 1840574,
     "runtimeBytes": 16716,
     "sha256": "2015839d2b34df8da897c813b618dd409cc88830ed29c373afb3b864cfe6c66f"
+  },
+  "assets/learning-lab/priority-3/vehicles/front-bus.png": {
+    "url": "optimized/assets/learning-lab/priority-3/vehicles/front-bus.webp",
+    "width": 597,
+    "height": 648,
+    "runtimeWidth": 597,
+    "runtimeHeight": 648,
+    "sourceBytes": 460432,
+    "runtimeBytes": 82446,
+    "sha256": "073c7c075abbe86db2298b3fa031e0824e5fe0dd78dee378d09d868cf3d5bc48"
+  },
+  "assets/learning-lab/priority-3/vehicles/front-minibus-taxi.png": {
+    "url": "optimized/assets/learning-lab/priority-3/vehicles/front-minibus-taxi.webp",
+    "width": 549,
+    "height": 546,
+    "runtimeWidth": 549,
+    "runtimeHeight": 546,
+    "sourceBytes": 339053,
+    "runtimeBytes": 55622,
+    "sha256": "0bd886f400961c32485099743c98aa09cd8b6e74d32461fe9523d0d9e8e7deef"
+  },
+  "assets/learning-lab/priority-3/vehicles/front-police-bakkie.png": {
+    "url": "optimized/assets/learning-lab/priority-3/vehicles/front-police-bakkie.webp",
+    "width": 597,
+    "height": 577,
+    "runtimeWidth": 597,
+    "runtimeHeight": 577,
+    "sourceBytes": 457368,
+    "runtimeBytes": 93102,
+    "sha256": "da88f011532bc8a7c801a889a4ff00fc5f4b4ac98a98cf0d20ed0aeee6ebe28c"
+  },
+  "assets/learning-lab/priority-3/vehicles/front-truck.png": {
+    "url": "optimized/assets/learning-lab/priority-3/vehicles/front-truck.webp",
+    "width": 536,
+    "height": 656,
+    "runtimeWidth": 536,
+    "runtimeHeight": 656,
+    "sourceBytes": 458473,
+    "runtimeBytes": 85936,
+    "sha256": "5c578ed54a99d0bfc2f6d98fa7388d15e46127af6eb4faa9874016dc2ce66449"
+  },
+  "assets/learning-lab/priority-3/vehicles/front-white-sedan.png": {
+    "url": "optimized/assets/learning-lab/priority-3/vehicles/front-white-sedan.webp",
+    "width": 531,
+    "height": 409,
+    "runtimeWidth": 531,
+    "runtimeHeight": 409,
+    "sourceBytes": 273993,
+    "runtimeBytes": 54120,
+    "sha256": "c900d65e5d172910495c706e05f20680bfab8999ddb5af6d95383ebed6358714"
+  },
+  "assets/learning-lab/priority-3/vehicles/rear-box-trailer.png": {
+    "url": "optimized/assets/learning-lab/priority-3/vehicles/rear-box-trailer.webp",
+    "width": 491,
+    "height": 700,
+    "runtimeWidth": 491,
+    "runtimeHeight": 700,
+    "sourceBytes": 498604,
+    "runtimeBytes": 75244,
+    "sha256": "d3e147d543e80f4dfa38c08e8c56dc7561f0b46dbcdd36480ad42eb49e6418ef"
+  },
+  "assets/learning-lab/priority-3/vehicles/rear-fuel-tanker.png": {
+    "url": "optimized/assets/learning-lab/priority-3/vehicles/rear-fuel-tanker.webp",
+    "width": 560,
+    "height": 698,
+    "runtimeWidth": 560,
+    "runtimeHeight": 698,
+    "sourceBytes": 516318,
+    "runtimeBytes": 89704,
+    "sha256": "e9ab8a7a7ae0fdc8b576e1f5017ef13d3a768272fe14d3e59935d97f4139d60f"
   },
   "assets/map_bg.webp": {
     "url": "optimized/assets/map_bg.webp",
