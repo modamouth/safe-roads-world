@@ -8,25 +8,32 @@ import { loadImage } from '../imageAssets.js';
 import { LEARNING_LAB_ASSETS as A } from '../lab/assets.js';
 import { B1_ROUTE_STOPS } from '../lab/routeStops.js';
 import { Sfx } from '../sfx.js';
-import { LEGS, STAMPS, CHECKS, TIPS } from '../journey/route.js';
-import { journey } from '../journey/progress.js';
+import { routeById } from '../journey/routes.js';
+import { journeyFor } from '../journey/progress.js';
+import { drawCoastMap } from '../journey/coastMap.js';
 
-// The Journey Home: route overview, Passport stamps and the pre-trip check.
-// Each leg is driven in JourneyDrive; fatigue and vehicle health carry over.
+// A journey's hub (the Journey Home, Journey to the Ocean): route overview, Passport
+// stamps and the pre-trip check. Each leg is driven in JourneyDrive; fatigue and
+// vehicle health carry over. Started with { route: 'b1' | 'b2' }.
 const TIME_WORD = { day: 'Afternoon', dusk: 'Dusk', night: 'Night' };
 // The illustrated B1 map, cropped to Windhoek–Tsumeb (fractions of the image).
 // Towns sit on the painted road; Otavi is not on the schematic, so it is measured from the art.
 const MAP = { x: 20, y: 176, w: 244, h: 410, crop: { x: 0.16, y: 0.33, w: 0.6, h: 0.66 } };
 const STOP = name => B1_ROUTE_STOPS.find(s => s.label === name);
 const ON_MAP = { Windhoek: STOP('Windhoek'), Okahandja: STOP('Okahandja'), Otjiwarongo: STOP('Otjiwarongo'), Otavi: { x: 0.452, y: 0.455 }, Tsumeb: STOP('Tsumeb') };
+// Where the route's towns sit on the illustrated B2 map (fractions of the image).
+const B2_ON_MAP = { Windhoek: [0.904, 0.656], Karibib: [0.569, 0.291], Arandis: [0.283, 0.515], Swakopmund: [0.132, 0.685] };
 let tipIndex = 0;
 
 export default class Journey extends Phaser.Scene {
   constructor() { super('Journey'); }
 
+  init(data) { this.r = routeById(data && data.route); this.j = journeyFor(this.r.id); }
+
   preload() {
     this.load.setPath(import.meta.env.BASE_URL);
-    if (!this.textures.exists(A.route.key)) loadImage(this, A.route.key, A.route.path);
+    const map = this.r.id === 'b2' ? A.routeB2 : A.route;
+    if (!this.textures.exists(map.key)) loadImage(this, map.key, map.path);
     this.load.on('loaderror', () => {});
   }
 
@@ -41,33 +48,33 @@ export default class Journey extends Phaser.Scene {
 
     const g = this.add.graphics().setDepth(5);
     g.fillStyle(C.navy, 0.92); g.fillRect(v.left, v.top, v.width, 88 - v.top);
-    iconButton(this, 44, 44, 'back', () => this.go('Map', { select: 'b1' })).setDepth(10);
-    this.add.text(84, 44, 'The Journey Home', { fontFamily: FONT, fontSize: '24px', color: '#FFFFFF', fontStyle: 'bold', resolution: 2 }).setOrigin(0, 0.5).setDepth(10);
+    iconButton(this, 44, 44, 'back', () => this.go('Map', { select: this.r.zone })).setDepth(10);
+    this.add.text(84, 44, this.r.title, { fontFamily: FONT, fontSize: '24px', color: '#FFFFFF', fontStyle: 'bold', resolution: 2 }).setOrigin(0, 0.5).setDepth(10);
     soundToggle(this);
 
-    const run = journey.run();
+    const run = this.j.run();
     const intro = run && run.complete
-      ? 'You made it home. Best journey score: ' + journey.best() + '/100.'
-      : 'Drive home for the holidays: Windhoek to Tsumeb on the B1. Four legs, one goal: arrive safely.';
+      ? this.r.done(this.j.best())
+      : this.r.intro;
     this.add.text(28, 112, intro, { fontFamily: FONT, fontSize: '17px', color: '#DDE6F0', wordWrap: { width: W - 56 }, lineSpacing: 4, resolution: 2 });
 
     this.route(run);
     this.stamps();
-    const tip = TIPS[tipIndex++ % TIPS.length];
+    const tip = this.r.tips[tipIndex++ % this.r.tips.length];
     this.add.text(W / 2, 808, 'Tip: ' + tip, { fontFamily: FONT, fontSize: '15px', color: '#9AA6B5', wordWrap: { width: W - 60 }, align: 'center', resolution: 2 }).setOrigin(0.5);
 
     const next = run && !run.complete ? run.leg : null;
-    const label = next == null ? (run && run.complete ? 'Drive home again' : 'Start the journey') : next === 0 ? 'Start leg 1' : 'Drive leg ' + (next + 1) + ': to ' + LEGS[next].to;
+    const label = next == null ? (run && run.complete ? this.r.again : 'Start the journey') : next === 0 ? 'Start leg 1' : 'Drive leg ' + (next + 1) + ': to ' + this.r.legs[next].to;
     button(this, W / 2, 866, W - 60, 64, label, () => (next == null ? this.preTrip() : this.drive(next)),
       { size: 23, fill: C.yellow, fillA: 1, color: '#0B1B2E' });
-    if (next) button(this, W / 2, 928, 260, 44, 'Start over from Windhoek', () => this.preTrip(), { size: 16, fill: C.navy, fillA: 0.9, stroke: 0x4FC3F7, r: 22 });
+    if (next) button(this, W / 2, 928, 260, 44, 'Start over from ' + this.r.legs[0].from, () => this.preTrip(), { size: 16, fill: C.navy, fillA: 0.9, stroke: 0x4FC3F7, r: 22 });
 
-    const arrived = data && data.arrived && LEGS.find(l => l.id === data.arrived);
+    const arrived = data && data.arrived && this.r.legs.find(l => l.id === data.arrived);
     if (arrived && !arrived.home && run && !run.complete) toast(this, 'Stretch break in ' + arrived.to + ': fatigue now ' + Math.round(run.fatigue) + '%', 760);
 
-    describe('The Journey Home', [intro,
-      'Route: ' + LEGS.map((l, i) => 'leg ' + (i + 1) + ' ' + l.from + ' to ' + l.to + this.legStatus(run, i).text).join('; ') + '.',
-      'Passport: ' + journey.stampCount() + ' of ' + STAMPS.length + ' journey stamps.']);
+    describe(this.r.title, [intro,
+      'Route: ' + this.r.legs.map((l, i) => 'leg ' + (i + 1) + ' ' + l.from + ' to ' + l.to + this.legStatus(run, i).text).join('; ') + '.',
+      'Passport: ' + this.j.stampCount() + ' of ' + this.r.stamps.length + ' journey stamps.']);
   }
 
   legStatus(run, i) {
@@ -78,16 +85,17 @@ export default class Journey extends Phaser.Scene {
   }
 
   route(run) {
-    const towns = [LEGS[0].from, ...LEGS.map(l => l.to)];
+    const towns = [this.r.legs[0].from, ...this.r.legs.map(l => l.to)];
+    if (this.r.id !== 'b1') return this.coastRoute(run, towns);
     const at = this.routeMap(run, towns);
     // The legs, beside the map.
-    const x = MAP.x + MAP.w + 20, y0 = MAP.y + 8, gap = MAP.h / LEGS.length, g = this.add.graphics();
-    LEGS.forEach((leg, i) => {
+    const x = MAP.x + MAP.w + 20, y0 = MAP.y + 8, gap = MAP.h / this.r.legs.length, g = this.add.graphics();
+    this.r.legs.forEach((leg, i) => {
       const y = y0 + i * gap, s = this.legStatus(run, i), next = s.state === 'next';
       if (next) { g.fillStyle(C.yellow, 0.12); g.fillRoundedRect(x - 10, y - 6, W - x - 10, gap - 12, 12); g.lineStyle(2, C.yellow, 0.8); g.strokeRoundedRect(x - 10, y - 6, W - x - 10, gap - 12, 12); }
-      this.add.text(x, y + 4, 'Leg ' + (i + 1) + (leg.home ? '  ·  home' : ''), { fontFamily: FONT, fontSize: '13px', color: '#FFCB2B', fontStyle: 'bold', resolution: 2 });
+      this.add.text(x, y + 4, 'Leg ' + (i + 1) + (leg.home ? '  ·  ' + this.r.end : ''), { fontFamily: FONT, fontSize: '13px', color: '#FFCB2B', fontStyle: 'bold', resolution: 2 });
       this.add.text(x, y + 22, leg.from + ' →\n' + leg.to, { fontFamily: FONT, fontSize: '17px', color: '#FFFFFF', fontStyle: 'bold', lineSpacing: 2, resolution: 2 });
-      const info = TIME_WORD[leg.time] + (leg.weather === 'rain' ? ', rain' : '') + '  ·  ' + leg.realKm + ' km';
+      const info = TIME_WORD[leg.time] + (leg.weather === 'rain' ? ', rain' : leg.fog ? ', fog' : leg.dust ? ', dust' : '') + '  ·  ' + leg.realKm + ' km';
       this.add.text(x, y + 70, info, { fontFamily: FONT, fontSize: '13px', color: '#9AA6B5', fontStyle: 'bold', resolution: 2 });
       const chip = s.state === 'done' ? ['✓ ' + run.scores[i] + '/100', '#7BE0A6'] : next ? ['Next', '#FFCB2B'] : null;
       if (chip) this.add.text(W - 30, y + 4, chip[0], { fontFamily: FONT, fontSize: '14px', color: chip[1], fontStyle: 'bold', resolution: 2 }).setOrigin(1, 0);
@@ -95,7 +103,7 @@ export default class Journey extends Phaser.Scene {
     return at;
   }
 
-  // The B1 from Windhoek to Tsumeb, with the towns of each leg and where you are now.
+  // Where each leg ends, and where you are now: the illustrated B1 map, or the drawn coast map.
   routeMap(run, towns) {
     const m = MAP, frame = this.add.graphics();
     frame.fillStyle(0x9C6230, 1); frame.fillRoundedRect(m.x, m.y, m.w, m.h, 16);
@@ -128,11 +136,44 @@ export default class Journey extends Phaser.Scene {
     return towns[here];
   }
 
+  // The coast journey: a wide map of the region, drawn from real coordinates, with the legs underneath.
+  coastRoute(run, towns) {
+    const here = !run ? 0 : run.complete ? towns.length - 1 : run.leg;
+    const area = { x: 20, y: 172, w: W - 40, h: 300 };
+    if (this.textures.exists(A.routeB2.key)) this.illustratedCoastMap(area, towns, here);
+    else drawCoastMap(this, area, { towns, here });
+    const y0 = 486, gap = 42, g = this.add.graphics();
+    this.r.legs.forEach((leg, i) => {
+      const y = y0 + i * gap, st = this.legStatus(run, i), next = st.state === 'next';
+      if (next) { g.fillStyle(C.yellow, 0.12); g.fillRoundedRect(20, y - 4, W - 40, gap - 6, 10); g.lineStyle(2, C.yellow, 0.8); g.strokeRoundedRect(20, y - 4, W - 40, gap - 6, 10); }
+      this.add.text(32, y + 15, (i + 1) + '', { fontFamily: FONT, fontSize: '15px', color: '#FFCB2B', fontStyle: 'bold', resolution: 2 }).setOrigin(0, 0.5);
+      this.add.text(52, y + 15, leg.from + ' → ' + leg.to, { fontFamily: FONT, fontSize: '16px', color: '#FFFFFF', fontStyle: 'bold', resolution: 2 }).setOrigin(0, 0.5);
+      const info = (leg.fog ? 'Fog' : leg.dust ? 'Dust' : TIME_WORD[leg.time]) + ' · ' + leg.realKm + ' km';
+      const chip = st.state === 'done' ? ['✓ ' + run.scores[i], '#7BE0A6'] : next ? ['Next', '#FFCB2B'] : null;
+      this.add.text(W - (chip ? 96 : 32), y + 15, info, { fontFamily: FONT, fontSize: '13px', color: '#9AA6B5', fontStyle: 'bold', resolution: 2 }).setOrigin(1, 0.5);
+      if (chip) this.add.text(W - 32, y + 15, chip[0], { fontFamily: FONT, fontSize: '14px', color: chip[1], fontStyle: 'bold', resolution: 2 }).setOrigin(1, 0.5);
+    });
+    return towns[here];
+  }
+
+  // The illustrated B2 map (towns, labels and route are painted on); mark where you are.
+  illustratedCoastMap(a, towns, here) {
+    const img = this.add.image(0, 0, A.routeB2.key).setOrigin(0);
+    const k = Math.min(a.w / img.width, a.h / img.height), w = img.width * k, h = img.height * k, x = a.x + (a.w - w) / 2, y = a.y + (a.h - h) / 2;
+    img.setScale(k).setPosition(x, y);
+    const mask = this.make.graphics({}, false); mask.fillStyle(0xFFFFFF); mask.fillRoundedRect(x, y, w, h, 16);
+    img.setMask(mask.createGeometryMask());
+    const frame = this.add.graphics(); frame.lineStyle(2, 0xFFFFFF, 0.25); frame.strokeRoundedRect(x, y, w, h, 16);
+    const p = B2_ON_MAP[towns[here]], cx = x + w * p[0], cy = y + h * p[1];
+    const ring = this.add.circle(cx, cy, 13).setStrokeStyle(3, 0xFFFFFF, 1);
+    if (!REDUCE_MOTION) this.tweens.add({ targets: ring, scale: 1.7, alpha: 0, duration: 1100, repeat: -1 });
+  }
+
   stamps() {
-    const have = journey.stamps(), y0 = 652;
-    this.add.text(28, 618, 'Passport  ' + Object.keys(have).length + '/' + STAMPS.length, { fontFamily: FONT, fontSize: '18px', color: '#FFCB2B', fontStyle: 'bold', resolution: 2 }).setOrigin(0, 0.5);
+    const have = this.j.stamps(), y0 = 652;
+    this.add.text(28, 618, 'Passport  ' + Object.keys(have).length + '/' + this.r.stamps.length, { fontFamily: FONT, fontSize: '18px', color: '#FFCB2B', fontStyle: 'bold', resolution: 2 }).setOrigin(0, 0.5);
     const cols = 9, cell = (W - 40) / cols;
-    STAMPS.forEach((s, i) => {
+    this.r.stamps.forEach((s, i) => {
       const x = 20 + cell * i + cell / 2, y = y0 + 14, on = !!have[s.id], g = this.add.graphics();
       if (on) { g.lineStyle(3, C.yellow, 1); g.strokeCircle(x, y, 22); g.fillStyle(C.navy2, 1); g.fillCircle(x, y, 19); drawIcon(g, s.icon, x, y, 22, C.yellow); }
       else { g.lineStyle(2, 0xFFFFFF, 0.25); g.strokeCircle(x, y, 22); drawIcon(g, s.icon, x, y, 20, 0xFFFFFF, 0.3); }
@@ -150,7 +191,7 @@ export default class Journey extends Phaser.Scene {
     o.add(panel(this, 28, 150, W - 56, 650, { alpha: 0.97, stroke: 0xFFFFFF, strokeA: 0.12 }));
     o.add(T(this, W / 2, 196, 'Before you leave', 30, '#FFFFFF'));
     o.add(this.add.text(W / 2, 236, 'A long trip starts in the driveway. Tap each check you do.', { fontFamily: FONT, fontSize: '16px', color: '#B9C6D6', wordWrap: { width: W - 110 }, align: 'center', resolution: 2 }).setOrigin(0.5, 0));
-    CHECKS.forEach((c, i) => {
+    this.r.checks.forEach((c, i) => {
       const b = button(this, W / 2, 322 + i * 84, W - 100, 70, '☐  ' + c.label, () => {
         checks[c.id] = !checks[c.id];
         b.setActive(!!checks[c.id]); b.setLabel((checks[c.id] ? '☑  ' : '☐  ') + c.label);
@@ -158,8 +199,8 @@ export default class Journey extends Phaser.Scene {
       o.add(b);
     });
     o.add(button(this, W / 2, 700, W - 100, 62, 'Leave now', () => {
-      const skipped = CHECKS.filter(c => !checks[c.id]);
-      const fresh = journey.startRun(checks);
+      const skipped = this.r.checks.filter(c => !checks[c.id]);
+      const fresh = this.j.startRun(checks);
       track('journey_pretrip', { checks, skipped: skipped.map(c => c.id) });
       if (skipped.length) {
         o.destroy(); this.overlay = null;
@@ -168,7 +209,7 @@ export default class Journey extends Phaser.Scene {
     }, { size: 23, fill: C.yellow, fillA: 1, color: '#0B1B2E' }));
     o.add(button(this, W / 2, 768, 200, 44, 'Not now', () => { o.destroy(); this.overlay = null; }, { size: 17, stroke: 0xFFFFFF, r: 22 }));
     this.overlay = o;
-    describe('Before you leave', CHECKS.map(c => c.label));
+    describe('Before you leave', this.r.checks.map(c => c.label));
     if (!REDUCE_MOTION) { o.setAlpha(0); this.tweens.add({ targets: o, alpha: 1, duration: 180 }); }
   }
 
@@ -184,7 +225,7 @@ export default class Journey extends Phaser.Scene {
     describe('You skipped ' + skipped.length + (skipped.length === 1 ? ' check' : ' checks'), skipped.map(c => c.skipped));
   }
 
-  drive(leg) { this.go('JourneyDrive', { leg }); }
+  drive(leg) { this.go('JourneyDrive', { leg, route: this.r.id }); }
 
   go(key, data) {
     if (this.leaving) return; this.leaving = true;

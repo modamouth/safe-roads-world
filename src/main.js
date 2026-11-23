@@ -4,7 +4,7 @@ import { GW, GH } from './config.js';
 import Boot from './scenes/Boot.js';
 import Title from './scenes/Title.js';
 import MapScene from './scenes/Map.js';
-import CityRunStub from './scenes/CityRunStub.js';
+import CityRun from './scenes/CityRun.js';
 import LabMenu from './scenes/LabMenu.js';
 import LabRunner from './lab/LabRunner.js';
 import Passport from './scenes/Passport.js';
@@ -21,7 +21,7 @@ const game = new Phaser.Game({
   // EXPAND keeps the whole 540x960 design visible and fills any extra screen space (see ui.setupCam).
   scale: { mode: Phaser.Scale.EXPAND, autoCenter: Phaser.Scale.CENTER_BOTH },
   render: { antialias: true },
-  scene: [Boot, Title, MapScene, CityRunStub, LabMenu, LabRunner, Passport, Journey, JourneyDrive]
+  scene: [Boot, Title, MapScene, CityRun, LabMenu, LabRunner, Passport, Journey, JourneyDrive]
 });
 
 game.events.once('destroy', cleanupFeedback);

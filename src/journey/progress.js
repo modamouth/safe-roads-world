@@ -1,26 +1,27 @@
 // ---------------------------------------------------------------------------
-// The Journey Home: progress saved on the device (pure, no Phaser).
+// Journey progress saved on the device (pure, no Phaser), one record per route.
 //
-// Shape (JSON in storage under JOURNEY_KEY):
+// Shape (JSON in storage under the route's key; the Journey Home uses JOURNEY_KEY):
 //   stamps  { pretrip: timestamp, leg1: timestamp, limit: timestamp, ... }
 //   run     the journey in progress: { leg, fatigue, vehicle, checks, scores, complete }
 //           `leg` is the next leg to drive; fatigue and vehicle carry between legs
 //   best    best average safety score over a whole journey
 // ---------------------------------------------------------------------------
-import { LEGS, CHECKS } from './route.js';
 import { TOWN_BREAK } from './sim.js';
+import { ROUTES, routeById } from './routes.js';
 import { deviceStorage } from '../lab/core/progress.js';
 
 export const JOURNEY_KEY = 'srw.journey.v1';
 
-export function createJourneyProgress(storage) {
+export function createJourneyProgress(storage, route = ROUTES.b1) {
+  const { key, legs, checks: CHECKS, stamps: STAMPS } = route;
   let data;
-  try { data = JSON.parse(storage.get(JOURNEY_KEY) || 'null'); } catch (e) { data = null; }
+  try { data = JSON.parse(storage.get(key) || 'null'); } catch (e) { data = null; }
   if (!data || typeof data !== 'object') data = {};
   data.stamps = data.stamps || {};
   data.run = data.run || null;
   data.best = data.best != null ? data.best : null;
-  const save = () => storage.set(JOURNEY_KEY, JSON.stringify(data));
+  const save = () => storage.set(key, JSON.stringify(data));
 
   const api = {
     stamps: () => Object.assign({}, data.stamps),
@@ -28,7 +29,7 @@ export function createJourneyProgress(storage) {
     stampCount: () => Object.keys(data.stamps).length,
     /** Stamp each id not stamped yet; returns the newly earned ones. */
     addStamps(ids, now) {
-      const fresh = ids.filter(id => !data.stamps[id]);
+      const fresh = ids.filter(id => !data.stamps[id] && STAMPS.some(s => s.id === id));
       fresh.forEach(id => { data.stamps[id] = now || Date.now(); });
       if (fresh.length) save();
       return fresh;
@@ -48,7 +49,7 @@ export function createJourneyProgress(storage) {
         run.leg = index + 1;
         run.fatigue = Math.max(0, result.fatigue - TOWN_BREAK);
         run.vehicle = result.vehicle;
-        if (run.leg >= LEGS.length) {
+        if (run.leg >= legs.length) {
           run.complete = true;
           const avg = Math.round(run.scores.reduce((a, b) => a + b, 0) / run.scores.length);
           data.best = Math.max(data.best || 0, avg);
@@ -63,4 +64,7 @@ export function createJourneyProgress(storage) {
   return api;
 }
 
-export const journey = createJourneyProgress(deviceStorage());
+const saved = {};
+/** Saved progress for a route (one shared instance per route). */
+export const journeyFor = id => (saved[routeById(id).id] = saved[routeById(id).id] || createJourneyProgress(deviceStorage(), routeById(id)));
+export const journey = journeyFor('b1');

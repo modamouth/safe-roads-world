@@ -103,3 +103,23 @@ test('each leg renders its time of day, and a crash stops the leg', async ({ pag
   await heading(page).toHaveText('Windhoek → Okahandja');
   expect(errors).toEqual([]);
 });
+
+test('the Mission Map opens the Journey to the Ocean, and its first leg starts', async ({ page }) => {
+  const errors = await boot(page);
+  await tap(page, 'Start Journey');
+  await tap(page, 'B2 to the Coast');
+  await page.waitForFunction(() => { const m = window.__srwGame.scene.getScene('Map'); return m.card && m.card.alpha === 1; }, null, SLOW);
+  await tap(page, 'Head for the sea');
+  await heading(page).toHaveText('Journey to the Ocean');
+  await page.screenshot({ path: shots + '/coast-hub.png' });
+  await tap(page, 'Start the journey');
+  await heading(page).toHaveText('Before you leave');
+  await page.waitForFunction(() => { const j = window.__srwGame.scene.getScene('Journey'); return j.overlay && j.overlay.alpha === 1; }, null, SLOW);
+  await tap(page, 'Leave now');
+  await tap(page, 'Drive anyway');
+  await heading(page).toHaveText('Windhoek → Karibib');
+  const saved = await page.evaluate(() => ({ coast: JSON.parse(localStorage.getItem('srw.journey.b2.v1')), home: localStorage.getItem('srw.journey.v1') }));
+  expect(saved.coast.run.leg).toBe(0);
+  expect(saved.home).toBeNull();
+  expect(errors).toEqual([]);
+});

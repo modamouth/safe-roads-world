@@ -8,10 +8,11 @@ import { Sfx } from '../sfx.js';
 import { LEARNING_LAB_ASSETS as A } from '../lab/assets.js';
 import { animationSeconds } from '../lab/core/time.js';
 import { bindCrashFeedback, crashImpact } from '../services/crashFeedbackScene.js';
-import { LEGS, STAMPS, peopleOf } from '../journey/route.js';
+import { peopleOf } from '../journey/route.js';
+import { routeById } from '../journey/routes.js';
 import { createLegSim, autopilot } from '../journey/sim.js';
 import { createRoad } from '../journey/road.js';
-import { journey } from '../journey/progress.js';
+import { journeyFor } from '../journey/progress.js';
 
 // The Journey Home: drive one leg. Hold PETROL and BRAKE; steer only when you
 // drift (the car keeps its lane otherwise). The HUD mirrors the original brief:
@@ -40,7 +41,15 @@ const ALERTS = {
   walkerPassed: () => ['Good: you gave them space', C.green],
   stopGo: () => ['Stop/Go roadworks: stop at the flagman', C.orange],
   go: () => ['GO: follow your lane through the roadworks', C.green],
-  ranStop: () => ['You drove past a STOP board!', C.red]
+  ranStop: () => ['You drove past a STOP board!', C.red],
+  overtakeScene: () => ['Slow truck: overtake only on a broken line when the road ahead is clear', C.teal],
+  overtakeSafe: () => ['Clean overtake: clear road, and space before you pulled in', C.green],
+  closeCall: () => ['Too close! Never overtake into oncoming traffic', C.red],
+  cutIn: () => ['You cut in too close to the truck: leave more space', C.orange],
+  lowVis: e => [(e.kind === 'fog' ? 'Fog' : 'Dust') + ': you can see about ' + e.m + ' m. Slow to ' + e.safe + ' km/h', C.teal],
+  tooFastVis: e => ['Too fast for the ' + e.kind + ': you could not stop in what you can see', C.red],
+  gust: () => ['Crosswind gust! Hold your lane', C.orange],
+  skid: e => ['Sand on the road at ' + e.kmh + ' km/h: the car slid', C.red]
 };
 const OVER_COPY = {
   rear: r => 'You ran into the vehicle ahead at ' + r.kmh + ' km/h faster than it. A 3-second gap gives you time to react and stop.',
@@ -48,6 +57,7 @@ const OVER_COPY = {
   warthog: r => 'You hit a warthog at ' + r.kmh + ' km/h. Warthogs dart out of the grass, often a family in a line: when one crosses, slow down, because more usually follow.',
   kudu: r => 'You hit a kudu at ' + r.kmh + ' km/h. At dusk and at night, slow down where game warning signs are up.',
   animal: r => 'You hit an animal at ' + r.kmh + ' km/h. On unfenced roads, slow down and be ready to stop.',
+  cutin: () => 'You pulled back in while you were still alongside the truck. Stay out until you can see its whole front behind you, then move back with space to spare.',
   convoy: () => 'You drove past the STOP board and met the oncoming traffic coming through your lane. At Stop/Go roadworks, wait at the line until the flagman shows GO.',
   taxi: r => 'A taxi pulled out in front of you and you hit it at ' + r.kmh + ' km/h. When a taxi is stopped at the roadside, slow down and be ready for it to pull out.',
   pedestrian: r => 'You hit a person at ' + r.kmh + ' km/h. Near people, on crossings or walking on the road edge, slow down and give them space.',
@@ -57,13 +67,17 @@ const OVER_COPY = {
 };
 
 export default class JourneyDrive extends Phaser.Scene {
-  constructor() { super('JourneyDrive'); }
+  // City Safety Run (CityRun.js) reuses this scene's controls, cards and renderer under its own key.
+  constructor(key = 'JourneyDrive') { super(key); }
 
-  init(data) { this.legIndex = clamp((data && data.leg) || 0, 0, LEGS.length - 1); }
+  init(data) {
+    this.r = routeById(data && data.route); this.j = journeyFor(this.r.id);
+    this.legIndex = clamp((data && data.leg) || 0, 0, this.r.legs.length - 1);
+  }
 
   preload() {
     this.load.setPath(import.meta.env.BASE_URL);
-    const people = peopleOf(LEGS[this.legIndex]).flatMap(who => Object.values(A.pedestrians[who]));
+    const people = peopleOf(this.r.legs[this.legIndex]).flatMap(who => Object.values(A.pedestrians[who]));
     [...ART, ...people].forEach(a => { if (!this.textures.exists(a.key)) loadImage(this, a.key, a.path); });
     this.load.on('loaderror', () => {});
   }
@@ -73,11 +87,11 @@ export default class JourneyDrive extends Phaser.Scene {
     Sfx.init(this);
     this.cameras.main.fadeIn(250, 0, 0, 0);
     // Phaser reuses this scene object for every leg, so reset all per-leg state here.
-    Object.assign(this, { leaving: false, started: false, paused: false, ended: false, resultShown: false, locked: false, overlay: null, alertUntil: 0, alertKey: null, pulse: {}, held: {} });
+    Object.assign(this, { leaving: false, started: false, paused: false, ended: false, resultShown: false, locked: false, resting: false, overlay: null, alertUntil: 0, alertKey: null, pulse: {}, held: {} });
     this.input.addPointer(2);
 
-    const run = journey.run() || { fatigue: 0, vehicle: 100, checks: {} };
-    this.leg = LEGS[this.legIndex];
+    const run = this.j.run() || { fatigue: 0, vehicle: 100, checks: {} };
+    this.leg = this.r.legs[this.legIndex];
     // Warthogs turn up in different places each drive.
     this.sim = createLegSim(this.leg, { fatigue: run.fatigue, vehicle: run.vehicle, checks: run.checks }, { wildSeed: Math.floor(Math.random() * 2 ** 32) });
     this.road = createRoad(this, { leg: this.leg, sim: this.sim, lights: !!run.checks.lights });
@@ -104,7 +118,7 @@ export default class JourneyDrive extends Phaser.Scene {
     iconButton(this, 44, 40, 'back', () => this.pause(), { label: 'Pause' }).setDepth(d + 2);
     this.add.text(80, 40, leg.from + ' → ' + leg.to, { fontFamily: FONT, fontSize: '21px', color: '#FFFFFF', fontStyle: 'bold', resolution: 2 }).setOrigin(0, 0.5).setDepth(d + 1);
     soundToggle(this);
-    this.add.text(24, 78, 'Leg ' + (this.legIndex + 1) + ' of ' + LEGS.length, { fontFamily: FONT, fontSize: '14px', color: '#B9C6D6', fontStyle: 'bold', resolution: 2 }).setOrigin(0, 0.5).setDepth(d + 1);
+    this.add.text(24, 78, 'Leg ' + (this.legIndex + 1) + ' of ' + this.r.legs.length, { fontFamily: FONT, fontSize: '14px', color: '#B9C6D6', fontStyle: 'bold', resolution: 2 }).setOrigin(0, 0.5).setDepth(d + 1);
     this.distTxt = this.add.text(W - 24, 78, '', { fontFamily: FONT, fontSize: '14px', color: '#B9C6D6', fontStyle: 'bold', resolution: 2 }).setOrigin(1, 0.5).setDepth(d + 1);
     this.bar = this.add.graphics().setDepth(d + 1);
 
@@ -138,7 +152,7 @@ export default class JourneyDrive extends Phaser.Scene {
   updateHud() {
     const st = this.sim.st, leg = this.leg, kmh = Math.round(st.v * 3.6);
     const left = Math.max(0, 1 - st.s / leg.length);
-    this.distTxt.setText(leg.to + (leg.home ? ' (home)' : '') + '  ' + Math.ceil(left * leg.realKm) + ' km');
+    this.distTxt.setText(leg.to + (leg.home ? this.r.endTag : '') + '  ' + Math.ceil(left * leg.realKm) + ' km');
     this.bar.clear();
     const bw = this.distTxt.x - this.distTxt.width - 16 - 116;   // up to the distance label
     this.bar.fillStyle(0xFFFFFF, 0.15); this.bar.fillRoundedRect(116, 74, bw, 8, 4);
@@ -148,25 +162,29 @@ export default class JourneyDrive extends Phaser.Scene {
     this.limitG.fillStyle(0xFFFFFF, 1); this.limitG.fillCircle(60, 146, 30);
     this.limitG.lineStyle(7, 0xD93A3F, 1); this.limitG.strokeCircle(60, 146, 26);
     if (this.limitTxt.text !== String(st.limit)) this.limitTxt.setText(String(st.limit));
-    this.aheadTxt.setText(st.ahead ? st.ahead.limit + ' ahead' : '');
+    // In fog or dust, the speed you can stop in matters more than the limit.
+    this.aheadTxt.setText(st.safeKmh ? (st.see.kind === 'fog' ? 'Fog' : 'Dust') + ': max ' + st.safeKmh : st.ahead ? st.ahead.limit + ' ahead' : '');
     this.speedTxt.setText(String(kmh)).setColor(st.speeding ? '#FF8A8D' : '#FFFFFF');
     this.kmhTxt.setX(this.speedTxt.x + this.speedTxt.width + 6);
     const s = Math.round(st.safety);
     this.safetyTxt.setText(String(s)).setColor(s >= 80 ? '#7BE0A6' : s >= 50 ? '#FFCB2B' : '#FF8A8D');
 
     const f = Math.round(st.fatigue), g = st.gap, veh = Math.round(st.vehicle);
-    this.chips[0].setText(f + '%').setColor(f >= 75 ? '#FF8A8D' : f >= 50 ? '#FFCB2B' : '#FFFFFF');
+    this.showFatigue(f);
     // Stopped or crawling behind a vehicle there is no time gap: show the distance instead.
     this.chips[1].setText(GAP_TEXT[g.state] || (g.seconds == null ? Math.round(g.m) + ' m' : g.seconds.toFixed(1) + ' s')).setColor(GAP_COL[g.state]);
     this.chips[2].setText(veh + '%').setColor(veh >= 70 ? '#FFFFFF' : veh >= 40 ? '#FFCB2B' : '#FF8A8D');
-    this.chips[3].setText(journey.stampCount() + '/' + STAMPS.length);
+    this.chips[3].setText(this.j.stampCount() + '/' + this.r.stamps.length);
 
     if (this.restBtn.visible !== st.canRest) { this.restBtn.setVisible(st.canRest); if (st.canRest) announce('Rest area. You can rest here.'); }
     if (st.phone && !this.phoneCard) this.showPhone(st.phone);
     if (!st.phone && this.phoneCard) { this.phoneCard.destroy(); this.phoneCard = null; }
-    if (st.restAhead != null && st.fatigue >= 35 && !st.canRest && this.time.now > this.alertUntil) this.alert('Rest area in ' + Math.max(0, st.restAhead) + ' m: slow down and pull in', C.teal, 'rest');
+    if (st.inBay && st.restAhead != null && st.v > 0.5 && this.time.now > this.alertUntil) this.alert('Stop in a parking bay to take your break', C.teal, 'bay');
+    if (st.restAhead != null && st.fatigue >= 35 && !st.canRest && !st.inBay && this.time.now > this.alertUntil) this.alert('Rest area in ' + Math.max(0, st.restAhead) + ' m: slow down and pull in', C.teal, 'rest');
     if (this.time.now > this.alertUntil && this.alertKey) { this.alertKey = null; this.alertBg.clear(); this.alertTxt.setText(''); }
   }
+
+  showFatigue(f) { this.chips[0].setText(f + '%').setColor(f >= 75 ? '#FF8A8D' : f >= 50 ? '#FFCB2B' : '#FFFFFF'); }
 
   alert(text, color, key) {
     this.alertKey = key || text;
@@ -250,7 +268,7 @@ export default class JourneyDrive extends Phaser.Scene {
     const lines = [leg.brief, 'Hold PETROL to drive and BRAKE to slow down. Your car keeps its lane: steer only if you drift. Keys: arrows or WASD.'];
     this.card(leg.from + ' → ' + leg.to, timeWord + '  ·  ' + leg.realKm + ' km', lines, [
       { label: 'Drive', primary: true, cb: () => { this.closeCard(); this.start(); } },
-      { label: 'Back to route', cb: () => this.go('Journey') }
+      { label: 'Back to route', cb: () => this.go('Journey', { route: this.r.id }) }
     ]);
   }
 
@@ -258,7 +276,7 @@ export default class JourneyDrive extends Phaser.Scene {
     this.started = true;
     Sfx.init(this); Sfx.startEngine();
     track('journey_leg_start', { leg: this.leg.id });
-    describe(this.leg.from + ' to ' + this.leg.to, ['Leg ' + (this.legIndex + 1) + ' of ' + LEGS.length + '. Use Accelerate and Brake. Steer left or right if you drift.']);
+    describe(this.leg.from + ' to ' + this.leg.to, ['Leg ' + (this.legIndex + 1) + ' of ' + this.r.legs.length + '. Use Accelerate and Brake. Steer left or right if you drift.']);
   }
 
   pause() {
@@ -266,19 +284,45 @@ export default class JourneyDrive extends Phaser.Scene {
     this.paused = true; Sfx.stopEngine();
     this.card('Paused', this.leg.from + ' → ' + this.leg.to, ['Your journey so far is saved at the start of this leg.'], [
       { label: 'Resume', primary: true, cb: () => { this.closeCard(); this.paused = false; if (this.started) Sfx.startEngine(); } },
-      { label: 'Restart this leg', cb: () => this.scene.restart({ leg: this.legIndex }) },
-      { label: 'Back to route', cb: () => this.go('Journey') }
+      { label: 'Restart this leg', cb: () => this.scene.restart({ leg: this.legIndex, route: this.r.id }) },
+      { label: 'Back to route', cb: () => this.go('Journey', { route: this.r.id }) }
     ]);
   }
 
   onHidden() { if (this.started && !this.ended && !this.paused) this.pause(); }
 
   rest() {
+    if (this.resting) return;
     const r = this.sim.rest();
     if (!r) return;
     track('journey_rest', { leg: this.leg.id, before: r.before });
     this.restBtn.setVisible(false);
-    this.paused = true; Sfx.stopEngine();
+    this.paused = true; this.resting = true; Sfx.stopEngine();
+    this.restLapse(r, () => { this.resting = false; this.restCard(r); });
+  }
+
+  // The 15-minute break as a short time-lapse: a clock, a progress bar and fatigue draining.
+  restLapse(r, done) {
+    const o = this.add.container(0, 0).setDepth(3900), x = 70, y = 440, w = W - 140;
+    o.add(panel(this, x, y, w, 170, { alpha: 0.94, stroke: C.teal, strokeA: 0.8 }));
+    o.add(T(this, W / 2, y + 38, 'Taking a 15-minute break', 24, '#FFFFFF'));
+    const clock = T(this, W / 2, y + 82, '0 of 15 min', 20, '#B9C6D6'), bar = this.add.graphics();
+    o.add([clock, bar]);
+    describe('Taking a 15-minute break', ['Fatigue ' + r.before + '% now.']);
+    this.tweens.addCounter({
+      from: 0, to: 1, duration: REDUCE_MOTION ? 600 : 5000,
+      onUpdate: tw => {
+        const k = tw.getValue(), f = Math.round(r.before + (r.after - r.before) * k);
+        clock.setText(Math.round(k * 15) + ' of 15 min  ·  fatigue ' + f + '%');
+        bar.clear(); bar.fillStyle(0xFFFFFF, 0.15); bar.fillRoundedRect(x + 30, y + 116, w - 60, 14, 7);
+        bar.fillStyle(C.teal, 1); bar.fillRoundedRect(x + 30, y + 116, Math.max(14, (w - 60) * k), 14, 7);
+        this.showFatigue(f);
+      },
+      onComplete: () => { o.destroy(); done(); }
+    });
+  }
+
+  restCard(r) {
     this.card('Rest stop', 'Fatigue ' + r.before + '% → ' + r.after + '%', [
       r.before >= 40 ? 'Good decision. A short sleep and a stretch is what works when you are tired.' : 'A break before you feel tired keeps you sharp for longer.',
       'Plan a stop about every two hours on long trips.'
@@ -294,6 +338,8 @@ export default class JourneyDrive extends Phaser.Scene {
     events.forEach(e => this.handle(e));
     this.road.update(dt);
     if (!this.ended) this.updateHud();
+    // Stopping in a parking bay is taking the break.
+    if (this.sim.st.canRest && this.sim.st.bayStill >= 1 && !this.ended) this.rest();
     Sfx.setEngine(this.sim.st.v * 3.6);
     if (this.sim.st.rumble && !REDUCE_MOTION && Math.random() < 0.2) Sfx.noise(0.08, 0.08, 180);
   }
@@ -320,24 +366,24 @@ export default class JourneyDrive extends Phaser.Scene {
     this.resultShown = true; this.ended = true;
     Sfx.stopEngine();
     const r = this.sim.result(), leg = this.leg;
-    const fresh = journey.finishLeg(this.legIndex, r);
+    const fresh = this.j.finishLeg(this.legIndex, r);
     track('journey_leg_end', { leg: leg.id, finished: r.finished, safety: r.safety, over: r.over && r.over.reason, stamps: fresh });
-    const stampNames = fresh.map(id => STAMPS.find(s => s.id === id).label);
+    const stampNames = fresh.map(id => this.r.stamps.find(s => s.id === id).label);
     const stats = 'Safety ' + r.safety + '/100   ·   Vehicle ' + r.vehicle + '%   ·   Fatigue ' + r.fatigue + '%';
     if (r.finished) {
       Sfx.chime(true);
-      const done = journey.run() && journey.run().complete;
-      this.card(leg.home ? 'You made it home' : 'Welcome to ' + leg.to, stats,
+      const done = this.j.run() && this.j.run().complete;
+      this.card(leg.home ? leg.finale || 'You made it home' : 'Welcome to ' + leg.to, stats,
         [...(stampNames.length ? ['New stamps: ' + stampNames.join(', ')] : []), ...r.issues.slice(0, 2)], [
-          { label: done ? 'See your journey' : 'Continue the journey', primary: true, cb: () => this.go('Journey', { arrived: leg.id }) },
-          { label: 'Drive this leg again', cb: () => this.scene.restart({ leg: this.legIndex }) }
+          { label: done ? 'See your journey' : 'Continue the journey', primary: true, cb: () => this.go('Journey', { arrived: leg.id, route: this.r.id }) },
+          { label: 'Drive this leg again', cb: () => this.scene.restart({ leg: this.legIndex, route: this.r.id }) }
         ], fresh);
     } else {
       const reason = r.over ? (r.over.reason === 'crash' ? r.over.kind : r.over.reason) : 'safety';
       this.card(r.over && r.over.reason === 'crash' ? 'Crash: the journey stops here' : 'The journey stops here', stats,
         [OVER_COPY[reason](r.over || {}), ...(stampNames.length ? ['New stamps: ' + stampNames.join(', ')] : [])], [
-          { label: 'Try this leg again', primary: true, cb: () => this.scene.restart({ leg: this.legIndex }) },
-          { label: 'Back to route', cb: () => this.go('Journey') }
+          { label: 'Try this leg again', primary: true, cb: () => this.scene.restart({ leg: this.legIndex, route: this.r.id }) },
+          { label: 'Back to route', cb: () => this.go('Journey', { route: this.r.id }) }
         ], fresh);
     }
   }
@@ -361,7 +407,7 @@ export default class JourneyDrive extends Phaser.Scene {
     if (stamps && stamps.length) {
       const g = this.add.graphics(); items.push(g);
       stamps.forEach((id, i) => {
-        const s = STAMPS.find(x => x.id === id), cx = x0 + 24 + 30 + i * 70;
+        const s = this.r.stamps.find(x => x.id === id), cx = x0 + 24 + 30 + i * 70;
         g.lineStyle(3, C.yellow, 1); g.strokeCircle(cx, y + 30, 28); g.fillStyle(C.navy2, 1); g.fillCircle(cx, y + 30, 24);
         drawIcon(g, s.icon, cx, y + 30, 28, C.yellow);
       });

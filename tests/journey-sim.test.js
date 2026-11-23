@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { LEGS, STAMPS, CHECKS } from '../src/journey/route.js';
-import { createLegSim, autopilot, gapState, speedingRate, limitAt, nextLimitDrop, legStamps, buildRoadShape, warthogSpots, TOWN_BREAK } from '../src/journey/sim.js';
+import { createLegSim, autopilot, gapState, speedingRate, limitAt, nextLimitDrop, legStamps, buildRoadShape, warthogSpots, laybyAt, laybyEdge, LAYBY, ROAD, TOWN_BREAK } from '../src/journey/sim.js';
 import { createJourneyProgress } from '../src/journey/progress.js';
 
 const ALL_CHECKS = Object.fromEntries(CHECKS.map(c => [c.id, true]));
@@ -293,3 +293,129 @@ describe('warthogs', () => {
   });
 });
 
+
+describe('town buildings', () => {
+  it('stand only in town sections, on both sides, set back behind the verge; offices only in Windhoek', async () => {
+    const { townLayout, townRanges } = await import('../src/journey/town.js');
+    LEGS.forEach(leg => {
+      const towns = townRanges(leg), layout = townLayout(leg);
+      expect(towns.length, leg.id).toBe(2);
+      expect(layout.some(b => b.x < 0) && layout.some(b => b.x > 0), leg.id).toBe(true);
+      layout.forEach(b => {
+        const town = towns.find(([from, to]) => b.s >= from && b.s <= to);
+        expect(town, leg.id + ' ' + b.s).toBeTruthy();
+        expect(Math.abs(b.x) - b.w / 2).toBeGreaterThanOrEqual(9.5);
+        if (b.key.startsWith('jh_bld_office')) expect(town[2]).toBe('Windhoek');
+      });
+      expect(townLayout(leg)).toEqual(layout);
+    });
+  });
+});
+
+describe('the rest area', () => {
+  // Leg 2's rest area on an otherwise empty road.
+  const leg = { ...LEGS[1], leads: [], animals: [], warthogs: null, oncoming: 0, crossings: [] };
+  const drive40 = sim => ({ throttle: sim.st.v * 3.6 < 40 ? 1 : 0, brake: 0, steer: 0 });
+  it('is a lay-by with slip lanes either end and parking well away from the road', () => {
+    expect(laybyAt(leg, leg.rest + LAYBY.from - 1)).toBe(0);
+    expect(laybyAt(leg, leg.rest + LAYBY.from + 30)).toBeCloseTo(0.5, 5);
+    expect(laybyAt(leg, leg.rest)).toBe(1);
+    expect(laybyEdge(leg, leg.rest)).toBeCloseTo(-LAYBY.outer, 5);
+    expect(LAYBY.park).toBeLessThan(-(LAYBY.island + 3));
+  });
+  for (const at of [10, 95]) it(`resting parks you in a bay; driving off at ${at} m merges back before the exit with no penalties`, () => {
+    const sim = createLegSim(leg, { fatigue: 60, checks: ALL_CHECKS });
+    sim.st.s = leg.rest + at; sim.st.v = 0;
+    expect(sim.rest()).toBeTruthy();
+    expect(sim.st.parked).toBe(true);
+    expect(sim.st.x).toBeLessThan(-ROAD.EDGE - 3);
+    const events = [], safety = sim.st.safety;
+    while (sim.st.s < leg.rest + LAYBY.to + 100 && !sim.st.over) events.push(...sim.step(DT, drive40(sim)));
+    expect(sim.st.over).toBeNull();
+    expect(sim.st.parked).toBe(false);
+    expect(sim.st.x).toBeCloseTo(ROAD.LANE, 1);
+    expect(events.some(e => e.type === 'crash' || e.type === 'rumble')).toBe(false);
+    expect(sim.st.safety).toBe(safety);
+  });
+  it('stopping in the parking area counts as stopped in a bay (the game then starts your break)', () => {
+    const sim = createLegSim(leg, { fatigue: 50, checks: ALL_CHECKS });
+    sim.st.s = leg.rest - 30; sim.st.x = LAYBY.park; sim.st.v = 0;
+    for (let i = 0; i < 45; i++) sim.step(DT, { throttle: 0, brake: 1, steer: 0 });
+    expect(sim.st.inBay).toBe(true);
+    expect(sim.st.bayStill).toBeGreaterThan(1);
+    expect(sim.st.canRest).toBe(true);
+    sim.st.x = ROAD.LANE;
+    sim.step(DT, { throttle: 0, brake: 1, steer: 0 });
+    expect(sim.st.inBay).toBe(false);
+    expect(sim.st.bayStill).toBe(0);
+  });
+  it('you can steer into the lay-by yourself without leaving the road', () => {
+    const sim = createLegSim(leg, { checks: ALL_CHECKS }), events = [];
+    sim.st.s = leg.rest - 70; sim.st.v = 30 / 3.6;
+    while (sim.st.s < leg.rest - 20) events.push(...sim.step(DT, { throttle: sim.st.v * 3.6 < 30 ? 1 : 0, brake: 0, steer: sim.st.x > -10 ? -1 : 0 }));
+    expect(sim.st.x).toBeLessThan(-9);
+    expect(events.some(e => e.type === 'crash')).toBe(false);
+    expect(sim.log.penalties.lane || 0).toBe(0);
+  });
+});
+
+
+describe('overtaking a slow truck', () => {
+  const kmhOf = sim => sim.st.v * 3.6;
+  // Hold `kmh` and keep to lane `x`, steering like a player holding the button.
+  const go = (kmh, x) => sim => ({ throttle: kmhOf(sim) < kmh ? 1 : 0, brake: kmhOf(sim) > kmh + 5 ? 1 : 0, steer: Math.abs(x - sim.st.x) < 0.1 ? 0 : Math.sign(x - sim.st.x) });
+  // Leg 3's night scene (a box trailer at 75 km/h; a bus comes the other way) on an otherwise quiet road.
+  const night = { ...LEGS[2], animals: [], warthogs: null };
+  function scene(leg, driver, untilS) {
+    const sim = createLegSim(leg, { checks: ALL_CHECKS }), events = [];
+    const truck = sim.ents.leads.find(l => l.overtake);
+    sim.st.s = truck.at - 105; sim.st.v = 95 / 3.6;
+    while (sim.st.s < untilS && !sim.st.over && sim.st.t < 120) events.push(...sim.step(DT, driver(sim, truck)));
+    return { sim, truck, events, types: events.map(e => e.type) };
+  }
+  // Follow at 75 until `ready`, then pass at 115 and pull back in `space` metres ahead.
+  const pass = (ready, space) => {
+    let out = false;
+    return (sim, truck) => {
+      const ahead = (sim.st.s - 4.5) - (truck.s + truck.len);
+      if (!out && ready(sim, truck)) out = true;
+      if (out && ahead >= space) out = false;
+      return out ? go(115, ROAD.ONCOMING)(sim) : go(sim.st.s < truck.s - 40 ? 100 : 74, ROAD.LANE)(sim);
+    };
+  };
+  const roadClear = sim => !sim.ents.oncoming.some(o => o.s > sim.st.s);
+
+  it('the careful driver overtakes each scene truck cleanly', () => {
+    let carry = { fatigue: 0, vehicle: 100, checks: ALL_CHECKS };
+    LEGS.slice(0, 3).forEach(leg => {
+      const { r } = drive(leg, carry, autopilot);
+      expect(r.safeOvertakes, leg.id).toBe(1);
+      expect(r.closeCalls + r.cutIns + r.collisions, leg.id).toBe(0);
+      carry = { fatigue: Math.max(0, r.fatigue - TOWN_BREAK), vehicle: r.vehicle, checks: ALL_CHECKS };
+    });
+  });
+  it('waiting for the bus to pass, then leaving space, is a clean overtake with no lane penalty', () => {
+    const { types, sim } = scene(night, pass((sim, t) => t.planned && roadClear(sim) && t.s - sim.st.s < 50, 25), 3000);
+    expect(types).toContain('overtakeScene');
+    expect(types).toContain('overtakeSafe');
+    expect(types).not.toContain('overLine');
+    expect(sim.log.penalties.lane || 0).toBe(0);
+  });
+  it('pulling out as soon as you catch up puts you nose to nose with the bus', () => {
+    const { types, events } = scene(night, pass((sim, t) => t.s - sim.st.s < 50, 25), 3000);
+    expect(types.includes('closeCall') || events.some(e => e.type === 'crash' && e.kind === 'headon')).toBe(true);
+    expect(types).not.toContain('overtakeSafe');
+  });
+  it('pulling back in too soon is a cut-in', () => {
+    const { types, sim } = scene(night, pass((sim, t) => t.planned && roadClear(sim) && t.s - sim.st.s < 50, 3), 3000);
+    expect(types).toContain('cutIn');
+    expect(sim.log.penalties.overtake).toBe(6);
+  });
+  it('overtaking on the solid line through the blind bend is never a clean overtake', () => {
+    const leg = { ...LEGS[1], animals: [], warthogs: null };
+    const { types, sim } = scene(leg, pass((sim, t) => sim.st.s > 2400 && roadClear(sim) && t.s - sim.st.s < 50, 25), 2700);
+    expect(types).toContain('overLine');
+    expect(types).not.toContain('overtakeSafe');
+    expect(sim.log.penalties.lane).toBeGreaterThan(0);
+  });
+});
