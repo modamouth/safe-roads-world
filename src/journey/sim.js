@@ -37,6 +37,9 @@ const LENGTH = { veh_truck: 8, veh_rear_fuel_tanker: 12, veh_rear_box_trailer: 1
 const CAR_LEN = 4.5;                            // our car, from the front bumper back
 const CUT_IN = 12;                              // metres of space to leave in front of a vehicle you pass
 const CLOSE_CALL = 2;                           // seconds to an oncoming vehicle while on the wrong side
+// Animals that dash across and keep running off the road: trigger distance (m) and speed (m/s).
+// Warthogs start a few seconds ahead of you instead (see warthogSpots).
+const RUNNERS = { warthog: { sp: 4.5, hit: 1.3 }, oryx: { trigger: 50, sp: 3.2, hit: 1.5 }, springbok: { trigger: 45, sp: 5, hit: 1.2 } };
 const SERIOUS = { headon: 0, animal: 50, kudu: 40, rear: 35, runoff: 60, pedestrian: 15, taxi: 35, convoy: 0, warthog: 70, cutin: 45, pullout: 25, junction: 15 };
 const KERB = ROAD.EDGE + 1;                     // where pedestrians wait and finish, from the centre
 const SHOULDER = -(ROAD.EDGE + 0.7);            // a vehicle parked on our shoulder
@@ -407,14 +410,16 @@ export function createLegSim(leg, carry = {}, opts = {}) {
       if (an.state === 'hit' || an.state === 'done') return;
       // A kudu bolts late, from close by; cattle and donkeys amble out from further off;
       // warthogs dash out a few seconds ahead of us, whatever our speed.
-      const trigger = an.kind === 'warthog' ? Math.max(30, v * an.tt) : an.kind === 'kudu' ? 45 : an.kind === 'cattle' ? 140 : 110;
-      if (an.state === 'waiting' && !an.verge && an.s - st.s < trigger) {
+      const run = RUNNERS[an.kind];
+      const trigger = an.kind === 'warthog' ? Math.max(30, v * an.tt) : run ? run.trigger : an.kind === 'kudu' ? 45 : an.kind === 'cattle' ? 140 : 110;
+      // Only ahead of us: an animal we have already passed stays where it is.
+      if (an.state === 'waiting' && !an.verge && an.s - st.s > 0 && an.s - st.s < trigger) {
         an.state = 'crossing';
         if (!an.young) events.push({ type: 'animal', kind: an.kind, group: an.group || 1 });
       }
-      const sp = an.kind === 'warthog' ? 4.5 : an.kind === 'kudu' ? 3.5 : an.kind === 'cattle' ? 1.1 : 0.9, dir = -an.side;
-      if (an.kind === 'warthog' && (an.state === 'crossing' || (an.state === 'clear' && Math.abs(an.x) < 16))) an.runT += dt;
-      if (an.kind === 'warthog' && an.state === 'clear' && Math.abs(an.x) < 16) an.x += dir * sp * dt;
+      const sp = run ? run.sp : an.kind === 'kudu' ? 3.5 : an.kind === 'cattle' ? 1.1 : 0.9, dir = -an.side;
+      if (run && (an.state === 'crossing' || (an.state === 'clear' && Math.abs(an.x) < 16))) an.runT += dt;
+      if (run && an.state === 'clear' && Math.abs(an.x) < 16) an.x += dir * sp * dt;
       if (an.state === 'crossing') {
         const before = an.x;
         an.x += dir * sp * dt;
@@ -423,12 +428,12 @@ export function createLegSim(leg, carry = {}, opts = {}) {
         if (Math.abs(an.x) > ROAD.EDGE + 2.5 && Math.sign(an.x) === dir) { an.state = 'clear'; an.hop = 0; }
       } else if (an.state === 'dwell') { an.dwell -= dt; if (an.dwell <= 0) an.state = 'crossing'; }
       if (prevS < an.s && st.s >= an.s) {
-        if (Math.abs(an.x - st.x) < (an.kind !== 'warthog' ? 1.6 : an.young ? 1.1 : 1.3)) {
+        if (Math.abs(an.x - st.x) < (!run ? 1.6 : an.young ? 1.1 : run.hit)) {
           an.state = 'hit'; log.animalsHit++;
           crash(an.kind === 'kudu' || an.kind === 'warthog' ? an.kind : 'animal', kmh, events);
           st.v *= an.kind === 'warthog' ? 0.6 : 0.3;
         } else {
-          an.state = an.kind === 'warthog' && an.state === 'clear' ? 'clear' : 'done';
+          an.state = run && an.state === 'clear' ? 'clear' : 'done';
           if (!an.verge || Math.abs(an.x - st.x) < 4) { log.animalsPassed++; if (!an.young) events.push({ type: 'animalPassed', kind: an.kind }); }
         }
       }
@@ -445,14 +450,17 @@ export function createLegSim(leg, carry = {}, opts = {}) {
         if (L.still >= (L.waitS || 3) && !ents.cross.some(c => Math.abs(c.x) < ROAD.EDGE + 1.5)) { L.state = 'green'; events.push({ type: 'green' }); }
         if (d < 320 && t >= L.nextCross) {
           const dir = L.crossN++ % 2 ? -1 : 1;
-          ents.cross.push({ s: L.s + 7 + dir * 1.8, x: -dir * 26, v: dir * (9 + rand() * 3), key: 'cross', light: L.id });
+          const key = ['taxi', 'sedan', 'bakkie', 'taxi', 'truck'][Math.floor(rand() * 5)];
+          ents.cross.push({ s: L.s + 7 + dir * 1.8, x: -dir * 26, v: dir * (key === 'truck' ? 8 : 9 + rand() * 3), key, light: L.id });
           L.nextCross = t + 3.2 + rand() * 1.5;
         }
         if (prevS < L.s && st.s >= L.s) { log.ranRed = (log.ranRed || 0) + 1; lose('red', 25); events.push({ type: 'ranRed' }); }
       }
     });
     ents.cross = ents.cross.filter(c => {
-      c.x += c.v * dt;
+      // Once our light is green, theirs is red: cars not yet in the junction wait at their line.
+      const L = ents.lights.find(l => l.id === c.light), waiting = L && L.state === 'green' && c.x * c.v < 0 && Math.abs(c.x) <= ROAD.EDGE + 4.5 && Math.abs(c.x) > ROAD.EDGE + 2.5;
+      if (!waiting) c.x += c.v * dt;
       // In the junction box with us?
       if (Math.abs(c.x - st.x) < 3.0 && st.s > c.s - 2 && st.s - CAR_LEN < c.s + 2 && !c.hit) { c.hit = true; crash('junction', Math.max(15, kmh + 15), events); st.v *= 0.3; }
       return Math.abs(c.x) < 30;
@@ -700,7 +708,7 @@ export function autopilot(sim) {
     if (d < 0 || an.state === 'done' || an.state === 'hit') return;
     if (an.state === 'waiting' && d < 320 && !an.verge && an.kind !== 'warthog') target = Math.min(target, 60);
     // Where there's one warthog there are often more: stay slow until the whole family is across.
-    if (an.kind === 'warthog' && an.state === 'crossing' && d < 150) target = Math.min(target, d < 60 ? 0 : 40);
+    if (RUNNERS[an.kind] && an.state === 'crossing' && d < 150) target = Math.min(target, d < 60 ? 0 : 40);
     else if ((an.state === 'crossing' || an.state === 'dwell') && Math.abs(an.x) < ROAD.EDGE + 1.5 && d < 150) target = Math.min(target, d < 45 ? 0 : 30);
   });
   ents.crossings.forEach(p => {

@@ -19,7 +19,7 @@ import JourneyDrive from './JourneyDrive.js';
 // and road renderer; adds an indicator, a rear-view mirror and encounter scoring.
 // Start with { from: i, run } to retry from just before encounter i (run carries
 // the first-attempt scores); with no data it is a fresh run.
-const ART = [A.scenery.bush, A.scenery.lamp, A.scenery.post, A.oncomingTruck, A.vehicle, ...Object.values(A.vehicles), ...Object.values(A.trafficLight)];
+const ART = [A.scenery.bush, A.scenery.lamp, A.scenery.post, A.oncomingTruck, A.vehicle, ...Object.values(A.vehicles), ...Object.values(A.sideViews), ...Object.values(A.town), ...Object.values(A.trafficLight)];
 const ALL_CHECKS = { tyres: true, lights: true, belts: true, phone: true };
 const SHORT = ['Pull out', 'Crossing', 'Taxi', 'Lights'];
 const ALERTS = {
@@ -266,6 +266,7 @@ export default class CityRun extends JourneyDrive {
       return;
     }
     // Failed: stop the drive, explain, and offer a retry from just before it.
+    this.updateHud();   // show the ✗ on its chip before the drive stops
     this.ended = true; Sfx.stopEngine();
     track('city_fail', { id: o.id, reason: o.reason });
     this.time.delayedCall(REDUCE_MOTION ? 0 : 800, () => {

@@ -18,7 +18,7 @@ import { PARKED_VEHICLES } from '../worldArt.js';
 import { pedestrianSet, setPedestrianPose } from '../lab/art/pedestrianArt.js';
 import { ROAD, LAYBY, buildRoadShape, zoneAt, laybyAt, laybyEdge } from './sim.js';
 import { TAXI_RIDERS } from './route.js';
-import { townTextures, townLayout, townRanges } from './town.js';
+import { townTextures, townLayout, townRanges, townArt } from './town.js';
 
 const CAMH = 5, Z_R = 22, CAR_LEN = 4.5, CAR_W = 1.85;
 export const HORIZON = 360, CAR_Y = 812;
@@ -55,7 +55,7 @@ const WIDTHS = Object.assign(Object.fromEntries(PARKED_VEHICLES.map(p => [p.key,
 // Oncoming traffic, front views: texture, width across the mirrors (m), and where the
 // headlights are (hx: from the centre, hy: up from the ground, both as a fraction of the image).
 const FRONTS = {
-  veh_taxi: { tex: 'veh_front_minibus_taxi', w: 2.1, hx: 0.38, hy: 0.36 },
+  veh_taxi: { tex: 'veh_front_minibus_taxi_plain', alt: 'veh_front_minibus_taxi', w: 2.1, hx: 0.38, hy: 0.36 },
   veh_sedan_white: { tex: 'veh_front_white_sedan', w: 1.95, hx: 0.35, hy: 0.45 },
   veh_truck: { tex: 'veh_front_truck', w: 2.9, hx: 0.35, hy: 0.22 },
   veh_bus: { tex: 'veh_front_bus', w: 3.1, hx: 0.35, hy: 0.17 },
@@ -269,7 +269,10 @@ export function createRoad(scene, o) {
   // Buildings along the town sections; the big trees make way for them there.
   townTextures(scene);
   const towns = townRanges(leg), inTown = s => towns.some(([from, to]) => s > from - 20 && s < to + 20);
-  townLayout(leg).forEach(b => add(b.key, b.s, b.x, b.w, 'w', { building: true }));
+  townLayout(leg).forEach(b => {
+    const art = townArt(scene, b), im = add(art ? art.key : b.key, b.s, b.x, art ? art.w : b.w, 'w', { building: true });
+    if (im && art) im.setOrigin(0.5, art.ground);
+  });
 
   // The rest area: concrete picnic tables under shade trees and a shade roof, a bin,
   // and a car already parked in a bay near the exit.
@@ -307,7 +310,7 @@ export function createRoad(scene, o) {
     if (i === 0 || z.limit !== leg.zones[i - 1].limit) sign('limit', z.at, String(z.limit));
   });
   if (leg.rest != null) { sign('rest', leg.rest - 400, 'Rest 400 m'); sign('rest', leg.rest + LAYBY.from - 15, 'Rest area'); }
-  leg.animals.forEach(an => { if (!an.verge) sign('warn', an.at - 260, an.kind === 'kudu' ? 'Kudu' : 'Livestock'); });
+  leg.animals.forEach(an => { if (!an.verge) sign('warn', an.at - 260, an.kind === 'kudu' ? 'Kudu' : an.kind === 'oryx' || an.kind === 'springbok' ? 'Game' : 'Livestock'); });
   ents.crossings.forEach(p => sign('warn', p.s - 120, 'Pedestrians'));
   const sg = ents.stopGo;
   if (sg) sign('warn', sg.at - 120, 'Stop/Go');
@@ -316,10 +319,17 @@ export function createRoad(scene, o) {
   const leadIms = ents.leads.map(l => add(vehKey(l.key), l.s, l.x, WIDTHS[l.key] || CAR_W, 'w', { ent: l, kind: 'lead' }));
   leadIms.forEach((im, i) => { if (im && im.texture.key === 'carRear') im.baseTint = [0x6D8FC7, 0xD8D2C4, 0xC75A4A][i % 3]; });
   const oncomingPool = [];
-  // Warthog frames share one canvas, so the feet stay put when they swap; the leap is mid-air.
-  const HOG = A.animals.warthog, HOG_RUN = [HOG.runA, HOG.leap, HOG.runB, HOG.leap].map(f => f.key), HOG_GROUND = 912 / 941;
+  // Running animals: four frames on one canvas, so the feet stay put when they swap (the
+  // leap is mid-air). size: canvas width in metres; ground: the feet, as a fraction down.
+  const RUN_ART = {
+    warthog: { set: A.animals.warthog, ground: 912 / 941, size: 1.75, frameS: 0.09 },
+    oryx: { set: A.animals.oryx, ground: 931 / 941, size: 3.5, frameS: 0.12 },
+    springbok: { set: A.animals.springbok, ground: 931 / 941, size: 2.6, frameS: 0.1 }
+  };
+  const runFrames = r => [r.set.runA, r.set.leap, r.set.runB, r.set.leap].map(f => f.key);
   const animalTex = an => {
-    if (an.kind === 'warthog') return ART(HOG.standing.key) ? HOG.standing.key : cowTexture(scene);
+    const ra = RUN_ART[an.kind];
+    if (ra) return ART(ra.set.standing.key) ? ra.set.standing.key : cowTexture(scene);
     if (an.kind === 'kudu') return ART('scn_kudu') ? 'scn_kudu' : 'kudu';
     if (an.kind === 'cattle') return ART(A.animals.cow.key) ? A.animals.cow.key : cowTexture(scene);
     if (ART(A.animals.donkey.key)) {
@@ -331,10 +341,10 @@ export function createRoad(scene, o) {
     return cowTexture(scene);
   };
   const animalIms = ents.animals.map(an => {
-    const hog = an.kind === 'warthog';
-    const key = animalTex(an), im = add(key, an.s, an.x, hog ? (an.young ? 1.15 : 1.75) : an.kind === 'kudu' ? (key === 'scn_kudu' ? 2.6 : 2.8) : an.kind === 'cattle' ? 2.3 : 1.4,
-      hog || (an.kind === 'kudu' && key !== 'scn_kudu') || an.kind === 'cattle' ? 'w' : 'h', { ent: an, kind: 'animal' });
-    if (im && hog && key === HOG.standing.key) im.setOrigin(0.5, HOG_GROUND);
+    const ra = RUN_ART[an.kind];
+    const key = animalTex(an), im = add(key, an.s, an.x, ra ? (an.young ? ra.size * 0.66 : ra.size) : an.kind === 'kudu' ? (key === 'scn_kudu' ? 2.6 : 2.8) : an.kind === 'cattle' ? 2.3 : 1.4,
+      ra || (an.kind === 'kudu' && key !== 'scn_kudu') || an.kind === 'cattle' ? 'w' : 'h', { ent: an, kind: 'animal' });
+    if (im && ra && key === ra.set.standing.key) im.setOrigin(0.5, ra.ground);
     if (im && key === A.animals.donkey.key) im.setFrame('animal');
     if (im && an.kind === 'kudu' && key === 'scn_kudu') im.referenceHeight = im.height;
     return im;
@@ -367,7 +377,14 @@ export function createRoad(scene, o) {
     Object.assign(sg, { ws: L.s + (side > 0 ? 12 : 0), xm: side * (ROAD.EDGE + 1.3), sizeM: 1, isSign: true, baseTint: 0xFFFFFF, light: L });
     sg.setVisible(false); c.add(sg); sprites.push(sg); return sg;
   }));
-  const SIDE_CAR = A.vehicle.key, crossPool = [];
+  // Cross traffic, side views facing right: texture, length (m) and ground line. The Lab's
+  // white hatchback stands in for any that have not loaded.
+  const SIDE = {
+    taxi: { tex: 'veh_side_minibus_taxi', w: 5.3, ground: 465 / 476 }, sedan: { tex: 'veh_side_sedan', w: 4.6, ground: 394 / 403 },
+    bakkie: { tex: 'veh_side_bakkie', w: 5.3, ground: 439 / 450 }, truck: { tex: 'veh_side_truck', w: 7.5, ground: 501 / 511 }
+  };
+  const sideOf = key => { const sv = SIDE[key]; return sv && ART(sv.tex) ? sv : ART(A.vehicle.key) ? { tex: A.vehicle.key, w: 4.2, ground: 0.855 } : { tex: 'carRear', w: 1.85, ground: 1 }; };
+  const crossPool = [];
 
   const glowLayer = scene.add.graphics(); c.add(glowLayer);
   const lights = [];
@@ -566,9 +583,10 @@ export function createRoad(scene, o) {
       if (!im) return;
       const an = im.ent; im.ws = an.s; im.xm = an.x; im.hop = an.hop || 0;
       if (an.kind === 'kudu' && ART('scn_kudu_leap')) im.setTexture(im.hop > 0.15 ? 'scn_kudu_leap' : 'scn_kudu');
-      if (an.kind === 'warthog' && ART(HOG.standing.key)) {
+      const ra = RUN_ART[an.kind];
+      if (ra && ART(ra.set.standing.key)) {
         const running = an.runT > 0 && Math.abs(an.x) < 16 && !REDUCE_MOTION;
-        im.setTexture(running ? HOG_RUN[Math.floor(an.runT / 0.09) % 4] : HOG.standing.key);
+        im.setTexture(running ? runFrames(ra)[Math.floor(an.runT / ra.frameS) % 4] : ra.set.standing.key);
         im.setVisible(Math.abs(an.x) < 16);
       }
       im.setFlipX(an.side > 0);
@@ -582,7 +600,8 @@ export function createRoad(scene, o) {
       let im = oncomingPool[i];
       if (!im) { im = scene.add.image(0, 0, frontTexture(scene)).setOrigin(0.5, 1); Object.assign(im, { by: 'w', baseTint: 0xFFFFFF }); c.add(im); oncomingPool.push(im); }
       // Front-view artwork where it loaded; otherwise the drawn car.
-      const f = FRONTS[on.key] && ART(FRONTS[on.key].tex) ? FRONTS[on.key] : { tex: frontTexture(scene), w: 1.85, hx: 0.36, hy: 0.4 };
+      const fr = FRONTS[on.key], tex = fr && (ART(fr.tex) ? fr.tex : fr.alt && ART(fr.alt) ? fr.alt : null);
+      const f = tex ? { ...fr, tex } : { tex: frontTexture(scene), w: 1.85, hx: 0.36, hy: 0.4 };
       if (im.texture.key !== f.tex) im.setTexture(f.tex);
       Object.assign(im, { ws: on.s, xm: on.x, sizeM: f.w, ent: on, front: f });
     });
@@ -590,7 +609,10 @@ export function createRoad(scene, o) {
     signalIms.forEach(sg => sg.setState(sg.light.state));
     (ents.cross || []).forEach((cr, i) => {
       let im = crossPool[i];
-      if (!im) { im = scene.add.image(0, 0, ART(SIDE_CAR) ? SIDE_CAR : 'carRear').setOrigin(0.5, ART(SIDE_CAR) ? 0.855 : 1); Object.assign(im, { by: 'w', baseTint: 0xFFFFFF, sizeM: 4.2, kind: 'cross' }); c.add(im); crossPool.push(im); }
+      if (!im) { im = scene.add.image(0, 0, 'carRear'); Object.assign(im, { by: 'w', baseTint: 0xFFFFFF, kind: 'cross' }); c.add(im); crossPool.push(im); }
+      const sv = sideOf(cr.key);
+      if (im.texture.key !== sv.tex) im.setTexture(sv.tex);
+      im.setOrigin(0.5, sv.ground); im.sizeM = sv.w;
       Object.assign(im, { ws: cr.s, xm: cr.x }); im.setFlipX(cr.v < 0);
     });
     crossPool.forEach((im, i) => { if (i >= (ents.cross || []).length) im.setVisible(false); });

@@ -1,6 +1,6 @@
 // resources: links to real Namibian organisations and official sources.
 import { W, COLORS as C } from '../../config.js';
-import { panel, focusRing } from '../../ui.js';
+import { focusRing } from '../../ui.js';
 import { mirrorLink } from '../../a11y.js';
 import { Sfx } from '../../sfx.js';
 import { TYPE, INK, SPACE } from '../../theme.js';

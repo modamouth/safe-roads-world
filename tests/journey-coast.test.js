@@ -93,3 +93,17 @@ describe('fog and dust', () => {
     expect(slow.types).not.toContain('skid');
   });
 });
+
+describe('desert game', () => {
+  it('an oryx and springbok cross the Namib stretch of leg 2; a driver who keeps going hits one', () => {
+    expect(arandis.animals.map(a => a.kind)).toEqual(expect.arrayContaining(['oryx', 'springbok']));
+    const noWeather = { ...arandis, dust: [], sand: [] };
+    const hits = ['oryx', 'springbok'].map(kind => {
+      const at = arandis.animals.find(a => a.kind === kind).at;
+      const { events } = run(noWeather, at - 250, 110, hold(110), at + 20);
+      return events.some(e => e.type === 'crash' && e.kind === 'animal');
+    });
+    expect(hits).toEqual([true, true]);
+  });
+});
+

@@ -164,16 +164,12 @@ one run. Progress is saved under `srw.city.v1`. Tune the route and scoring in
 drivers who fail each encounter. In dev, `?autopilot=1` drives it for you.
 
 Artwork: the rear-view taxi and bakkie, the front-view bakkie in the mirror, oncoming
-front views, the schoolgirl, traffic lights (`tl_red`/`tl_yellow`/`tl_green`), street
-lamps and the side-view hatchback for cross traffic are existing art. Drawn in code, in
-place of art (replace by adding these and loading them by key):
-
-| Drawn now | Wanted asset (key) | Orientation |
-|---|---|---|
-| Shop and office facades (`src/journey/town.js`) | `city_facade_*`, Windhoek CBD shopfronts and office blocks | Front-on, transparent background, ground at the bottom |
-| Kerbs, pavement, parking bay, junction | (fine drawn) | n/a |
-| Rear-view mirror frame and the SIGNAL button icon | (fine drawn) | n/a |
-| Cross traffic: one white hatchback (`lab-vehicle-side-view-safety-features`) | `veh_side_*`, more side views (taxi, bakkie, sedan) | Side view, facing right; flipped for the other direction |
+front views (the minibus taxi without a badge), the schoolgirl, traffic lights
+(`tl_red`/`tl_yellow`/`tl_green`), street lamps, side-view cross traffic (`veh_side_*`,
+facing right, flipped for the other direction) and the town buildings (`town_*`, front-on;
+`src/journey/town.js` maps them to the layout and draws stand-ins until they load) are all
+illustrated. The kerbs, pavement, parking bay, junction, mirror frame and SIGNAL icon are
+drawn in code.
 
 ## Pedestrian safety (Learning Lab)
 
