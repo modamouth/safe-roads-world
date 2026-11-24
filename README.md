@@ -155,6 +155,10 @@ with four encounters in order, each scored out of 25 (no time bonus):
 4. **Traffic light**: a red light and stop line ahead; stop behind the line, and go on
    green once the cross traffic has cleared the junction.
 
+Between encounters the street is busy: kerbside parking on both sides (`parking` in the
+route), steady oncoming traffic at town speeds that queues at the red light, a car ahead
+that turns off before the junction, and frequent cross traffic.
+
 A failed encounter explains what happened and retries from just before it (fresh
 traffic); the first-attempt score is kept and retries are practice. The results show
 the total, the breakdown, a tip, and a link to the Learning Lab activity for the weakest
