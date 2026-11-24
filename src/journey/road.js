@@ -286,12 +286,33 @@ export function createRoad(scene, o) {
     if (parked) add(parked, r + 112, laybyEdge(leg, r + 112) + 1.2, WIDTHS.veh_sedan_blue, 'w');
   }
 
+  // Kerbside parking (leg.parking: [from, to, side]): rear views on our side, front views
+  // across the road (they face the other way). Same cars every drive.
+  const PARK_X = ROAD.EDGE + 1.2;
+  if (leg.parking) {
+    let seed = 97; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+    const REARS = ['veh_taxi', 'veh_sedan_blue', 'veh_sedan_white', 'veh_bakkie', 'veh_sedan_white', 'veh_taxi'];
+    const FRONTS_PARKED = ['veh_taxi', 'veh_sedan_white', 'veh_bakkie', 'veh_sedan_white', 'veh_police'];
+    leg.parking.forEach(([from, to, side]) => {
+      for (let ps = from + 4; ps < to - 4; ps += 6.5 + rnd() * 4) {
+        if (rnd() < 0.42) continue;
+        if (side < 0) {
+          const key = REARS[Math.floor(rnd() * REARS.length)];
+          if (ART(key)) add(key, ps, -PARK_X, WIDTHS[key] || CAR_W, 'w', { parkedCar: true });
+        } else {
+          const fr = FRONTS[FRONTS_PARKED[Math.floor(rnd() * FRONTS_PARKED.length)]], tex = fr && (ART(fr.tex) ? fr.tex : fr.alt && ART(fr.alt) ? fr.alt : null);
+          if (tex) add(tex, ps, PARK_X, fr.w, 'w', { parkedCar: true });
+        }
+      }
+    });
+  }
+
   // Street lamps through towns (the first and last 60 km/h zones).
   const lamps = [];
   leg.zones.forEach((z, i) => {
     if (!z.sign || !z.sign.startsWith('town:')) return;
     const end = (leg.zones[i + 1] || { at: leg.length + 400 }).at;
-    for (let s = z.at + 20; s < end; s += 45) { const l = add(ART('scn_lamp') ? 'scn_lamp' : 'post', s, -ROAD.EDGE - 1.4, ART('scn_lamp') ? 6 : 1.1, 'h'); if (l) lamps.push(l); }
+    for (let s = z.at + 20; s < end; s += 45) { const l = add(ART('scn_lamp') ? 'scn_lamp' : 'post', s, -ROAD.EDGE - (leg.parking ? 2.7 : 1.4), ART('scn_lamp') ? 6 : 1.1, 'h'); if (l) lamps.push(l); }
   });
 
   // Signs: every limit change, town boards, roadworks/pothole warnings, the rest area.
@@ -518,6 +539,13 @@ export function createRoad(scene, o) {
       const band = (s0, s1) => cs + zNear < s1 && cs + zFar > s0;
       // A kerb along the pavement in town.
       if (land.kerb) { line(-ROAD.EDGE - 1.15, -ROAD.EDGE - 1, 0xE8E2D6); line(ROAD.EDGE + 1, ROAD.EDGE + 1.15, 0xE8E2D6); }
+      // Parking lanes along the kerbs.
+      (leg.parking || []).forEach(([from, to, side]) => {
+        if (!band(from, to)) return;
+        const near = side * (ROAD.EDGE + 0.15), far = side * (ROAD.EDGE + 2.2);
+        fill(X(Math.min(near, far)), X(Math.max(near, far)), shade(0x5E5B57));
+        line(Math.min(far, far - side * 0.15), Math.max(far, far - side * 0.15), 0xF4F4F4);
+      });
       // The kerbside parking bay you start in.
       if (leg.startBay && band(leg.startBay.from, leg.startBay.to)) {
         fill(X(-ROAD.EDGE - 2.2), X(-ROAD.EDGE - 0.15), shade(0x6E6A64));
@@ -621,12 +649,14 @@ export function createRoad(scene, o) {
       if (im.ent && (im.ent.gone || (im.kind === 'ped' && im.ent.state === 'hit'))) { im.setVisible(false); return; }
       if (im.tree && inTown(im.ws)) { im.setVisible(false); return; }
       if (im.decor && im.xm < -ROAD.EDGE - 0.9 && laybyAt(leg, im.ws) > 0) { im.setVisible(false); return; }
+      // No bushes in the parking lanes.
+      if (im.decor && leg.parking && Math.abs(im.xm) < ROAD.EDGE + 3 && leg.parking.some(([f, t, sd]) => im.ws > f - 3 && im.ws < t + 3 && Math.sign(im.xm) === sd)) { im.setVisible(false); return; }
       // Passengers climb in when their taxi pulls away.
       if (im.taxi && im.taxi.phase !== 'parked') { im.setVisible(false); return; }
       const p = project(im, cs, camX);
       if (!p) return;
       const isAnimal = im.kind === 'animal', isVeh = im.kind === 'lead' || oncomingPool.includes(im);
-      const lit = isAnimal || isVeh || im.isSign || im.kind === 'ped' || im.building || Math.abs(im.xm) < 6;
+      const lit = isAnimal || isVeh || im.isSign || im.kind === 'ped' || im.building || im.parkedCar || Math.abs(im.xm) < 6;
       // Buildings at night are only half lit by the street lamps.
       const dim = night && !lit ? Math.max(0.75, 1 - p.vv) : night && im.building ? Math.max(0.5, 1 - p.vv) : 1 - p.vv;
       if (!im.isSign) im.setTint(lerpColor(im.baseTint, dark, dim));

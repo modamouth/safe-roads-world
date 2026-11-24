@@ -28,13 +28,21 @@ export const CITY_LEG = {
     // 1: a bakkie coming up behind while you are parked; it turns off before the crossing.
     { at: -40, kmh: 50, until: 330, key: 'veh_bakkie', fromBehind: true },
     // 3: a Quantum taxi that indicates, slows and stops at the kerb for passengers.
-    { at: 590, kmh: 40, activate: 440, until: 980, key: 'veh_taxi', signalAt: 700, stopAt: 745, waitS: 5, kerbX: -2.9 }
+    { at: 590, kmh: 40, activate: 440, until: 980, key: 'veh_taxi', signalAt: 700, stopAt: 745, waitS: 5, kerbX: -2.9 },
+    // A car ahead between the taxi stop and the lights; it turns off into a side street.
+    { at: 1010, kmh: 42, activate: 940, until: 1085, key: 'veh_sedan_blue' }
   ],
-  animals: [], potholes: [], rest: null, oncoming: 230, phone: [],
+  // Kerbside parking: [from, to, side] stretches (-1 our side, 1 across), kept clear of the
+  // bay you start in, the crossing, the taxi stop, side streets and the junction.
+  parking: [[22, 300, -1], [470, 700, -1], [820, 1060, -1], [1215, 1380, -1], [0, 395, 1], [445, 1150, 1], [1230, 1380, 1]],
+  animals: [], potholes: [], rest: null, phone: [],
+  // City traffic: busy oncoming lane at town speeds, mostly taxis, cars and bakkies.
+  oncoming: 95, oncomingKmh: [38, 58],
+  oncomingMix: ['veh_taxi', 'veh_taxi', 'veh_taxi', 'veh_sedan_white', 'veh_sedan_white', 'veh_bakkie', 'veh_bakkie', 'veh_police', 'veh_bus', 'veh_truck'],
   // 2: a schoolgirl walks along the pavement to the zebra crossing, then crosses.
   crossings: [{ at: CROSSING, who: 'schoolgirl', from: 1, approach: 14, trigger: 75 }],
   // 4: a signalised junction, red as you approach.
-  lights: [{ at: STOP_LINE, waitS: 3 }]
+  lights: [{ at: STOP_LINE, waitS: 3, crossEvery: [2.2, 1.3] }]
 };
 
 // Where each encounter starts (for retries), what it is called, and its Learning Lab link.

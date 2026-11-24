@@ -393,13 +393,18 @@ export function createLegSim(leg, carry = {}, opts = {}) {
     // During an overtaking scene only the planned vehicles come the other way.
     const scene = ents.leads.some(l => l.overtake && !l.gone && !l.passed && st.s > (l.activate != null ? l.activate : l.at - 450) - 400);
     if (st.s >= nextOncoming && st.s < leg.length - 150 && !nearWorks && !scene) {
-      ents.oncoming.push({ s: st.s + 650, v: (80 + rand() * 30) / 3.6, x: ROAD.ONCOMING, key: ONCOMING_MIX[Math.floor(rand() * ONCOMING_MIX.length)] });
+      // A leg can set its own traffic: oncomingKmh [min, max] and oncomingMix (vehicle keys).
+      const [lo, hi] = leg.oncomingKmh || [80, 110], mix = leg.oncomingMix || ONCOMING_MIX;
+      ents.oncoming.push({ s: st.s + 650, v: (lo + rand() * (hi - lo)) / 3.6, x: ROAD.ONCOMING, key: mix[Math.floor(rand() * mix.length)] });
       nextOncoming = st.s + leg.oncoming * (0.6 + rand() * 0.8);
     }
-    ents.oncoming = ents.oncoming.filter(o => {
-      const before = o.s - prevS;
+    // Oncoming vehicles move towards us (s falling); each keeps a gap behind the one in front of it.
+    ents.oncoming.sort((p, q) => p.s - q.s);
+    ents.oncoming = ents.oncoming.filter((o, k, all) => {
+      const before = o.s - prevS, ahead = k > 0 && Math.abs(all[k - 1].x - o.x) < 1.8 ? all[k - 1] : null;
       const redFor = ents.lights.some(L => L.state !== 'green' && o.s > L.s + 14 && o.s - o.v * dt <= L.s + 16);
       if (!crossingBusy(o.s - 14, o.s - 4.5) && !redFor) o.s -= o.v * dt;
+      if (ahead) o.s = Math.max(o.s, ahead.s + (ahead.key === 'veh_truck' || ahead.key === 'veh_bus' ? 11 : 7));
       if (o.convoy) o.x = convoyX(o.s);
       if (Math.abs(o.x - st.x) < 1.8 && o.s - st.s <= 0 && before > 0) crash(o.convoy ? 'convoy' : 'headon', kmh + o.v * 3.6, events);
       return o.s > st.s - 40;
@@ -452,7 +457,8 @@ export function createLegSim(leg, carry = {}, opts = {}) {
           const dir = L.crossN++ % 2 ? -1 : 1;
           const key = ['taxi', 'sedan', 'bakkie', 'taxi', 'truck'][Math.floor(rand() * 5)];
           ents.cross.push({ s: L.s + 7 + dir * 1.8, x: -dir * 26, v: dir * (key === 'truck' ? 8 : 9 + rand() * 3), key, light: L.id });
-          L.nextCross = t + 3.2 + rand() * 1.5;
+          const [ce, cr] = L.crossEvery || [3.2, 1.5];
+          L.nextCross = t + ce + rand() * cr;
         }
         if (prevS < L.s && st.s >= L.s) { log.ranRed = (log.ranRed || 0) + 1; lose('red', 25); events.push({ type: 'ranRed' }); }
       }
